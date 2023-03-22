@@ -7,7 +7,7 @@ import initialiseResolver from "@noir-lang/noir-source-resolver";
 export const compileCircuit = async () => {
     await initNoirWasm();
 
-    return await fetch("main.nr")
+    return await fetch(new URL("../src/main.nr", import.meta.url))
     .then(r => r.text())
     .then(code => {
       initialiseResolver((id : any) => {
