@@ -1,7 +1,12 @@
 import { ethers } from 'ethers';
 
 const verifierABI = [
-  'function verify(bytes calldata) external view returns (bool result)',
+    // "struct Puzzle {  uint id; bytes32 solution; }",
+    
+    "function addSolution(uint id, bytes32 solution) public",
+
+    "function getPuzzle() public view returns (uint id, bytes32 solution)",
+    "function submitSolution(uint level, bytes calldata solution) public returns (bool)"
 ];
 
 declare global {
@@ -22,7 +27,7 @@ class Ethers {
     this.signer = this.provider.getSigner();
 
     this.contract = new ethers.Contract(
-      '0x11550241DbeE0F29a2658CAFAf17d92e2664888a',
+      '0x53973982F8099F0Ed3b96BE12fA66FE08d9Dbb3F',
       verifierABI,
       this.signer,
     );
