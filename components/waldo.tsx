@@ -7,16 +7,7 @@ import Ethers from '../utils/ethers';
 import React from 'react';
 
 import { ThreeDots } from "react-loader-spinner";
-
-export type ClickABI = {
-    solutionHash: string,
-    coords: number[],
-}
-
-export type Puzzle = {
-    solution: string,
-    id: number,
-}
+import { Puzzle } from "../types/index"
 
 
 function Waldo() {
@@ -63,7 +54,7 @@ function Waldo() {
       }
 
       const coords = Object.values(localMousePos)
-      worker.postMessage({ acir, input: {coords: coords, solutionHash: "0x206c6a688c2560a664cae4d0f8eef08d0c2364b0f3bd041038870c909c3be1c1"} });
+      worker.postMessage({ acir, input: {coords: coords, solutionHash: currentPuzzle.solution} });
     }
   }
 

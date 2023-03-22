@@ -1,8 +1,7 @@
 import { ethers } from 'ethers';
+import addresses from "./addresses.json"
 
 const verifierABI = [
-    // "struct Puzzle {  uint id; bytes32 solution; }",
-    
     "function addSolution(uint id, bytes32 solution) public",
 
     "function getPuzzle() public view returns (uint id, bytes32 solution)",
@@ -27,7 +26,7 @@ class Ethers {
     this.signer = this.provider.getSigner();
 
     this.contract = new ethers.Contract(
-      '0x53973982F8099F0Ed3b96BE12fA66FE08d9Dbb3F',
+      addresses.game,
       verifierABI,
       this.signer,
     );
