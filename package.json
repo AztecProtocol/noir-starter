@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "next",
     "build": "next build",
-    "start": "next start",
+    "start:local": "npm run deploy:local && next start",
+    "start:mumbai": "npm run deploy:mumbai && next start",
     "deploy:local": "hardhat run scripts/genContract.ts && NODE_ENV=localhost hardhat run --network localhost scripts/deploy.ts",
     "deploy:mumbai": "hardhat run scripts/genContract.ts && NODE_ENV=testnet hardhat run --network mumbai scripts/deploy.ts",
     "test": "hardhat test"

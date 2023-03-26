@@ -16,7 +16,7 @@ async function main() {
 
   if (process.env.NODE_ENV !== 'production') {
     let captchas: any = [];
-    for (let i = 0; i < 30; i++) {
+    for (let i = 0; i < (process.env.CAPTCHAS_NUMBER as unknown as number); i++) {
       captchas.push(generateCaptcha());
     }
     captchas = await Promise.all(captchas);
