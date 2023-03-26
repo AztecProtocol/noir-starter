@@ -61,7 +61,6 @@ describe('It compiles noir program code, receiving circuit bytes and abi object.
         [prover, verifier] = await setup_generic_prover_and_verifier(acir);
     });
 
-
     before("Deploy contract", async () => {
         const Verifier = await ethers.getContractFactory('TurboVerifier');
         const verifier = await Verifier.deploy();
