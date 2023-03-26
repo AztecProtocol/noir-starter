@@ -8,8 +8,12 @@ import { expect } from 'chai';
 import { create_proof, verify_proof, setup_generic_prover_and_verifier} from '@noir-lang/barretenberg';
 import { ethers } from 'hardhat'; 
 import Ethers from '../utils/ethers';
-import { Puzzle } from "../types/index"
+import { Captcha, Puzzle } from "../types/index"
 import { Contract } from "ethers";
+import generateCaptcha from "../scripts/genCaptchas";
+import { opendir, readFile, rm } from "fs/promises";
+import { convertSolutionToArrayBytes, getSolutionHash, convertSolutionHashToArrayBytes, toArrayBytes } from "../utils/captcha";
+const ipfsClient = require('ipfs-http-client');
 
 const MAIN_NR_PATH = "src/main.nr";
 
@@ -22,6 +26,12 @@ describe('It compiles noir program code, receiving circuit bytes and abi object.
 
     let game : Contract;
     let puzzle : Puzzle;
+
+    let ipfsData : {path: string};
+    let captcha : Captcha;
+
+    let correctProof : any;
+
 
     before(async () => {
         initialiseResolver(() => {
@@ -62,27 +72,59 @@ describe('It compiles noir program code, receiving circuit bytes and abi object.
         game = await Game.deploy(verifierAddr.address);
         console.log(`Game deployed to ${game.address}`);
 
-        await game.addSolution(0, "0x206c6a688c2560a664cae4d0f8eef08d0c2364b0f3bd041038870c909c3be1c1")
-        puzzle = await game.getPuzzle();
+        captcha = await generateCaptcha();
 
-        // player level should be 0 at first
-        expect(puzzle.id).to.eq(0)
+        const projectId = process.env.IPFS_PROJECT_ID;
+        const projectSecret = process.env.IPFS_PROJECT_SECRET;
+
+        const auth =
+            'Basic ' + Buffer.from(projectId + ':' + projectSecret).toString('base64');
+
+        const client = ipfsClient.create({
+            host: 'ipfs.infura.io',
+            port: 5001,
+            protocol: 'https',
+            headers: {
+                authorization: auth
+            },
+        });
+
+
+        return opendir("tmp")
+        .then(async () => {
+            const file = await readFile(`tmp/${captcha.key}.bmp`)
+            ipfsData = await client.add(file)
+            await game.addPuzzle(ipfsData.path, captcha.solutionHash)
+        })
+        .then(async () => {
+            await rm("tmp", { recursive: true })
+            puzzle = await game.getPuzzle();
+        })
+    })
+
+    it("Should get a puzzle from the contract", async () => {
+        expect(puzzle.url).to.equal(ipfsData.path)
+    })
+
+
+    before("Generate proof", async () => {
+        const solutionBytes = convertSolutionToArrayBytes(captcha.key)
+        const solutionHashBytes = convertSolutionHashToArrayBytes(puzzle.solutionHash)
+        const input = {solution: solutionBytes, solutionHash: solutionHashBytes};
+        correctProof = await create_proof(prover, acir, input) 
     })
 
     it("Should generate valid proof for correct input", async () => {
-        const input = {coords: [400, 500], solutionHash: puzzle.solution};
-        const proof = await create_proof(prover, acir, input)
-
-        expect(proof instanceof Buffer).to.be.true
-
-        const verification = await verify_proof(verifier, proof)
-
+        expect(correctProof instanceof Buffer).to.be.true
+        const verification = await verify_proof(verifier, correctProof)
         expect(verification).to.be.true
     })
 
     it("Should fail with incorrect input", async () => {
         try {
-            const input = {coords: [0, 0], solutionHash: puzzle.solution};
+            const wrongSolutionBytes = convertSolutionToArrayBytes("00000")
+            const solutionHashBytes = convertSolutionHashToArrayBytes(puzzle.solutionHash)
+            const input = {solution: wrongSolutionBytes, solutionHash: solutionHashBytes};
             await create_proof(prover, acir, input)
         } catch(e) {
             expect(e instanceof Error).to.be.true
@@ -90,15 +132,8 @@ describe('It compiles noir program code, receiving circuit bytes and abi object.
     })
 
     it("Should verify the proof on-chain", async () => {
-        const input = [400, 500];
-        const proof = await create_proof(prover, acir, input)
-
-        const ver = await game.submitSolution(0, proof)
-        await ver.wait()
-
-        // player should have advanced to level 1
-        const level = await game.getPuzzle()
-        expect(level.id).to.eq(1)
+        const ver = await game.submitSolution(correctProof)
+        expect(ver).to.be.true
     })
 
 });

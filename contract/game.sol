@@ -6,39 +6,44 @@ interface IVerifier {
 }
 
 struct Puzzle {
-    uint id;
-    bytes32 solution;
+    string url;
+    bytes32 solutionHash;
 }
+
+import "hardhat/console.sol";
 
 contract Waldo {
     IVerifier public verifier;
 
-    mapping(uint => bytes32) solutions;
-    mapping(address => uint) levels;
+    mapping(uint => Puzzle) puzzles;
+    uint length = 0;
+    uint nonce = 0;
 
     constructor(IVerifier _verifier) {
         verifier = _verifier;
+        length = 0;
     }
 
-    function addSolution(uint id, bytes32 solution) public {
-        if (solutions[id] == bytes32(0)) {
-            solutions[id] = solution;
-        }
+    function addPuzzle(string memory url, bytes32 solutionHash) public {
+        puzzles[length] = Puzzle(url, solutionHash);
+        length++;
     }
+
+    function pseudoRandom() private view returns (uint) {
+        uint randomHash = uint(keccak256(abi.encodePacked(block.difficulty, block.timestamp)));
+        return randomHash % length;
+    } 
 
     function getPuzzle() public view returns (Puzzle memory) {
-        uint playerLevel = levels[msg.sender];
-        Puzzle memory puzzle = Puzzle(playerLevel, solutions[playerLevel]);
+        uint random = pseudoRandom();
+        Puzzle memory puzzle = puzzles[random];
         return puzzle;
     }
 
-    function submitSolution(uint level, bytes calldata solution) public returns (bool) {
-        require(level == levels[msg.sender], "Can't submit a solution for a level different than yours!");
-
+    function submitSolution(bytes calldata solution) public view returns (bool) {
         bool proofResult = verifier.verify(solution);
         require(proofResult, "Proof is not valid");
 
-        levels[msg.sender] = levels[msg.sender] + 1;
         return proofResult;
     }
 }

@@ -1,4 +1,9 @@
 export type Puzzle = {
-    solution: string,
-    id: number,
+    url: string,
+    solutionHash: string,
+}
+
+export type Captcha = {
+    key: string, 
+    solutionHash: number[]
 }

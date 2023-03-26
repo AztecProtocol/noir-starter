@@ -1,12 +1,6 @@
 import { ethers } from 'ethers';
 import addresses from "./addresses.json"
-
-const verifierABI = [
-    "function addSolution(uint id, bytes32 solution) public",
-
-    "function getPuzzle() public view returns (uint id, bytes32 solution)",
-    "function submitSolution(uint level, bytes calldata solution) public returns (bool)"
-];
+import artifacts from "../artifacts/contract/game.sol/Waldo.json"
 
 declare global {
   interface Window {
@@ -27,7 +21,7 @@ class Ethers {
 
     this.contract = new ethers.Contract(
       addresses.game,
-      verifierABI,
+      artifacts.abi,
       this.signer,
     );
     this.connect();
