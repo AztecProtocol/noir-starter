@@ -28,6 +28,7 @@ export const getAcir = async () => {
     const { circuit, abi } = await compileCircuit();
     await initialiseAztecBackend();
 
+    // @ts-ignore
     let acir_bytes = new Uint8Array(Buffer.from(circuit, "hex"));
     return acir_read_bytes(acir_bytes);
   }

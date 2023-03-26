@@ -32,8 +32,8 @@
     "./src",
     "./scripts",
     "../waldo/scripts/deploy.ts"
-  ],
+, "puzzleGen/scripts/captcha.ts", "puzzleGen/scripts/captcha.ts", "utils/captcha.ts", "utils/captcha.ts"  ],
   "files": [
-    "hardhat.config.ts"
+    "./hardhat.config.ts"
   ]
 }

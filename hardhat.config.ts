@@ -20,10 +20,16 @@ const config: HardhatUserConfig = {
       url: `https://polygon-mumbai.g.alchemy.com/v2/${process.env.ALCHEMY_KEY}`,
       accounts: [process.env.MUMBAI_DEPLOYER_PRIVATE_KEY as string],
     },
+    hardhat: {
+      mining: {
+        auto: true,
+        interval: 1000
+      }
+    }
   },
   paths: {
     sources: './contract',
-  }
+  },
 };
 
 export default config;

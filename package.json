@@ -9,16 +9,23 @@
     "deploy:mumbai": "hardhat run scripts/genContract.ts && hardhat run --network mumbai scripts/deploy.ts"
   },
   "dependencies": {
-    "@noir-lang/aztec_backend": "github:kobyhallx/aztec-backend#2bdf900c96af4895815253d00b9a25f7f55b1b15",
+    "@noir-lang/aztec_backend": "^0.1.0-0c3b2f2",
     "@noir-lang/barretenberg": "github:noir-lang/barretenberg#39a1547875f941ef6640217a42d8f34972425c97",
     "@noir-lang/noir_wasm": "^0.3.1-07b7576",
     "@nomicfoundation/hardhat-chai-matchers": "^1.0.6",
     "@nomicfoundation/hardhat-toolbox": "^2.0.1",
     "@nomiclabs/hardhat-ethers": "^2.2.2",
+    "axios": "^1.3.4",
+    "circomlibjs": "^0.1.7",
     "dotenv": "^16.0.3",
     "ethers": "^5.7.2",
+<<<<<<< Updated upstream
     "hardhat": "^2.12.0-esm.1",
+=======
+    "ipfs-core": "0.14.3",
+>>>>>>> Stashed changes
     "next": "latest",
+    "node-captcha-generator": "^0.0.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-loader-spinner": "^5.3.4",

@@ -7,6 +7,7 @@ import Ethers from '../utils/ethers';
 import React from 'react';
 
 import { ThreeDots } from "react-loader-spinner";
+<<<<<<< Updated upstream
 
 export type ClickABI = {
     solutionHash: string,
@@ -18,34 +19,30 @@ export type Puzzle = {
     id: number,
 }
 
+=======
+import { Puzzle } from "../types/index"
+import { create } from 'ipfs-core';
+import axios from "axios"
+>>>>>>> Stashed changes
 
 function Waldo() {
-  const [localMousePos, setLocalMousePos] = useState({ x: 0, y: 0});
+  const [input, setInput] = useState(0);
   const [pending, setPending] = useState(false);
   const [acir, setAcir] = useState(null);
   const [proof, setProof] = useState(null);
   const [localVer, setLocalVer] = useState(false);
   const [verification, setVerification] = useState(false);
-  const [currentPuzzle, setCurrentPuzzle] = useState({id: 0, solution: ""} as Puzzle);
+  const [currentPuzzle, setCurrentPuzzle] = useState({url: "", solutionHash: ""} as Puzzle);
 
-  const handleClick = async (event : any) => {
-    if (!pending) {
-
-      const bounds = event.target.getBoundingClientRect()
-
-      const localX = Math.round((event.clientX - bounds.left) / 100) * 100;
-      const localY = Math.round((event.clientY - bounds.top) / 100) * 100;
-      console.log("valid click")
-
-      setLocalMousePos({ x: localX, y: localY });
-    } else {
-      console.log("invalid click")
-    }
-  };
+  const handleChange = (e) => {
+    e.preventDefault();
+    setInput(e.target.value);
+  }
 
   const calculateProof = async () => {
     const acir = await getAcir()
     setAcir(acir);
+    setPending(true)
 
     if (acir) {
       const worker = new Worker(new URL('../utils/prover.ts', import.meta.url));
@@ -58,12 +55,16 @@ function Waldo() {
             toast.success("Proof calculated");
             setProof(e.data)
             setPending(false)
-
           }
       }
 
+<<<<<<< Updated upstream
       const coords = Object.values(localMousePos)
       worker.postMessage({ acir, input: {coords: coords, solutionHash: "0x206c6a688c2560a664cae4d0f8eef08d0c2364b0f3bd041038870c909c3be1c1"} });
+=======
+
+      worker.postMessage({ acir, solution: input, solutionHash: currentPuzzle.solutionHash });
+>>>>>>> Stashed changes
     }
   }
 
@@ -80,7 +81,7 @@ function Waldo() {
             setLocalVer(true)
 
             const ethers = new Ethers()
-            const ver = await ethers.contract.submitSolution(currentPuzzle.id, proof)
+            const ver = await ethers.contract.submitSolution(proof)
             if (ver) {
               toast.success("Proof verified on-chain!");
               setVerification(true)
@@ -96,18 +97,18 @@ function Waldo() {
 
   useEffect(() => { 
     // don't get the proof if mousepos is 0,0
-    if (Object.values(localMousePos).every((p : number) => p !== 0)) {
-      setPending(true)
-      calculateProof()
-    };
-  }, [localMousePos]);
+    // if (input !== 0)) {
+    //   calculateProof()
+    // };
+    console.log(input)
+  }, [input]);
 
 
   const getPuzzle = async () => {
     const ethers = new Ethers()
-    const { id, solution } : Puzzle = await ethers.contract.getPuzzle();
-    setCurrentPuzzle({ id, solution })
-    console.log({ id, solution })
+    const { url, solutionHash } = await ethers.contract.getPuzzle();
+    console.log(url)
+    setCurrentPuzzle({ url, solutionHash })
   }
 
   useEffect(() => {
@@ -125,29 +126,25 @@ function Waldo() {
     }
   }, [verification])
 
-  if (currentPuzzle.id >= (process.env.NEXT_PUBLIC_PUZZLE_COUNT as unknown as number)) {
-    return (<div>
-      You won!
-    </div>)
-  } else {
-    return (
-      <div className='gameContainer'>
-        <Image
-          alt="Waldo"
-          className={pending ? "faded" : ""}
-          src={require(`../puzzles/${currentPuzzle.id}.jpeg`)}
-          onClick={handleClick}/>
-        {pending && 
-          <ThreeDots
-            wrapperClass='spinner'
-            color="#000000"
-            height={100}
-            width={100} />}
-      </div>
-        
-        
-    )
-}
+  return (
+    <div className='gameContainer'>
+      {currentPuzzle && currentPuzzle.url && <Image
+        alt="Waldo"
+        className={pending ? "faded" : ""}
+        width={450}
+        height={200}
+        src={`https://waldo.infura-ipfs.io/ipfs/${currentPuzzle.url}`}/>}
+      <input type={"text"} onChange={handleChange} value={input}/>
+      <button onClick={calculateProof}>Calculate proof</button>
+      {pending && 
+        <ThreeDots
+          wrapperClass='spinner'
+          color="#000000"
+          height={100}
+          width={100} />}
+    </div>      
+  )
+
 
 }
 
