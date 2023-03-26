@@ -4,7 +4,8 @@
   "description": "",
   "scripts": {
     "dev": "next",
-    "build:website": "next build",
+    "build": "next build",
+    "start": "next start",
     "deploy:local": "hardhat run scripts/genContract.ts && NODE_ENV=localhost hardhat run --network localhost scripts/deploy.ts",
     "deploy:mumbai": "hardhat run scripts/genContract.ts && NODE_ENV=testnet hardhat run --network mumbai scripts/deploy.ts",
     "test": "hardhat test"
@@ -26,7 +27,8 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-loader-spinner": "^5.3.4",
-    "react-toastify": "^9.1.1"
+    "react-toastify": "^9.1.1",
+    "sharp": "^0.32.0"
   },
   "devDependencies": {
     "@noir-lang/noir-source-resolver": "^1.1.0",
