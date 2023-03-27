@@ -48,7 +48,8 @@ async function main() {
       opendir('tmp')
         .then(async () => {
           for await (const captcha of captchas) {
-            const file = await readFile(`tmp/${captcha.key}.bmp`);
+            const file = await readFile(`tmp/${captcha.key}.jpg`);
+
             const results = await client.add(file);
             await game.addPuzzle(results.path, captcha.solutionHash);
           }
