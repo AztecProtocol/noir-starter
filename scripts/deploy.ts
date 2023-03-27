@@ -1,8 +1,9 @@
-import { writeFileSync, readFileSync, unlinkSync, rmdirSync } from 'fs';
+import { writeFileSync, readFileSync, unlinkSync, rmdirSync, existsSync } from 'fs';
 import { opendir } from 'node:fs/promises';
 import { ethers } from 'hardhat';
 import generateCaptcha from './genCaptchas';
 import { readFile, rm, rmdir } from 'fs/promises';
+import path from 'path';
 const ipfsClient = require('ipfs-http-client');
 
 async function main() {
@@ -43,17 +44,19 @@ async function main() {
     for await (const _ of client.pin.rmAll(client.pin.ls({ type: 'recursive' }))) {
     }
 
-    opendir('tmp')
-      .then(async () => {
-        for await (const captcha of captchas) {
-          const file = await readFile(`tmp/${captcha.key}.bmp`);
-          const results = await client.add(file);
-          await game.addPuzzle(results.path, captcha.solutionHash);
-        }
-      })
-      .then(async () => {
-        await rm('tmp', { recursive: true });
-      });
+    if (existsSync(path.join(__dirname, '../tmp'))) {
+      opendir('tmp')
+        .then(async () => {
+          for await (const captcha of captchas) {
+            const file = await readFile(`tmp/${captcha.key}.bmp`);
+            const results = await client.add(file);
+            await game.addPuzzle(results.path, captcha.solutionHash);
+          }
+        })
+        .then(async () => {
+          await rm('tmp', { recursive: true });
+        });
+    }
   }
 
   const config = {
