@@ -65,6 +65,7 @@ async function main() {
     game: game.address,
   };
 
+  console.log('Config', config);
   writeFileSync('utils/addresses.json', JSON.stringify(config), { flag: 'w' });
 }
 
