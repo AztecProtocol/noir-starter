@@ -23,6 +23,7 @@ const nextConfig = {
         pathname: '/ipfs/**',
       },
     ],
+    formats: ['image/bmp', 'image/jpeg', 'image/png', 'image/webp', 'image/gif', 'image/svg+xml'],
   },
 };
 
