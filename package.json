@@ -6,8 +6,7 @@
     "dev": "next",
     "build:local": "npm run deploy:local && next build",
     "build:mumbai": "npm run deploy:mumbai && next build",
-    "deploy:local": "hardhat run scripts/genContract.ts && NODE_ENV=localhost hardhat run --network localhost scripts/deploy.ts",
-    "deploy:mumbai": "hardhat run scripts/genContract.ts && NODE_ENV=testnet hardhat run --network mumbai scripts/deploy.ts",
+    "deploy": "hardhat run scripts/genContract.ts && hardhat run --network ${NETWORK} scripts/deploy.ts",
     "test": "hardhat test"
   },
   "dependencies": {

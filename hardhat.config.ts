@@ -17,15 +17,22 @@ const config: HardhatUserConfig = {
   },
   networks: {
     mumbai: {
-      url: `https://polygon-mumbai.g.alchemy.com/v2/${process.env.ALCHEMY_KEY}`,
+      url: `https://polygon-mumbai.g.alchemy.com/v2/${process.env.MUMBAI_ALCHEMY_KEY}`,
       accounts: [process.env.MUMBAI_DEPLOYER_PRIVATE_KEY as string],
+    },
+    sepoia: {
+      url: `https://eth-sepolia.g.alchemy.com/v2/${process.env.SEPOIA_ALCHEMY_KEY}`,
+      accounts: [process.env.SEPOIA_DEPLOYER_PRIVATE_KEY as string],
     },
     hardhat: {
       mining: {
         auto: true,
-        interval: 1000
-      }
-    }
+        interval: 1000,
+      },
+      accounts: [
+        { privateKey: process.env.HARDHAT_DEPLOYER_PRIVATE_KEY as string, balance: '100000000' },
+      ],
+    },
   },
   paths: {
     sources: './contract',

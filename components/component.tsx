@@ -14,18 +14,26 @@ function Component() {
   const [proof, setProof] = useState(null);
   const [verification, setVerification] = useState(false);
 
+  // Handles input state
   const handleChange = e => {
     e.preventDefault();
     setInput({ ...input, [e.target.name]: e.target.value });
   };
 
+  // Calculates proof
   const calculateProof = async () => {
+    // only launch if we do have an acir to calculate the proof from
     const acir = await getAcir();
     setAcir(acir);
+
+    // set a pending state to show a spinner
     setPending(true);
 
     if (acir) {
+      // launching a new worker for the proof calculation
       const worker = new Worker(new URL('../utils/prover.ts', import.meta.url));
+
+      // handling the response from the worker
       worker.onmessage = e => {
         if (e.data instanceof Error) {
           toast.error('Error while calculating proof');
@@ -37,20 +45,26 @@ function Component() {
         }
       };
 
+      // sending the acir and input to the worker
       worker.postMessage({ acir, input });
     }
   };
 
   const verifyProof = async () => {
+    // only launch if we do have an acir and a proof to verify
     if (acir && proof) {
+      // launching a new worker for the verification
       const worker = new Worker(new URL('../utils/verifier.ts', import.meta.url));
       console.log('worker launched');
+
+      // handling the response from the worker
       worker.onmessage = async e => {
         if (e.data instanceof Error) {
           toast.error('Error while verifying proof');
         } else {
           toast.success('Proof verified');
 
+          // Verifies proof on-chain
           const ethers = new Ethers();
           const ver = await ethers.contract.verify(proof);
           if (ver) {
@@ -62,16 +76,24 @@ function Component() {
           }
         }
       };
+
+      // sending the acir and proof to the worker
       worker.postMessage({ acir, proof });
     }
   };
 
+  // Verifier the proof if there's one in state
   useEffect(() => {
     if (proof) {
       verifyProof();
     }
   }, [proof]);
 
+  useEffect(() => {
+    new Ethers();
+  }, []);
+
+  // Shows verification result
   useEffect(() => {
     if (verification) {
       toast.success('Proof verified!');
