@@ -33,7 +33,7 @@ This script does a few things:
 1. Generates a verifier contract from the circuit inside the `src` folder
 2. Deploys the verifier contract
 3. Deploys the game contract
-4. Generates 30 captchas, then:
+4. Generates the number of captchas set in CAPTCHAS_NUMBER env variable, then:
    1. Uploads the images themselves to IPFS and pins them in your Infura node
    2. Calculates the solution hashes from the solutions
    3. Sends both the CID of the images and the hashes to the game contract
