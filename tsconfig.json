@@ -2,11 +2,7 @@
   "compilerOptions": {
     "target": "es2020",
     "useDefineForClassFields": true,
-    "lib": [
-      "DOM",
-      "DOM.Iterable",
-      "ESNext"
-    ],
+    "lib": ["DOM", "DOM.Iterable", "ESNext"],
     "allowJs": false,
     "skipLibCheck": true,
     "esModuleInterop": true,
@@ -23,17 +19,7 @@
     "strictNullChecks": true,
     "incremental": true
   },
-  "exclude": [
-    "dist",
-    "node_modules"
-  ],
-  "include": [
-    "./test",
-    "./src",
-    "./scripts",
-    "../waldo/scripts/deploy.ts"
-, "puzzleGen/scripts/captcha.ts", "puzzleGen/scripts/captcha.ts", "utils/captcha.ts", "utils/captcha.ts"  ],
-  "files": [
-    "./hardhat.config.ts"
-  ]
+  "exclude": ["dist", "node_modules"],
+  "include": ["./test", "./src", "./scripts"],
+  "files": ["./hardhat.config.ts"]
 }

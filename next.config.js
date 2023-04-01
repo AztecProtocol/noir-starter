@@ -15,15 +15,6 @@ const nextConfig = {
 
     return config;
   },
-  images: {
-    remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: 'waldo.infura-ipfs.io',
-        pathname: '/ipfs/**',
-      },
-    ],
-  },
 };
 
 module.exports = nextConfig;

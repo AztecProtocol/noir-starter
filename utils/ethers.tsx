@@ -1,6 +1,6 @@
 import { ethers } from 'ethers';
-import addresses from "./addresses.json"
-import artifacts from "../artifacts/contract/game.sol/Waldo.json"
+import addresses from './addresses.json';
+import artifacts from '../artifacts/contract/plonk_vk.sol/TurboVerifier.json';
 
 declare global {
   interface Window {
@@ -19,17 +19,13 @@ class Ethers {
     this.utils = ethers.utils;
     this.signer = this.provider.getSigner();
 
-    this.contract = new ethers.Contract(
-      addresses.game,
-      artifacts.abi,
-      this.signer,
-    );
+    this.contract = new ethers.Contract(addresses.verifier, artifacts.abi, this.signer);
     this.connect();
   }
 
   async connect() {
-    if (typeof window.ethereum !== "undefined") {
-      await window.ethereum.request({ method: "eth_requestAccounts" });
+    if (typeof window.ethereum !== 'undefined') {
+      await window.ethereum.request({ method: 'eth_requestAccounts' });
       this.contract = this.contract.connect(this.signer);
     }
   }

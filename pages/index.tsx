@@ -1,9 +1,6 @@
-
-import React from 'react'
-import Waldo from '../components/waldo'
+import React from 'react';
+import Component from '../components/component';
 
 export default function Page() {
-  return (
-    <Waldo  />
-  )
+  return <Component />;
 }

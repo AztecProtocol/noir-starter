@@ -1,4 +1,4 @@
-import { existsSync, readFileSync, writeFileSync, unlinkSync } from 'fs';
+import { existsSync, readFileSync, writeFileSync, unlinkSync, mkdirSync } from 'fs';
 import path from 'path';
 // @ts-ignore
 import { initialiseResolver } from '@noir-lang/noir-source-resolver';
@@ -9,6 +9,11 @@ import { setup_generic_prover_and_verifier } from '@noir-lang/barretenberg';
 const MAIN_NR_PATH = 'src/main.nr';
 
 async function main() {
+  if (!existsSync(path.join(__dirname, '../contract'))) {
+    console.log('Contract folder does not exist. Creating...');
+    mkdirSync(path.join(__dirname, '../contract'));
+  }
+
   if (existsSync(path.join(__dirname, '../contract/plonk_vk.sol'))) {
     unlinkSync(path.join(__dirname, '../contract/plonk_vk.sol'));
   }
@@ -26,8 +31,7 @@ async function main() {
   console.log('Compiling...');
   const compiled = await compile({});
 
-  const acir_bytes = new Uint8Array(Buffer.from(compiled.circuit, 'hex'));
-  const acir = acir_read_bytes(acir_bytes);
+  const acir = acir_read_bytes(compiled.circuit);
 
   const [prover, verifier] = await setup_generic_prover_and_verifier(acir);
   console.log('Generating contract...');
