@@ -1,12 +1,10 @@
-import { existsSync, readFileSync, writeFileSync, unlinkSync, mkdirSync } from 'fs';
+import { existsSync, readFileSync, writeFileSync, unlinkSync, mkdirSync, readdirSync } from 'fs';
 import path from 'path';
 // @ts-ignore
 import { initialiseResolver } from '@noir-lang/noir-source-resolver';
 import { acir_read_bytes, compile } from '@noir-lang/noir_wasm';
 // @ts-ignore
 import { setup_generic_prover_and_verifier } from '@noir-lang/barretenberg';
-
-const MAIN_NR_PATH = 'src/main.nr';
 
 async function main() {
   // The user must have a folder called 'contract' in the root directory. If not, we create it.
@@ -21,20 +19,19 @@ async function main() {
   }
 
   // We initialise the resolver, which will allow us to import files from the user's project.
-  initialiseResolver(() => {
+  initialiseResolver((id: any) => {
     try {
-      // We read the user's main.nr file and return it as a string.
-      const string = readFileSync(MAIN_NR_PATH, { encoding: 'utf8' });
-      return string;
+      return readFileSync(`circuit/${id}`, { encoding: 'utf8' }) as string;
     } catch (err) {
       console.error(err);
       throw err;
     }
   });
 
-  console.log('Compiling...');
   // We compile the Noir program.
-  const compiled = await compile({});
+  const compiled = await compile({
+    entry_point: 'file1.nr',
+  });
 
   // We read the ACIR circuit.
   const acir = acir_read_bytes(compiled.circuit);

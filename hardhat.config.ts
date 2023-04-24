@@ -29,9 +29,6 @@ const config: HardhatUserConfig = {
         auto: true,
         interval: 1000,
       },
-      accounts: [
-        { privateKey: process.env.HARDHAT_DEPLOYER_PRIVATE_KEY as string, balance: '100000000' },
-      ],
     },
   },
   paths: {

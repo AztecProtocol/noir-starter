@@ -13,8 +13,6 @@ import {
 import { ethers } from 'hardhat';
 import { Contract } from 'ethers';
 
-const MAIN_NR_PATH = 'src/main.nr';
-
 describe('It compiles noir program code, receiving circuit bytes and abi object.', () => {
   let compiled: any;
   let acir: any;
@@ -26,16 +24,18 @@ describe('It compiles noir program code, receiving circuit bytes and abi object.
   let correctProof: any;
 
   before(async () => {
-    initialiseResolver(() => {
+    initialiseResolver((id: string) => {
       try {
-        const string = fs.readFileSync(MAIN_NR_PATH, { encoding: 'utf8' });
+        const string = fs.readFileSync(`circuit/${id}`, { encoding: 'utf8' });
         return string;
       } catch (err) {
         console.error(err);
         throw err;
       }
     });
-    compiled = await compile({});
+    compiled = await compile({
+      entry_point: 'file1.nr',
+    });
 
     expect(compiled).to.have.property('circuit');
     expect(compiled).to.have.property('abi');
