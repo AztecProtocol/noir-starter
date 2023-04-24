@@ -4,7 +4,7 @@
   "description": "",
   "scripts": {
     "dev": "next",
-    "build:local": "NETWORK=localhost npm run deploy && next build",
+    "build:local": "NETWORK=-localhost npm run deploy && next build",
     "build:mumbai": "NETWORK=mumbai npm run deploy:mumbai && next build",
     "deploy": "hardhat run scripts/genContract.ts && hardhat run --network ${NETWORK} scripts/deploy.ts",
     "test": "hardhat test"

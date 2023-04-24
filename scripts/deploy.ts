@@ -18,6 +18,7 @@ async function main() {
   // Print the config
   console.log('Deployed at', config);
   writeFileSync('utils/addresses.json', JSON.stringify(config), { flag: 'w' });
+  process.exit();
 }
 
 // We recommend this pattern to be able to use async/await everywhere

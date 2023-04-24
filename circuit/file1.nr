@@ -1,8 +1,7 @@
-use dep::std;
+mod file2;
 
 fn main(x : Field, y : pub Field) -> pub bool {
-    constrain x == y;
-    x == y
+    file2::doStuff(x, y)
 }
 
 #[test]
