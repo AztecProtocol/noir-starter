@@ -10,9 +10,9 @@
     "test": "hardhat test"
   },
   "dependencies": {
-    "@noir-lang/aztec_backend": "^0.1.0-0c3b2f2",
+    "@noir-lang/aztec_backend": "0.1.0-0c3b2f2",
     "@noir-lang/barretenberg": "github:noir-lang/barretenberg#39a1547875f941ef6640217a42d8f34972425c97",
-    "@noir-lang/noir_wasm": "^0.3.2-bcdfd526",
+    "@noir-lang/noir_wasm": "0.3.2-fa0e9cff",
     "@nomicfoundation/hardhat-chai-matchers": "^1.0.6",
     "@nomicfoundation/hardhat-toolbox": "^2.0.1",
     "@nomiclabs/hardhat-ethers": "^2.2.2",
@@ -26,7 +26,7 @@
     "react-toastify": "^9.1.1"
   },
   "devDependencies": {
-    "@noir-lang/noir-source-resolver": "^1.1.0",
+    "@noir-lang/noir-source-resolver": "1.1.1",
     "@types/mocha": "^10.0.1",
     "@types/node": "^18.15.5",
     "@types/react": "^18.0.26",

@@ -21,7 +21,7 @@ async function main() {
   // We initialise the resolver, which will allow us to import files from the user's project.
   initialiseResolver((id: any) => {
     try {
-      return readFileSync(`circuit/${id}`, { encoding: 'utf8' }) as string;
+      return readFileSync(`circuits/src/${id}`, { encoding: 'utf8' }) as string;
     } catch (err) {
       console.error(err);
       throw err;

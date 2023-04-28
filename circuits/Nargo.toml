@@ -1,5 +1,5 @@
 [package]
 authors = [""]
-compiler_version = "0.1"
+compiler_version = "0.4.1"
 
 [dependencies]
