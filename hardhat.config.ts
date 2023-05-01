@@ -24,6 +24,9 @@ const config: HardhatUserConfig = {
       url: `https://eth-sepolia.g.alchemy.com/v2/${process.env.SEPOIA_ALCHEMY_KEY}`,
       accounts: [process.env.SEPOIA_DEPLOYER_PRIVATE_KEY as string],
     },
+    localhost: {
+      url: 'http://localhost:8545'
+    },
     hardhat: {
       mining: {
         auto: true,

@@ -62,5 +62,6 @@ In `./circuits`:
 
 6. Deploy
 
+- start a local development EVM at http://localhost:8545
 - Copy `./.env.example` to `./.env` and add keys
-- Run `npm build:local` to run the project locally
+- Run `npm build:local` to build the project and deploy contracts to the local development chain
