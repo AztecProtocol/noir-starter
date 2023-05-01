@@ -59,3 +59,8 @@ In `./circuits`:
 **With Typescript and WASM**
 
 - See the example in [`./components/component.tsx`](./components/component.tsx)
+
+6. Deploy
+
+- Copy `./.env.example` to `./.env` and add keys
+- Run `npm build:local` to run the project locally
