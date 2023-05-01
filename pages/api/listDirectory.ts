@@ -3,7 +3,7 @@ import path from 'path';
 
 export default function handler(req, res) {
   try {
-    const files = readdirSync(path.resolve(process.cwd(), './circuit'));
+    const files = readdirSync(path.resolve(process.cwd(), './circuits/src'));
     res.status(200).json({ files });
   } catch (error) {
     console.error('Error reading the directory:', error);
