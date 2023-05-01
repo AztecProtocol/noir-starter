@@ -43,7 +43,19 @@ export const compileCircuit = async () => {
 };
 
 export const getAcir = async () => {
+  const response = await fetch('/api/getAcir');
+  const data = await response.json();
+  await initialiseAztecBackend();
+
+  let acir_bytes = new Uint8Array(Buffer.from(data.bytecode, 'hex'));
+  console.log(acir_bytes)
+
+  return acir_read_bytes(acir_bytes);
+};
+
+export const compileAcir = async () => {
   const { circuit } = await compileCircuit();
   await initialiseAztecBackend();
+  console.log(circuit)
   return acir_read_bytes(circuit);
 };
