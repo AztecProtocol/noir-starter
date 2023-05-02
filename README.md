@@ -5,7 +5,7 @@
 This is a reference repo to help you get started with writing zero-knowledge circuits with Noir.
 
 The root of the project is a [Next.js](https://nextjs.org/) + [Hardhat](https://hardhat.org/)
-project. Check a live version of this starter [here's](spiffy-lollipop-5d763a.netlify.app)
+project. Check a live version of this starter [here](https://spiffy-lollipop-5d763a.netlify.app)
 
 ## Getting Started
 
