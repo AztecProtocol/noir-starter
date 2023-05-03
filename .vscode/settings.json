@@ -1,4 +1,0 @@
-{
-  "prettier.configPath": ".prettierrc",
-  "recommendations": ["nrwl.angular-console", "esbenp.prettier-vscode"]
-}

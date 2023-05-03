@@ -40,9 +40,13 @@ next-env.d.ts
 
 # nargo
 target
+contract
 
 # hardhat
 cache
 artifacts
 typechain-types
 proofs
+
+# other
+.vscode
