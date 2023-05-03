@@ -33,23 +33,22 @@ export class NoirServer extends Noir {
 
     };
 
-    getSmartContract(saveToFs? : boolean) {
+    getSmartContract() {
         const sc = this.verifier.SmartContract();
 
         // The user must have a folder called 'contract' in the root directory. If not, we create it.
-        if (!fs.existsSync(path.join(__dirname, '../contract'))) {
+        if (!fs.existsSync(path.join(__dirname, '../../contract'))) {
             console.log('Contract folder does not exist. Creating...');
-            fs.mkdirSync(path.join(__dirname, '../contract'));
+            fs.mkdirSync(path.join(__dirname, '../../contract'));
         }
 
         // If the user already has a file called 'plonk_vk.sol' in the 'contract' folder, we delete it.
-        if (fs.existsSync(path.join(__dirname, '../contract/plonk_vk.sol'))) {
-            fs.unlinkSync(path.join(__dirname, '../contract/plonk_vk.sol'));
+        if (fs.existsSync(path.join(__dirname, '../../contract/plonk_vk.sol'))) {
+            fs.unlinkSync(path.join(__dirname, '../../contract/plonk_vk.sol'));
         }
 
-        console.log("writing")
         // We write the contract to a file called 'plonk_vk.sol' in the 'contract' folder.
-        fs.writeFileSync(path.join(__dirname, '../contract/plonk_vk.sol'), sc, {
+        fs.writeFileSync(path.join(__dirname, '../../contract/plonk_vk.sol'), sc, {
             flag: 'w',
         });
 

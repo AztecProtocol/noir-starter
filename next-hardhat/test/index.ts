@@ -36,6 +36,7 @@ describe('It compiles noir program code, receiving circuit bytes and abi object.
     // workaround for race condition
     execSync('npx hardhat compile', { cwd: path.join(__dirname, '../contract') });
 
+    
     const Verifier = await ethers.getContractFactory('TurboVerifier');
     verifierContract = await Verifier.deploy();
 
