@@ -4,6 +4,8 @@
 
 This example uses [Next.js](https://nextjs.org/) as the frontend framework, and [Hardhat](https://hardhat.org/) to deploy and test.
 
+It also features multiple files and different entry points by resolving multiple files and using the `entry_point` parameter to the `compile` function.
+
 ## Getting Started
 
 1. Install dependencies with
@@ -12,9 +14,7 @@ This example uses [Next.js](https://nextjs.org/) as the frontend framework, and 
 npm i
 ```
 
-The `package-lock.json` defines specific versions of the `@noir-lang` packages that are compatible.
-Noir is being actively developed, so the latest versions of various packages are often incompatible
-with each other.
+> NOTE: Do not use `yarn` as it fails to grab the NPM specific versions we need. Also, mind that the `package-lock.json` defines specific versions of the `@noir-lang` packages that are compatible. Noir is being actively developed, so the latest versions of various packages are often incompatible with each other.
 
 2. Write circuits in `./circuits/src`.
 
@@ -22,7 +22,7 @@ You can read more about writing circuits in Noir on the [Noir docs](https://noir
 
 3. Create the verifier contract
 
-You can create the Solidity verifier contract in two ways.
+Although the `npm build` already generates and compiles the circuits before deploying, you can manually create the Solidity verifier contract:
 
 - natively by navigating to the `.circuits/` directory and running `nargo codegen-verifier`. If you
   generate the verifier contract via this method, you may need to copy the file created at
@@ -45,7 +45,7 @@ In `./circuits`:
 
 **With Typescript and WASM**
 
-- See the example in [`./components/component.tsx`](./components/component.tsx)
+- See an example React component in [`./components/component.tsx`](./components/component.tsx)
 
 5. Verify proofs
 
@@ -61,8 +61,8 @@ In `./circuits`:
 
 6. Deploy
 
-- start a local development EVM at <http://localhost:8545>
-- Copy `./.env.example` to `./.env` and add keys
+- Start a local development EVM at <http://localhost:8545>, for example with `npx hardhat node`.
+- Copy `./.env.example` to `./.env` and add keys for alchemy (to act as a node) and the deployer's private key. Make sure you have funds in this account.
 - Run `NETWORK=localhost npm build` to build the project and deploy contracts to the local development chain
 
-You can choose any other network in `hardhat.config.ts` and deploy on them using this `NETWORK` environment variable. For example, `NETWORK=mumbai npm build` or `NETWORK=sepoia npm build`. Feel free to contribute with other networks in `hardhat.config.ts`
+You can choose any other network in `hardhat.config.ts` and deploy there using this `NETWORK` environment variable. For example, `NETWORK=mumbai npm build` or `NETWORK=sepoia npm build`. Feel free to contribute with other networks in `hardhat.config.ts`
