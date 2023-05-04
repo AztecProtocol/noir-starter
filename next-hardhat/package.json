@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next",
     "build": "npm run deploy && next build",
-    "deploy": "hardhat run scripts/genContract.ts && hardhat run --network ${NETWORK} scripts/deploy.ts",
+    "deploy": "hardhat run scripts/genContract.ts && hardhat compile && hardhat run --network ${NETWORK} scripts/deploy.ts",
     "test": "hardhat test"
   },
   "dependencies": {

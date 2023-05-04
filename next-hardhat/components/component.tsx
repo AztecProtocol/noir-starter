@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 
 import { toast } from 'react-toastify';
-import { getAcir } from '../utils/proofs';
 import Ethers from '../utils/ethers';
 import React from 'react';
 
@@ -10,7 +9,6 @@ import { ThreeDots } from 'react-loader-spinner';
 function Component() {
   const [input, setInput] = useState({ x: '', y: '' });
   const [pending, setPending] = useState(false);
-  const [acir, setAcir] = useState(null);
   const [proof, setProof] = useState(null);
   const [verification, setVerification] = useState(false);
 
@@ -23,36 +21,31 @@ function Component() {
   // Calculates proof
   const calculateProof = async () => {
     // only launch if we do have an acir to calculate the proof from
-    const acir = await getAcir();
-    setAcir(acir);
-
     // set a pending state to show a spinner
     setPending(true);
 
-    if (acir) {
-      // launching a new worker for the proof calculation
-      const worker = new Worker(new URL('../utils/prover.ts', import.meta.url));
+    // launching a new worker for the proof calculation
+    const worker = new Worker(new URL('../utils/prover.ts', import.meta.url));
 
-      // handling the response from the worker
-      worker.onmessage = e => {
-        if (e.data instanceof Error) {
-          toast.error('Error while calculating proof');
-          setPending(false);
-        } else {
-          toast.success('Proof calculated');
-          setProof(e.data);
-          setPending(false);
-        }
-      };
+    // handling the response from the worker
+    worker.onmessage = e => {
+      if (e.data instanceof Error) {
+        toast.error('Error while calculating proof');
+        setPending(false);
+      } else {
+        toast.success('Proof calculated');
+        setProof(e.data);
+        setPending(false);
+      }
+    };
 
-      // sending the acir and input to the worker
-      worker.postMessage({ acir, input });
-    }
-  };
+    // sending the acir and input to the worker
+    worker.postMessage({ input });
+};
 
   const verifyProof = async () => {
     // only launch if we do have an acir and a proof to verify
-    if (acir && proof) {
+    if (proof) {
       // launching a new worker for the verification
       const worker = new Worker(new URL('../utils/verifier.ts', import.meta.url));
       console.log('worker launched');
@@ -78,7 +71,7 @@ function Component() {
       };
 
       // sending the acir and proof to the worker
-      worker.postMessage({ acir, proof });
+      worker.postMessage({ proof });
     }
   };
 
