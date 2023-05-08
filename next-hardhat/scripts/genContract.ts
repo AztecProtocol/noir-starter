@@ -1,5 +1,3 @@
-import { existsSync, readFileSync, writeFileSync, unlinkSync, mkdirSync, readdirSync } from 'fs';
-import path from 'path';
 import { NoirServer } from '../utils/noir/noirServer';
 
 async function main() {

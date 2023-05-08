@@ -66,3 +66,25 @@ In `./circuits`:
 - Run `NETWORK=localhost npm build` to build the project and deploy contracts to the local development chain
 
 You can choose any other network in `hardhat.config.ts` and deploy there using this `NETWORK` environment variable. For example, `NETWORK=mumbai npm build` or `NETWORK=sepoia npm build`. Feel free to contribute with other networks in `hardhat.config.ts`
+
+## Testing
+
+There is an [example test file](./test/index.ts) that shows how to compile a Noir program, deploy the Solidity verifier to a test network, generate a proof and verify the proof the natively and via the published Solidity contract, all with Typescript.
+
+You can run the tests with:
+
+```sh
+npx hardhat test
+```
+
+> Note that these tests run against file1.nr. The compilation entry point is specified in the [NoirServer](./utils/noir/noirServer.ts) class.
+
+One of the tests is checking for a failing proof, so you will see an error printed in the console and all tests should pass (this is expected).
+
+## Estimate gas
+
+There is a [script](./scripts/verificationGas.ts) to easily check how much gas ethers estimates a call to the `verify` function will cost.
+
+```sh
+npm run verify_gas
+```
