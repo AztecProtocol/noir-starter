@@ -14,7 +14,7 @@ It also features multiple files and different entry points by resolving multiple
 npm i
 ```
 
-> NOTE: Do not use `yarn` as it fails to grab the NPM specific versions we need. Also, mind that the `package-lock.json` defines specific versions of the `@noir-lang` packages that are compatible. Noir is being actively developed, so the latest versions of various packages are often incompatible with each other.
+⚠️  The examples install specific versions of the required `@noir-lang` npm pacakges. Different versions are not cross compatible. Do not use `yarn` as it fails to grab the NPM specific versions we need. Noir is being actively developed, so the latest versions of various packages are often incompatible with each other. ⚠️
 
 2. Write circuits in `./circuits/src`.
 
