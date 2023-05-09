@@ -1,12 +1,13 @@
 {
   "name": "noir-starter",
   "version": "1.0.0",
-  "description": "",
+  "description": "A template repository to get started with writing zero knowledge programs with Noir.",
   "scripts": {
     "dev": "next",
     "build": "npm run deploy && next build",
     "deploy": "hardhat run scripts/genContract.ts && hardhat compile && hardhat run --network ${NETWORK} scripts/deploy.ts",
-    "test": "hardhat test"
+    "test": "hardhat test",
+    "verify_gas": "hardhat run scripts/genContract.ts && hardhat run scripts/verificationGas.ts"
   },
   "dependencies": {
     "@noir-lang/aztec_backend": "0.1.0-0c3b2f2",
