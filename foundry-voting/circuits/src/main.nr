@@ -14,3 +14,13 @@ fn main(root : pub Field, index : Field, hash_path : [Field; 2], secret: Field, 
 
     nullifier[0]
 }
+
+fn member_commitment(priv_key : Field, secret : Field) {
+    let pubkey = std::scalar_mul::fixed_base(priv_key);
+    let pubkey_x = pubkey[0];
+    let pubkey_y = pubkey[1];
+    let note_commitment = std::hash::pedersen([pubkey_x, pubkey_y, secret]);
+
+    std::println("Public leaf:");
+    std::println(note_commitment);
+}
