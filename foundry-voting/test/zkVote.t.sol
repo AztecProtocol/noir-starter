@@ -43,7 +43,7 @@ contract zkVoteTest is Test {
     }
 
     function test_Revert_DoubleVote() public {
-        testValidVote();
+        test_ValidVote();
         vm.expectRevert();
         voteContract.castVote(
             proofBytes,
