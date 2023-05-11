@@ -27,12 +27,12 @@ jobs:
     - name: Generate verifier contract
       run: |
         nargo codegen-verifier && cp contract/plonk_vk.sol ../src/plonk_vk.sol
-      working-directory: ./circuits
+      working-directory: foundry-voting/circuits
 
     - name: Generate proof
       run: |
         nargo prove p
-      working-directory: ./circuits
+      working-directory: foundry-voting/circuits
 
 
     - name: Test with Foundry
