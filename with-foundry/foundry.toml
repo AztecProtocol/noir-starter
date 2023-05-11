@@ -4,8 +4,5 @@ out = "out"
 libs = ["lib"]
 fs_permissions = [{ access = "read", path = "./"}]
 
-[rpc_endpoints]
-localhost = "${ANVIL_RPC_URL}"
-
 
 # See more config options https://github.com/foundry-rs/foundry/tree/master/config

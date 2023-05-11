@@ -3,3 +3,4 @@ out
 proofs
 broadcast
 .env
+plonk_vk.sol
