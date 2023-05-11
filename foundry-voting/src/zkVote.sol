@@ -5,7 +5,7 @@ pragma solidity >=0.8.19;
 
 import {UltraVerifier} from './plonk_vk.sol';
 
-contract zkVote is UltraVerifier {
+contract zkVote {
 
     UltraVerifier verifier;
 
@@ -46,7 +46,7 @@ contract zkVote is UltraVerifier {
 
         if(vote == 1)
             proposals[proposalId].forVotes += 1;
-        else if (vote == 2)
+        else // vote = 0
             proposals[proposalId].againstVotes += 1;
 
         return true;
