@@ -1,6 +1,6 @@
 use dep::std;
 
-fn main(root : pub Field, index : Field, hash_path : [Field; 2], secret: Field, priv_key: Field, proposalId: pub Field, vote: pub Field) -> pub Field {
+fn main(root : pub Field, index : Field, hash_path : [Field; 2], secret: Field, priv_key: Field, proposalId: pub Field, vote: pub u8) -> pub Field {
     let note_commitment = std::hash::pedersen([priv_key, secret]);
     let nullifier = std::hash::pedersen([root, priv_key, proposalId]);
 
@@ -11,12 +11,18 @@ fn main(root : pub Field, index : Field, hash_path : [Field; 2], secret: Field, 
     nullifier[0]
 }
 
-fn member_commitment(priv_key : Field, secret : Field) {
-    let pubkey = std::scalar_mul::fixed_base(priv_key);
-    let pubkey_x = pubkey[0];
-    let pubkey_y = pubkey[1];
-    let note_commitment = std::hash::pedersen([pubkey_x, pubkey_y, secret]);
+// helpers for getting note_commitments to build the merkle tree
 
-    std::println("Public leaf:");
-    std::println(note_commitment);
-}
+// fn main(priv_key : Field, secret : Field) {
+//     let note_commitment = std::hash::pedersen([pubkey_x, pubkey_y, secret]);
+//     std::println("Public leaf:");
+//     std::println(note_commitment);
+// }
+
+// get hashes for building a merkle tree
+
+// fn main(first : Field, second : Field) {
+//     let note_commitment = std::hash::pedersen([first, second]);
+//     std::println("Public node:");
+//     std::println(note_commitment);
+// }
