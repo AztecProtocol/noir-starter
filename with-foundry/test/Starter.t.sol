@@ -12,9 +12,6 @@ contract StarterTest is Test {
     bytes32[] public wrong = new bytes32[](1);
 
     function setUp() public {
-        uint256 deployerPrivateKey = vm.envUint("PRIVATE_KEY");
-        vm.startBroadcast(deployerPrivateKey);
-
         verifier = new UltraVerifier();
         starter = new Starter(verifier);
 
