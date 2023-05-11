@@ -3,11 +3,7 @@ pragma solidity ^0.8.17;
 import {Vm} from "forge-std/Vm.sol";
 import {strings} from "stringutils/strings.sol";
 import {Strings} from "@openzeppelin/contracts/utils/Strings.sol";
-import "forge-std/console2.sol";
-
-interface IVerifier {
-    function verify(bytes calldata, bytes32[] calldata publicInputs) external view returns (bool);
-}
+import "./plonk_vk.sol";
 
 contract Starter {
     using strings for *;
@@ -15,9 +11,9 @@ contract Starter {
 
     Vm public constant vm = Vm(address(bytes20(uint160(uint256(keccak256("hevm cheat code"))))));
 
-    IVerifier public verifier;
+    UltraVerifier public verifier;
 
-    constructor(IVerifier _verifier) {
+    constructor(UltraVerifier _verifier) {
         verifier = _verifier;
     }
 
