@@ -23,16 +23,6 @@ contract zkVoteTest is Test {
         proofBytes = vm.parseBytes(proof);
     }
 
-
-    function testFailInvalidProof() public {
-        bytes32[] memory inputs = new bytes32[](4);
-        inputs[0] = merkleRoot;
-        inputs[1] = bytes32(0);
-        inputs[2] = bytes32(abi.encodePacked(uint(1)));
-        inputs[3] = nullifierHash;
-        verifier.verify(hex"01", inputs);
-    }
-
     function testValidVote() public {
         voteContract.castVote(
             proofBytes,
@@ -42,8 +32,17 @@ contract zkVoteTest is Test {
         );
     }
 
+    function test_revert_invalidProof() public {
+        vm.expectRevert();
+        bytes32[] memory inputs = new bytes32[](4);
+        inputs[0] = merkleRoot;
+        inputs[1] = bytes32(0);
+        inputs[2] = bytes32(abi.encodePacked(uint(1)));
+        inputs[3] = nullifierHash;
+        verifier.verify(hex"01", inputs);
+    }
 
-    function test_Revert_DoubleVote() public {
+    function test_revert_doubleVote() public {
         testValidVote();
         vm.expectRevert();
         voteContract.castVote(
