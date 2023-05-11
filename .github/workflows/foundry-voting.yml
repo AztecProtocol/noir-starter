@@ -34,7 +34,6 @@ jobs:
         nargo prove p
       working-directory: foundry-voting/circuits
 
-
     - name: Test with Foundry
       run: |
         forge test --optimize --optimizer-runs 5000 --evm-version london

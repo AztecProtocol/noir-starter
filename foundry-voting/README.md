@@ -24,3 +24,7 @@ See the test file [here](./test/zkVote.t.sol). Run tests with `forge test`.
 ## Development
 
 If you change the circuit at `./circuits/src/main.nr` you will need to recompile (`nargo compile p`) the circuit, regenerate the Solidity verifier (saved to `./circuits/contract/plonk_vk.sol`) and replace `./src/plonk_vk.sol`.
+
+```sh
+cp contract/plonk_vk.sol ../src/plonk_vk.sol
+```
