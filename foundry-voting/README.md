@@ -2,6 +2,10 @@
 
 This example project shows how to create a simple zk voting circuit in Noir with a corresponding Solidity contract to track eligible voters, proposals and votes.
 
+## Overview
+
+This is the process used for how you could use the [circuit](circuits/src/main.nr) and the [zkVote contract](src/zkVote.sol) to manage private voting.
+
 1. Create a set of voters. A merkle root is stored in the zkVote Solidity contract that voters will use to verify membership against. In this example, there are 4 accounts in the set of voters. The private keys are 0, 1, 2, 3 and the secret value to create the commitment is 9.
 
 | Private Key | Commitment = pedersen(private key, secret) |
@@ -13,7 +17,7 @@ This example project shows how to create a simple zk voting circuit in Noir with
 
 This gives intermediate hashes of `0x0fcf7577aeb374ed0a19b942e0470521d46bde86f01d3138239ccc4b995c00ae` (`pedersen(commitment0, commitment1)`) and `0x1e8e7c1e1f6f65d0d3553e0f715c335f0ccdcc21cda1df7355e6c6e851bccf54` (`pedersen(commitment2, commitment3)`) and a root hash of `0x20c77d6d51119d86868b3a37a64cd4510abd7bdb7f62a9e78e51fe8ca615a194`.
 
-2. Users will input their information into the circuit and generate a proof (see inputs in [Prover.toml](./circuits/Prover.toml) and run `nargo prove p` to generate the proof.)
+2. Users will input their information into the circuit and generate a proof (see example inputs in [Prover.toml](./circuits/Prover.toml) and run `nargo prove p` to generate the proof.)
    1. Public inputs and outputs are printed in [Verifier.toml](./circuits/Verifier.toml).
 3. The generated proof + the contents of Verifier.toml are sent in a transaction to the `castVote` function in the [zkVote](./src/zkVote.sol) contract. The function verifies that the sender is authorized to vote on the proposal, that they haven't already voted and tallies their vote.
 
