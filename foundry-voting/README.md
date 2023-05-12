@@ -32,3 +32,5 @@ If you change the circuit at `./circuits/src/main.nr` you will need to recompile
 ```sh
 cp contract/plonk_vk.sol ../src/plonk_vk.sol
 ```
+
+The merkle tree will need to be recalculated whenever there are users added to the set or if there are any changes to the voters private keys (private keys are an input to the merkle membership commitment, so changing a key changes the corresponding leaf in the merkle tree, which changes the root). 
