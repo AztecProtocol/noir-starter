@@ -14,7 +14,7 @@ fn main(root : pub Field, index : Field, hash_path : [Field; 2], secret: Field, 
 // helpers for getting note_commitments to build the merkle tree
 
 // fn main(priv_key : Field, secret : Field) {
-//     let note_commitment = std::hash::pedersen([pubkey_x, pubkey_y, secret]);
+//     let note_commitment = std::hash::pedersen([priv_key, secret]);
 //     std::println("Public leaf:");
 //     std::println(note_commitment);
 // }
