@@ -2,12 +2,12 @@
 
 When contributing to this repository, please first discuss the change you wish to make via an issue.
 
-## Contributing to an existing example
+## Contributing to an existing example project
 
 If you would like to contribute to an existing example project, please open an issue and tag one of the original
 authors or maintainers (@critesjosh, @signorecello) with your suggestion.
 
-## Adding a new example
+## Adding a new example project
 
 If you are interested in adding a new example project, fork this repo and create a new branch for your work. Create a new folder with a descriptive name 
 for the project and include the following:
