@@ -1,6 +1,6 @@
 # a github workflow that runs curl -L https://foundry.paradigm.xyz | bash then nargo codegen-verifier then nargo prove p
 
-name: Run Tests on PR
+name: Run fourndry-voting Tests on PR
 on:
   pull_request:
     paths:
