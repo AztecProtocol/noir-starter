@@ -31,7 +31,8 @@ jobs:
 
     - name: Generate proof
       run: |
-        nargo prove p/circuits
+        nargo prove p
+      working-directory: with-foundry/circuits
 
     - name: Test with Foundry
       run: |
