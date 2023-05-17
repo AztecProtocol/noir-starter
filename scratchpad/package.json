@@ -1,0 +1,7 @@
+{
+  "dependencies": {
+    "@types/node": "^20.1.7",
+    "ethers": "^6.3.0",
+    "typescript": "^5.0.4"
+  }
+}
