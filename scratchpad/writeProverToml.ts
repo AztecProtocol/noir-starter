@@ -8,32 +8,32 @@ const message = "test message";
 const hexToUint8Array = (hex: string) =>
   Uint8Array.from(Buffer.from(hex, "hex"));
 
-  const writeToProverToml = (
-    pub_key_x: string, // these are all hex strings
-    pub_key_y: string,
-    signature: string,
-    message_hash: string
-  ) => {
-    const abi = {
-      pub_key_x: hexToUint8Array(pub_key_x),
-      pub_key_y: hexToUint8Array(pub_key_y),
-      signature: Uint8Array.from(
-        Buffer.from(signature.slice(2).slice(0, 128), "hex")
-      ),
-      message_hash: hexToUint8Array(message_hash.slice(2)),
-    };
-  
-    console.log("\x1b[35m%s\x1b[0m", "Writing to Prover/Verifier.toml: ");
-    Object.entries(abi).forEach(([key, value]) => {
-      console.log("\x1b[33m%s\x1b[0m", key, value.toString());
-    });
-  
-    const proverToml = `pub_key_x = [${abi.pub_key_x}]\npub_key_y = [${abi.pub_key_y}]\nsignature = [${abi.signature}]\nmessage_hash = [${abi.message_hash}]`;
-  
-    const verifierToml = `hashed_message = [${abi.message_hash}]\nsetpub = []`;
-    fs.writeFileSync("circuits/Prover.toml", proverToml);
-    // fs.writeFileSync("Verifier.toml", verifierToml);
+const writeToProverToml = (
+  pub_key_x: string, // these are all hex strings
+  pub_key_y: string,
+  signature: string,
+  message_hash: string
+) => {
+  const abi = {
+    pub_key_x: hexToUint8Array(pub_key_x),
+    pub_key_y: hexToUint8Array(pub_key_y),
+    signature: Uint8Array.from(
+      Buffer.from(signature.slice(2).slice(0, 128), "hex")
+    ),
+    message_hash: hexToUint8Array(message_hash.slice(2)),
   };
+
+  console.log("\x1b[35m%s\x1b[0m", "Writing to Prover/Verifier.toml: ");
+  Object.entries(abi).forEach(([key, value]) => {
+    console.log("\x1b[33m%s\x1b[0m", key, value.toString());
+  });
+
+  const proverToml = `pub_key_x = [${abi.pub_key_x}]\npub_key_y = [${abi.pub_key_y}]\nsignature = [${abi.signature}]\nmessage_hash = [${abi.message_hash}]`;
+
+  const verifierToml = `hashed_message = [${abi.message_hash}]\nsetpub = []`;
+  fs.writeFileSync("circuits/Prover.toml", proverToml);
+  // fs.writeFileSync("Verifier.toml", verifierToml);
+};
 
 async function main(){
 
