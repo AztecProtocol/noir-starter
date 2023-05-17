@@ -20,14 +20,14 @@ contract StarterTest is Test {
     }
 
     function testVerifyProof() public {
-        string memory proof = vm.readLine("./proofs/p.proof");
+        string memory proof = vm.readLine("./circuits/proofs/p.proof");
         bytes memory proofBytes = vm.parseBytes(proof);
         starter.verifyEqual(proofBytes, correct);
     }
 
     function test_wrongProof() public {
         vm.expectRevert();
-        string memory proof = vm.readLine("./proofs/p.proof");
+        string memory proof = vm.readLine("./circuits/proofs/p.proof");
         bytes memory proofBytes = vm.parseBytes(proof);
         starter.verifyEqual(proofBytes, wrong);
     }
