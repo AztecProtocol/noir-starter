@@ -6,7 +6,7 @@ Each project is an example you can use as template. Feel free to mix them in ord
 
 ## Templates
 
-Use templates as a starting point for your own project.
+Use templates as a starting point for your project.
 
 - Next.js + Hardhat: [`./next-hardhat`](./next-hardhat)
 - Foundry: [`./with-foundry`](./with-foundry)
