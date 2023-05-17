@@ -27,11 +27,11 @@ jobs:
     - name: Generate verifier contract
       run: |
         nargo codegen-verifier
-      working-directory: with-foundry
+      working-directory: with-foundry/circuits
 
     - name: Generate proof
       run: |
-        nargo prove p
+        nargo prove p/circuits
 
     - name: Test with Foundry
       run: |
