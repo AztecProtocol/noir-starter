@@ -40,7 +40,7 @@ next-env.d.ts
 
 # nargo
 target
-contract
+contract/plonk_vk.sol
 
 # hardhat
 cache
