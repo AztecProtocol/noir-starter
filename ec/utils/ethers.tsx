@@ -1,5 +1,4 @@
 import { ethers } from 'ethers';
-import addresses from './addresses.json';
 
 // Ethers class to handle the connection to the blockchain
 export class Ethers {
@@ -14,8 +13,7 @@ export class Ethers {
   async signMessage(message: string) {
     const sender = new ethers.Wallet(process.env.SIGNATURE_PRIVATE_KEY as unknown as string);
     const signature = await sender.signMessage(message);
-    const hash = ethers.utils.hashMessage(message);
-    return { hash, signature };
+    return { signature };
   }
 
   async recoverPublicKey(hash: string, signature: string) {

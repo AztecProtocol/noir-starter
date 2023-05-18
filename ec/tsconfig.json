@@ -20,6 +20,6 @@
     "incremental": true
   },
   "exclude": ["dist", "node_modules"],
-  "include": ["./test", "./src", "./scripts"],
+  "include": ["./test", "./src", "circuits/scripts"],
   "files": ["./hardhat.config.ts"]
 }
