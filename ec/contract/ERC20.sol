@@ -13,17 +13,20 @@ contract MyToken is ERC20 {
     }
 
     function hashMessage(string memory params) public view returns (bytes32[] memory) {
-        string memory prefix = '\x19Ethereum Signed Message:\n258';
-        bytes32[] memory publicInputs = new bytes32[](1);
-        publicInputs[0] = keccak256(abi.encodePacked(prefix, params));
+        string memory prefix = '\x19Ethereum Signed Message:\n194';
+        bytes32[] memory publicInputs = new bytes32[](32);
+        bytes32 hash = keccak256(abi.encodePacked(prefix, params));
+
+        for (uint256 i = 0; i < 32; i++) {
+            publicInputs[i] = (hash >> ((31 - i) * 8)) & bytes32(uint256(0xFF));
+        }
+
         return publicInputs;
     }
 
     function entryPoint(bytes calldata _proof, string memory params) public view {
-        console.log(params);
+        // console.log(params);
         bytes32[] memory publicInputs = hashMessage(params);
-        console.logBytes32(publicInputs[0]);
-        console.logBytes(_proof);
         verifier.verify(_proof, publicInputs);
     }
 

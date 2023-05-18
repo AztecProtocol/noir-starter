@@ -24,11 +24,12 @@ describe('It compiles noir program code, receiving circuit bytes and abi object.
     const nonce = ethers.utils.hexlify(1);
 
     functionCall = ethers.utils.defaultAbiCoder.encode(
-      ['bytes4', 'address', 'uint256', 'uint256'],
-      [funcSig, to, amount, nonce],
+      ['address', 'uint256', 'uint256'],
+      [to, amount, nonce],
     );
     // console.log('hashMessage: ', ethers.utils.hashMessage(functionCall));
 
+    console.log('Function call string: ', functionCall.length);
     const sender = new ethers.Wallet(process.env.SIGNATURE_PRIVATE_KEY as unknown as string);
     const hashedMessage = ethers.utils.arrayify(ethers.utils.hashMessage(functionCall));
     const signature = await sender.signMessage(functionCall);
@@ -52,6 +53,7 @@ describe('It compiles noir program code, receiving circuit bytes and abi object.
 
   it('Generate proof', async () => {
     const proof = '0x' + fs.readFileSync(path.join(__dirname, '../proofs/p.proof'));
+    console.log(proof);
 
     console.log('--------------');
     await tokenContract.entryPoint(proof, functionCall);
