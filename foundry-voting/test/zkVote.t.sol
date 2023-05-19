@@ -3,7 +3,7 @@ pragma solidity ^0.8.13;
 
 import "forge-std/Test.sol";
 import "../src/zkVote.sol";
-import "../src/plonk_vk.sol";
+import "../circuits/contract/plonk_vk.sol";
 
 contract zkVoteTest is Test {
     zkVote public voteContract;

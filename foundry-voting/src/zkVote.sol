@@ -3,7 +3,7 @@
 //SPDX-License-Identifier: MIT
 pragma solidity >=0.8.19;
 
-import {UltraVerifier} from './plonk_vk.sol';
+import {UltraVerifier} from '../circuits/contract/plonk_vk.sol';
 
 contract zkVote {
 
