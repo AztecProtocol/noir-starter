@@ -15,26 +15,35 @@ const config: HardhatUserConfig = {
       optimizer: { enabled: true, runs: 5000 },
     },
   },
+  mocha: {
+    timeout: 100000000,
+  },
   networks: {
     // mumbai: {
     //   url: `https://polygon-mumbai.g.alchemy.com/v2/${process.env.MUMBAI_ALCHEMY_KEY}`,
     //   accounts: [process.env.MUMBAI_DEPLOYER_PRIVATE_KEY as string],
     // },
-    // sepoia: {
-    //   url: `https://eth-sepolia.g.alchemy.com/v2/${process.env.SEPOIA_ALCHEMY_KEY}`,
+    // sepolia: {
+    //   url: `https://eth-sepolia.g.alchemy.com/v2/${process.env.SEPOLIA_ALCHEMY_KEY}`,
     //   accounts: [process.env.SEPOIA_DEPLOYER_PRIVATE_KEY as string],
     // },
-    localhost: {
-      url: 'http://localhost:8545',
-      accounts: [process.env.SIGNATURE_PRIVATE_KEY as string],
+    local: {
+      url: 'http://127.0.0.1:8545',
+      accounts: [process.env.USER1_PRIVATE_KEY as string, process.env.USER2_PRIVATE_KEY as string],
     },
     hardhat: {
       mining: {
         auto: true,
         interval: 1000,
       },
+      blockGasLimit: 1000000000,
+    },
+    runner: {
+      url: 'http://localhost:8545',
+      accounts: [process.env.TOKEN_CONTRACT_OWNER as string],
     },
   },
+
   paths: {
     sources: './contract',
   },
