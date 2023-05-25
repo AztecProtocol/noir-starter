@@ -21,6 +21,8 @@
     "eth-sig-util": "^3.0.1",
     "ethers": "^5.7.2",
     "hardhat": "^2.14.0",
+    "keccak256": "^1.0.6",
+    "merkletreejs": "^0.3.10",
     "next": "latest",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

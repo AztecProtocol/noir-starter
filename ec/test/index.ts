@@ -5,151 +5,130 @@ import { ethers } from 'hardhat';
 import path from 'path';
 import { execSync } from 'child_process';
 import { expect } from 'chai';
+import MerkleTree from 'merkletreejs'; // MerkleTree.js
+import merkle from './merkle.json'; // merkle
+import keccak256 from 'keccak256';
 
-const hexToUint8Array = (hex: string) => Uint8Array.from(Buffer.from(hex, 'hex'));
-
-async function prove(
-  hashedMessage: string,
-  signature: string,
-  proofName: string,
-  useExistentProof = true,
-) {
-  let pubKey = ethers.utils.recoverPublicKey(hashedMessage, signature).slice(4);
-  let pub_key_x = pubKey.substring(0, 64);
-  let pub_key_y = pubKey.substring(64);
-
-  const abi = {
-    pub_key_x: hexToUint8Array(pub_key_x),
-    pub_key_y: hexToUint8Array(pub_key_y),
-    signature: Uint8Array.from(Buffer.from(signature.slice(2).slice(0, 128), 'hex')),
-    hashed_message: hexToUint8Array(hashedMessage.slice(2)),
-  };
-
-  console.log('Writing to Prover/Verifier.toml...');
-  const proverToml = `pub_key_x = [${abi.pub_key_x}]\npub_key_y = [${abi.pub_key_y}]\nsignature = [${abi.signature}]\nhashed_message = [${abi.hashed_message}]`;
-
-  fs.writeFileSync('Prover.toml', proverToml);
-
-  console.log('Proving...');
-  if (!useExistentProof) execSync(`nargo prove ${proofName}`);
-
-  console.log('Generating smart contract...');
-  // execSync('nargo codegen-verifier');
-
-  const proof = '0x' + fs.readFileSync(path.join(__dirname, `../proofs/${proofName}.proof`));
-  return proof;
+/**
+ * Generate Merkle Tree leaf from address and value
+ * @param {string} address of airdrop claimee
+ * @param {string} value of airdrop tokens to claimee
+ * @returns {Buffer} Merkle Tree node
+ */
+function generateLeaf(address: string, value: string): Buffer {
+  return Buffer.from(
+    // Hash in appropriate Merkle format
+    ethers.utils.solidityKeccak256(['address', 'uint256'], [address, value]).slice(2),
+    'hex',
+  );
 }
 
-async function getFuncSig(functionCall: string) {
-  const functionSignature = ethers.utils.id(functionCall);
-  return functionSignature.substr(0, 10);
-}
+// async function prove(
+//   pubKey: string,
+//   hashedMessage: string,
+//   signature: string,
+//   proofName: string,
+//   useExistentProof = true,
+// ) {
+//   let pub_key_x = pubKey.substring(0, 64);
+//   let pub_key_y = pubKey.substring(64);
 
-async function getHashedMessage(functionSignature: string, functionCall: string) {
-  const functionCallBytes = ethers.utils.arrayify(functionCall);
+//   const abi = {
+//     pub_key_x: hexToUint8Array(pub_key_x),
+//     pub_key_y: hexToUint8Array(pub_key_y),
+//     signature: Uint8Array.from(Buffer.from(signature.slice(2).slice(0, 128), 'hex')),
+//     hashed_message: hexToUint8Array(hashedMessage.slice(2)),
+//   };
 
-  return ethers.utils.hashMessage([
-    ...ethers.utils.arrayify(functionSignature),
-    ...functionCallBytes,
-  ]);
-}
+//   console.log('Writing to Prover/Verifier.toml...');
+//   const proverToml = `pub_key_x = [${abi.pub_key_x}]\npub_key_y = [${abi.pub_key_y}]\nsignature = [${abi.signature}]\nhashed_message = [${abi.hashed_message}]`;
 
-describe('It compiles noir program code, receiving circuit bytes and abi object.', () => {
-  let tokenContract: Contract;
-  let verifierContract: Contract;
-  let correctProof: any;
-  let hashedMessageBytes: any;
+//   fs.writeFileSync('Prover.toml', proverToml);
 
-  let functionCall: string;
-  const user1 = new ethers.Wallet(
-    process.env.USER1_PRIVATE_KEY as unknown as string,
-    ethers.provider,
-  );
-  const user2 = new ethers.Wallet(
-    process.env.USER2_PRIVATE_KEY as unknown as string,
-    ethers.provider,
-  );
-  const runner = new ethers.Wallet(
-    process.env.TOKEN_CONTRACT_OWNER as unknown as string,
-    ethers.provider,
-  );
-  const thirdParty = new ethers.Wallet(
-    process.env.THIRD_PARTY_PRIVATE_KEY as unknown as string,
-    ethers.provider,
-  );
+//   console.log('Proving...');
+//   if (!useExistentProof) execSync(`nargo prove ${proofName}`);
+
+//   console.log('Generating smart contract...');
+//   execSync('nargo codegen-verifier');
+
+//   const proof = '0x' + fs.readFileSync(path.join(__dirname, `../proofs/${proofName}.proof`));
+//   return proof;
+// }
+
+describe('Airdrop', () => {
+  let user = new ethers.Wallet(process.env.USER_PRIVATE_KEY as string);
+  let airdrop: Contract;
+  let merkleTree: MerkleTree;
+
+  let messageToHash = '0xabfd76608112cc843dca3a31931f3974da5f9f5d32833e7817bc7e5c50c7821e'; // keccak of "signthis"
 
   before('Deploy contract', async () => {
-    const Verifier = await ethers.getContractFactory('UltraVerifier');
-    verifierContract = await Verifier.deploy();
-    const verifierAddr = await verifierContract.deployed();
-    console.log(`Verifier deployed to ${verifierAddr.address}`);
+    const Token = await ethers.getContractFactory('BasicToken');
+    const token = await Token.deploy(100000000);
 
-    const Token = await ethers.getContractFactory('MyToken');
-    tokenContract = await Token.deploy(verifierAddr.address);
-    const tokenAddr = await tokenContract.deployed();
-    console.log(`Token deployed to ${tokenAddr.address}`);
-  });
+    const Airdrop = await ethers.getContractFactory('Airdrop');
 
-  it('Mints tokens to user1', async () => {
-    await tokenContract.mint(user1.address, 1000000000);
-  });
-
-  it("Approves the contract to transfer user1's tokens", async () => {
-    const funcSig = await getFuncSig('approve(address,uint256)');
-
-    functionCall = ethers.utils.defaultAbiCoder.encode(
-      ['address', 'uint256'],
-      [runner.address, ethers.utils.hexlify(1000000000)],
+    // Setup merkle tree
+    merkleTree = new MerkleTree(
+      // Generate leafs
+      Object.entries(merkle.airdrop).map(([address, tokens]) =>
+        generateLeaf(
+          ethers.utils.getAddress(address),
+          ethers.utils.parseUnits(tokens.toString(), merkle.decimals).toString(),
+        ),
+      ),
+      // Hashing function
+      keccak256,
+      { sortPairs: true },
     );
 
-    const hashedMessage = await getHashedMessage(funcSig, functionCall);
-    const signature = await user1.signMessage(functionCall);
-    const proof = prove(hashedMessage, signature, 'approve', true);
-
-    await tokenContract
-      .connect(user1)
-      .entryPoint(proof, funcSig, functionCall, { gasLimit: 100000000 });
-
-    expect(await tokenContract.allowance(user1.address, runner.address)).to.equal(1000000000);
+    airdrop = await Airdrop.deploy(token.address, merkleTree.getRoot(), messageToHash);
+    await airdrop.deployed();
+    console.log('Airdrop deployed to:', airdrop.address);
   });
 
-  it('Transfers user1 funds to user2', async () => {
-    const funcSig = await getFuncSig('transferFrom(address,address,uint256)');
+  it('Calculate proof', async () => {
+    // pub_key_x: [u8; 32], // first part of public key
+    // pub_key_y: [u8; 32], // second part of public key
+    // signature: [u8; 64], // signature of the public message (signThis in the contract)
+    // merkle_path: [u8; 32], // merkle path from the leaf to the root (root is in the contract)
+    // hashed_message: pub [u8; 32], // signThis, in the contract
+    // nullifier: pub [u8; 32], // calculated nullifier, this should be h(signature) FOR NOW BECAUSE IT'S UNSAFE ECDSA IS MALLEABLE
+    // merkle_root: pub [u8; 32], // merkle root, in the contract
+    const messageToHash = await airdrop.getMessage();
+    const hashedMessage = ethers.utils.arrayify(ethers.utils.hashMessage(messageToHash));
 
-    functionCall = ethers.utils.defaultAbiCoder.encode(
-      ['address', 'address', 'uint256'],
-      [user1.address, user2.address, ethers.utils.hexlify(42)],
-    );
+    const pubKey = ethers.utils.arrayify(user.publicKey).slice(1);
+    const signature = await user.signMessage(messageToHash);
 
-    const hashedMessage = await getHashedMessage(funcSig, functionCall);
-    const signature = await runner.signMessage(functionCall);
-    const proof = prove(hashedMessage, signature, 'transfer1to2', true);
+    const proof = merkleTree.getProof(generateLeaf(user.address, '42000000000000000000'));
+    const hashPath = proof.map(x => x.data.toString('hex'));
 
-    await tokenContract
-      .connect(runner)
-      .entryPoint(proof, funcSig, functionCall, { gasLimit: 100000000 });
+    const nullifier = ethers.utils.solidityKeccak256(['bytes'], [signature]);
+    const merkleRoot = merkleTree.getRoot().toString('hex');
 
-    expect(await tokenContract.balanceOf(user1.address)).to.equal(999999958);
-    expect(await tokenContract.balanceOf(user2.address)).to.equal(42);
-  });
+    const abi = {
+      pub_key_x: pubKey.slice(0, 32),
+      pub_key_y: pubKey.slice(32),
+      signature: ethers.utils.arrayify(signature).slice(0, 64),
+      merkle_path: hashPath.map(hash => `"0x${hash}"`),
+      hashed_message: hashedMessage,
+      nullifier: nullifier,
+      merkle_root: '0x' + merkleRoot,
+    };
+    console.log('abi', abi);
 
-  it('Transfers directly from user2 to user1', async () => {
-    const funcSig = await getFuncSig('transfer(address,uint256)');
-
-    functionCall = ethers.utils.defaultAbiCoder.encode(
-      ['address', 'uint256'],
-      [user1.address, ethers.utils.hexlify(42)],
-    );
-
-    const hashedMessage = await getHashedMessage(funcSig, functionCall);
-    const signature = await user2.signMessage(functionCall);
-    const proof = prove(hashedMessage, signature, 'transfer2to1', true);
-
-    await tokenContract
-      .connect(thirdParty)
-      .entryPoint(proof, funcSig, functionCall, { gasLimit: 100000000 });
-
-    expect(await tokenContract.balanceOf(user1.address)).to.equal(1000000000);
-    expect(await tokenContract.balanceOf(user2.address)).to.equal(0);
+    console.log('Writing to Prover/Verifier.toml...');
+    const proverToml = `
+      pub_key_x = [${abi.pub_key_x}]\n
+      pub_key_y = [${abi.pub_key_y}]\n
+      signature = [${abi.signature}]\n
+      merkle_path = [${abi.merkle_path}]\n
+      hashed_message = [${abi.hashed_message}]\n
+      nullifier = "${abi.nullifier}"\n
+      merkle_root = "${abi.merkle_root}"
+    `;
+    fs.writeFileSync('Prover.toml', proverToml);
+    // execSync(`nargo prove p`);
   });
 });
