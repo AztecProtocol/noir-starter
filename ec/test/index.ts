@@ -9,6 +9,8 @@ import MerkleTree from 'merkletreejs'; // MerkleTree.js
 import merkle from './merkle.json'; // merkle
 import keccak256 from 'keccak256';
 
+import blake2 from 'blake2';
+
 /**
  * Generate Merkle Tree leaf from address and value
  * @param {string} address of airdrop claimee
@@ -104,7 +106,11 @@ describe('Airdrop', () => {
     const proof = merkleTree.getProof(generateLeaf(user.address, '42000000000000000000'));
     const hashPath = proof.map(x => x.data.toString('hex'));
 
-    const nullifier = ethers.utils.solidityKeccak256(['bytes'], [signature]);
+    const nullifier = blake2
+      .createHash('blake2s')
+      .update(ethers.utils.arrayify(signature).slice(0, 64))
+      .digest();
+    console.log('nullifier', nullifier);
     const merkleRoot = merkleTree.getRoot().toString('hex');
 
     const abi = {
@@ -113,7 +119,7 @@ describe('Airdrop', () => {
       signature: ethers.utils.arrayify(signature).slice(0, 64),
       merkle_path: hashPath.map(hash => `"0x${hash}"`),
       hashed_message: hashedMessage,
-      nullifier: nullifier,
+      nullifier: Uint8Array.from(nullifier),
       merkle_root: '0x' + merkleRoot,
     };
     console.log('abi', abi);
@@ -125,7 +131,7 @@ describe('Airdrop', () => {
       signature = [${abi.signature}]\n
       merkle_path = [${abi.merkle_path}]\n
       hashed_message = [${abi.hashed_message}]\n
-      nullifier = "${abi.nullifier}"\n
+      nullifier = [${abi.nullifier}]\n
       merkle_root = "${abi.merkle_root}"
     `;
     fs.writeFileSync('Prover.toml', proverToml);
