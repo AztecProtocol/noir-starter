@@ -29,7 +29,7 @@ const config: HardhatUserConfig = {
     // },
     local: {
       url: 'http://127.0.0.1:8545',
-      accounts: [process.env.USER_PRIVATE_KEY as string],
+      accounts: [process.env.USER1_PRIVATE_KEY as string, process.env.USER2_PRIVATE_KEY as string],
     },
     hardhat: {
       mining: {

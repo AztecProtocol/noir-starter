@@ -5,11 +5,17 @@ import { ethers } from 'hardhat';
 import path from 'path';
 import { execSync } from 'child_process';
 import { expect } from 'chai';
-import MerkleTree from 'merkletreejs'; // MerkleTree.js
+import { MerkleTree } from '../utils/merkleTree'; // MerkleTree.js
 import merkle from './merkle.json'; // merkle
 import keccak256 from 'keccak256';
 
+// @ts-ignore -- no types
 import blake2 from 'blake2';
+
+// @ts-ignore -- no types
+import { BarretenbergWasm } from '@noir-lang/barretenberg';
+
+import { generateHashPathInput } from '../utils/helpers'; // helpers.ts
 
 /**
  * Generate Merkle Tree leaf from address and value
@@ -58,7 +64,11 @@ function generateLeaf(address: string, value: string): Buffer {
 // }
 
 describe('Airdrop', () => {
-  let user = new ethers.Wallet(process.env.USER_PRIVATE_KEY as string);
+  let user1 = new ethers.Wallet(process.env.USER1_PRIVATE_KEY as string);
+  let user2 = new ethers.Wallet(process.env.USER2_PRIVATE_KEY as string);
+  let user1Leaf = generateLeaf(user1.address, '42000000000000000000').toString('hex');
+  let user2Leaf = generateLeaf(user2.address, '42000000000000000000').toString('hex');
+
   let airdrop: Contract;
   let merkleTree: MerkleTree;
 
@@ -70,21 +80,15 @@ describe('Airdrop', () => {
 
     const Airdrop = await ethers.getContractFactory('Airdrop');
 
-    // Setup merkle tree
-    merkleTree = new MerkleTree(
-      // Generate leafs
-      Object.entries(merkle.airdrop).map(([address, tokens]) =>
-        generateLeaf(
-          ethers.utils.getAddress(address),
-          ethers.utils.parseUnits(tokens.toString(), merkle.decimals).toString(),
-        ),
-      ),
-      // Hashing function
-      keccak256,
-      { sortPairs: true },
-    );
+    const barretenberg = await BarretenbergWasm.new();
+    await barretenberg.init();
 
-    airdrop = await Airdrop.deploy(token.address, merkleTree.getRoot(), messageToHash);
+    // Setup merkle tree
+    merkleTree = new MerkleTree(4, barretenberg);
+    merkleTree.insert(user1Leaf);
+    merkleTree.insert(user2Leaf);
+
+    airdrop = await Airdrop.deploy(token.address, '0x' + merkleTree.root(), messageToHash);
     await airdrop.deployed();
     console.log('Airdrop deployed to:', airdrop.address);
   });
@@ -100,28 +104,29 @@ describe('Airdrop', () => {
     const messageToHash = await airdrop.getMessage();
     const hashedMessage = ethers.utils.arrayify(ethers.utils.hashMessage(messageToHash));
 
-    const pubKey = ethers.utils.arrayify(user.publicKey).slice(1);
-    const signature = await user.signMessage(messageToHash);
+    const pubKey = ethers.utils.arrayify(user1.publicKey).slice(1);
+    const signature = await user1.signMessage(messageToHash);
 
-    const proof = merkleTree.getProof(generateLeaf(user.address, '42000000000000000000'));
-    const hashPath = proof.map(x => x.data.toString('hex'));
+    const index = merkleTree.getIndex(user1Leaf);
+    const proof = merkleTree.proof(index);
 
     const nullifier = blake2
       .createHash('blake2s')
       .update(ethers.utils.arrayify(signature).slice(0, 64))
       .digest();
-    console.log('nullifier', nullifier);
-    const merkleRoot = merkleTree.getRoot().toString('hex');
 
     const abi = {
       pub_key_x: pubKey.slice(0, 32),
       pub_key_y: pubKey.slice(32),
       signature: ethers.utils.arrayify(signature).slice(0, 64),
-      merkle_path: hashPath.map(hash => `"0x${hash}"`),
       hashed_message: hashedMessage,
       nullifier: Uint8Array.from(nullifier),
-      merkle_root: '0x' + merkleRoot,
+      merkle_path: generateHashPathInput(proof.pathElements),
+      leaf: '0x' + user1Leaf,
+      index: index,
+      merkle_root: '0x' + proof.root,
     };
+
     console.log('abi', abi);
 
     console.log('Writing to Prover/Verifier.toml...');
@@ -129,12 +134,15 @@ describe('Airdrop', () => {
       pub_key_x = [${abi.pub_key_x}]\n
       pub_key_y = [${abi.pub_key_y}]\n
       signature = [${abi.signature}]\n
-      merkle_path = [${abi.merkle_path}]\n
       hashed_message = [${abi.hashed_message}]\n
       nullifier = [${abi.nullifier}]\n
+      merkle_path = [${abi.merkle_path}]\n
+      leaf = "${abi.leaf}"\n
+      index = ${abi.index}\n
       merkle_root = "${abi.merkle_root}"
     `;
     fs.writeFileSync('Prover.toml', proverToml);
-    // execSync(`nargo prove p`);
+    execSync('nargo prove p --show-output');
+    // execSync('nargo verify p');
   });
 });
