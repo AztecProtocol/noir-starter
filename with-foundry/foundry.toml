@@ -1,8 +1,10 @@
 [profile.default]
-src = "src"
-out = "out"
+solc_version = '0.8.17'
+auto_detect_solc = false
+optimizer_runs = 5_000
+optimizer = true
+src = "contracts"
 libs = ["lib"]
-fs_permissions = [{ access = "read", path = "./"}]
-
+fs_permissions = [{ access = "read-write", path = "./"}]
 
 # See more config options https://github.com/foundry-rs/foundry/tree/master/config
