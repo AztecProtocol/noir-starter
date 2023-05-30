@@ -17,12 +17,6 @@ import { BarretenbergWasm } from '@noir-lang/barretenberg';
 
 import { generateHashPathInput } from '../utils/helpers'; // helpers.ts
 
-/**
- * Generate Merkle Tree leaf from address and value
- * @param {string} address of airdrop claimee
- * @param {string} value of airdrop tokens to claimee
- * @returns {Buffer} Merkle Tree node
- */
 function generateLeaf(address: string, value: string): Buffer {
   return Buffer.from(
     // Hash in appropriate Merkle format
@@ -31,106 +25,11 @@ function generateLeaf(address: string, value: string): Buffer {
   );
 }
 
-// async function prove(
-//   pubKey: string,
-//   hashedMessage: string,
-//   signature: string,
-//   proofName: string,
-//   useExistentProof = true,
-// ) {
-//   let pub_key_x = pubKey.substring(0, 64);
-//   let pub_key_y = pubKey.substring(64);
+function prove(abi: any, testCase: string) {
+  console.log('abi', abi);
 
-//   const abi = {
-//     pub_key_x: hexToUint8Array(pub_key_x),
-//     pub_key_y: hexToUint8Array(pub_key_y),
-//     signature: Uint8Array.from(Buffer.from(signature.slice(2).slice(0, 128), 'hex')),
-//     hashed_message: hexToUint8Array(hashedMessage.slice(2)),
-//   };
-
-//   console.log('Writing to Prover/Verifier.toml...');
-//   const proverToml = `pub_key_x = [${abi.pub_key_x}]\npub_key_y = [${abi.pub_key_y}]\nsignature = [${abi.signature}]\nhashed_message = [${abi.hashed_message}]`;
-
-//   fs.writeFileSync('Prover.toml', proverToml);
-
-//   console.log('Proving...');
-//   if (!useExistentProof) execSync(`nargo prove ${proofName}`);
-
-//   console.log('Generating smart contract...');
-//   execSync('nargo codegen-verifier');
-
-//   const proof = '0x' + fs.readFileSync(path.join(__dirname, `../proofs/${proofName}.proof`));
-//   return proof;
-// }
-
-describe('Airdrop', () => {
-  let user1 = new ethers.Wallet(process.env.USER1_PRIVATE_KEY as string);
-  let user2 = new ethers.Wallet(process.env.USER2_PRIVATE_KEY as string);
-  let user1Leaf = generateLeaf(user1.address, '42000000000000000000').toString('hex');
-  let user2Leaf = generateLeaf(user2.address, '42000000000000000000').toString('hex');
-
-  let airdrop: Contract;
-  let merkleTree: MerkleTree;
-
-  let messageToHash = '0xabfd76608112cc843dca3a31931f3974da5f9f5d32833e7817bc7e5c50c7821e'; // keccak of "signthis"
-
-  before('Deploy contract', async () => {
-    const Token = await ethers.getContractFactory('BasicToken');
-    const token = await Token.deploy(100000000);
-
-    const Airdrop = await ethers.getContractFactory('Airdrop');
-
-    const barretenberg = await BarretenbergWasm.new();
-    await barretenberg.init();
-
-    // Setup merkle tree
-    merkleTree = new MerkleTree(4, barretenberg);
-    merkleTree.insert(user1Leaf);
-    merkleTree.insert(user2Leaf);
-
-    airdrop = await Airdrop.deploy(token.address, '0x' + merkleTree.root(), messageToHash);
-    await airdrop.deployed();
-    console.log('Airdrop deployed to:', airdrop.address);
-  });
-
-  it('Calculate proof', async () => {
-    // pub_key_x: [u8; 32], // first part of public key
-    // pub_key_y: [u8; 32], // second part of public key
-    // signature: [u8; 64], // signature of the public message (signThis in the contract)
-    // merkle_path: [u8; 32], // merkle path from the leaf to the root (root is in the contract)
-    // hashed_message: pub [u8; 32], // signThis, in the contract
-    // nullifier: pub [u8; 32], // calculated nullifier, this should be h(signature) FOR NOW BECAUSE IT'S UNSAFE ECDSA IS MALLEABLE
-    // merkle_root: pub [u8; 32], // merkle root, in the contract
-    const messageToHash = await airdrop.getMessage();
-    const hashedMessage = ethers.utils.arrayify(ethers.utils.hashMessage(messageToHash));
-
-    const pubKey = ethers.utils.arrayify(user1.publicKey).slice(1);
-    const signature = await user1.signMessage(messageToHash);
-
-    const index = merkleTree.getIndex(user1Leaf);
-    const proof = merkleTree.proof(index);
-
-    const nullifier = blake2
-      .createHash('blake2s')
-      .update(ethers.utils.arrayify(signature).slice(0, 64))
-      .digest();
-
-    const abi = {
-      pub_key_x: pubKey.slice(0, 32),
-      pub_key_y: pubKey.slice(32),
-      signature: ethers.utils.arrayify(signature).slice(0, 64),
-      hashed_message: hashedMessage,
-      nullifier: Uint8Array.from(nullifier),
-      merkle_path: generateHashPathInput(proof.pathElements),
-      leaf: '0x' + user1Leaf,
-      index: index,
-      merkle_root: '0x' + proof.root,
-    };
-
-    console.log('abi', abi);
-
-    console.log('Writing to Prover/Verifier.toml...');
-    const proverToml = `
+  console.log('Writing to Prover/Verifier.toml...');
+  const proverToml = `
       pub_key_x = [${abi.pub_key_x}]\n
       pub_key_y = [${abi.pub_key_y}]\n
       signature = [${abi.signature}]\n
@@ -141,8 +40,87 @@ describe('Airdrop', () => {
       index = ${abi.index}\n
       merkle_root = "${abi.merkle_root}"
     `;
-    fs.writeFileSync('Prover.toml', proverToml);
-    execSync('nargo prove p --show-output');
-    // execSync('nargo verify p');
+  fs.writeFileSync('Prover.toml', proverToml);
+  execSync(`nargo prove ${testCase} --show-output`);
+  const proof = fs.readFileSync(`proofs/${testCase}.proof`);
+  return proof;
+}
+
+describe('Airdrop', () => {
+  let airdrop: Contract;
+  let merkleTree: MerkleTree;
+  let messageToHash: string | Uint8Array;
+  let hashedMessage: Uint8Array;
+
+  before('Deploy contract', async () => {
+    const Token = await ethers.getContractFactory('BasicToken');
+    const token = await Token.deploy(100000000);
+
+    // execSync('nargo codegen-verifier');
+
+    const Verifier = await ethers.getContractFactory('TurboVerifier');
+    const verifierContract = await Verifier.deploy();
+    const verifierAddr = await verifierContract.deployed();
+
+    const Airdrop = await ethers.getContractFactory('Airdrop');
+    const barretenberg = await BarretenbergWasm.new();
+    await barretenberg.init();
+
+    // Setup merkle tree
+    merkleTree = new MerkleTree(4, barretenberg);
+    Object.keys(merkle).map((addr: any) => {
+      // @ts-ignore
+      merkleTree.insert(generateLeaf(addr, merkle[addr]).toString('hex'));
+    });
+
+    const message = '0xabfd76608112cc843dca3a31931f3974da5f9f5d32833e7817bc7e5c50c7821e'; // keccak of "signthis"
+    airdrop = await Airdrop.deploy(
+      token.address,
+      '0x' + merkleTree.root(),
+      message,
+      verifierAddr.address,
+    );
+    await airdrop.deployed();
+    console.log('Airdrop deployed to:', airdrop.address);
+  });
+
+  before(async () => {
+    messageToHash = await airdrop.getMessage();
+    hashedMessage = ethers.utils.arrayify(ethers.utils.hashMessage(messageToHash));
+  });
+
+  let userAbi: any;
+  before('Calculates valid proof', async () => {
+    const user = new ethers.Wallet(process.env.USER1_PRIVATE_KEY as string);
+    const leaf = generateLeaf(user.address, '42000000000000000000').toString('hex');
+    const pubKey = ethers.utils.arrayify(user.publicKey).slice(1);
+    const signature = await user.signMessage(messageToHash);
+    const index = merkleTree.getIndex(leaf);
+    const mt = merkleTree.proof(index);
+    const nullifier = blake2
+      .createHash('blake2s')
+      .update(ethers.utils.arrayify(signature).slice(0, 64))
+      .digest();
+
+    userAbi = {
+      pub_key_x: pubKey.slice(0, 32),
+      pub_key_y: pubKey.slice(32),
+      signature: ethers.utils.arrayify(signature).slice(0, 64),
+      hashed_message: hashedMessage,
+      nullifier: Uint8Array.from(nullifier),
+      merkle_path: generateHashPathInput(mt.pathElements),
+      leaf: '0x' + leaf,
+      index: index,
+      merkle_root: '0x' + mt.root,
+    };
+  });
+
+  it('Collects tokens from a whitelisted user', async () => {
+    const proof = prove(userAbi, 'valid');
+    console.log(proof.toString());
+    expect(proof).to.exist;
+
+    const res = await airdrop.claim('0x' + proof.toString());
+    console.log(res);
   });
 });
