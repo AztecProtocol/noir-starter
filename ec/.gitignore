@@ -40,13 +40,12 @@ next-env.d.ts
 
 # nargo
 target
-contract/plonk_vk.sol
 
 # hardhat
 cache
 artifacts
 typechain-types
-proofs
+proofs/*.proof
 
 # other
 .vscode
