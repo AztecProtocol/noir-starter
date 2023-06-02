@@ -1,109 +1,73 @@
 // @ts-ignore -- no types
-import { SinglePedersen } from '@noir-lang/barretenberg';
+import { newBarretenbergApiSync } from '@aztec/bb.js/dest/factory';
 // @ts-ignore -- no types
-import { BarretenbergWasm } from '@noir-lang/barretenberg';
-
-export function pedersenLeftRight(
-  barretenberg: BarretenbergWasm,
-  left: string,
-  right: string,
-): string {
-  let leftBuffer = Buffer.from(left, 'hex');
-  let rightBuffer = Buffer.from(right, 'hex');
-  let pedersen = new SinglePedersen(barretenberg);
-  let hashRes = pedersen.compress(leftBuffer, rightBuffer);
-  return hashRes.toString('hex');
-}
+import { Fr } from '@aztec/bb.js/dest/types';
 
 export interface IMerkleTree {
-  root: () => string;
+  root: () => Fr;
   proof: (index: number) => {
-    root: string;
-    pathElements: string[];
+    root: Fr;
+    pathElements: Fr[];
     pathIndices: number[];
-    leaf: string;
+    leaf: Fr;
   };
-  insert: (leaf: string) => void;
+  insert: (leaf: Fr) => void;
 }
 
 export class MerkleTree implements IMerkleTree {
-  readonly zeroValue = '18d85f3de6dcd78b6ffbf5d8374433a5528d8e3bf2100df0b7bb43a4c59ebd63'; // sha256("simple_shield")
+  readonly zeroValue = Fr.fromString(
+    '18d85f3de6dcd78b6ffbf5d8374433a5528d8e3bf2100df0b7bb43a4c59ebd63',
+  );
   levels: number;
-  hashLeftRight: (barretenberg: BarretenbergWasm, left: string, right: string) => string;
-  storage: Map<string, string>;
-  zeros: string[];
+  storage: Map<string, Fr>;
+  zeros: Fr[];
   totalLeaves: number;
-  barretenberg: BarretenbergWasm;
+  bb: any;
 
-  constructor(
-    levels: number,
-    barretenberg: BarretenbergWasm,
-    defaultLeaves: string[] = [],
-    hashLeftRight = pedersenLeftRight,
-  ) {
+  constructor(levels: number) {
     this.levels = levels;
-    this.hashLeftRight = hashLeftRight;
     this.storage = new Map();
     this.zeros = [];
     this.totalLeaves = 0;
-    this.barretenberg = barretenberg;
+  }
+
+  async initialize(defaultLeaves: Fr[]) {
+    this.bb = await newBarretenbergApiSync();
 
     // build zeros depends on tree levels
     let currentZero = this.zeroValue;
     this.zeros.push(currentZero);
-    for (let i = 0; i < levels; i++) {
-      currentZero = this.hashLeftRight(barretenberg, currentZero, currentZero);
+
+    for (let i = 0; i < this.levels; i++) {
+      currentZero = this.pedersenHash(currentZero, currentZero);
       this.zeros.push(currentZero);
     }
+  }
 
-    if (defaultLeaves.length > 0) {
-      this.totalLeaves = defaultLeaves.length;
-
-      // store leaves with key value pair
-      let level = 0;
-      defaultLeaves.forEach((leaf, index) => {
-        this.storage.set(MerkleTree.indexToKey(level, index), leaf);
-      });
-
-      // build tree with initial leaves
-      level++;
-      let numberOfNodesInLevel = Math.ceil(this.totalLeaves / 2);
-      for (level; level <= this.levels; level++) {
-        for (let i = 0; i < numberOfNodesInLevel; i++) {
-          const leftKey = MerkleTree.indexToKey(level - 1, 2 * i);
-          const rightKey = MerkleTree.indexToKey(level - 1, 2 * i + 1);
-
-          const left = this.storage.get(leftKey);
-          const right = this.storage.get(rightKey) || this.zeros[level - 1];
-          if (!left) throw new Error('leftKey not found');
-
-          const node = this.hashLeftRight(barretenberg, left, right);
-          this.storage.set(MerkleTree.indexToKey(level, i), node);
-        }
-        numberOfNodesInLevel = Math.ceil(numberOfNodesInLevel / 2);
-      }
-    }
+  pedersenHash(left: Fr, right: Fr): Fr {
+    let hashRes = this.bb.pedersenHashPair(left, right);
+    return hashRes;
   }
 
   static indexToKey(level: number, index: number): string {
     return `${level}-${index}`;
   }
 
-  getIndex(leaf: string): number {
+  getIndex(leaf: Fr): number {
     for (const [key, value] of this.storage) {
-      if (value === leaf) {
+      if (value.toString() === leaf.toString()) {
         return Number(key.split('-')[1]);
       }
     }
     return -1;
   }
 
-  root(): string {
+  root(): Fr {
     return this.storage.get(MerkleTree.indexToKey(this.levels, 0)) || this.zeros[this.levels];
   }
 
   proof(indexOfLeaf: number) {
-    let pathElements: string[] = [];
+    let pathElements: Fr[] = [];
     let pathIndices: number[] = [];
 
     const leaf = this.storage.get(MerkleTree.indexToKey(0, indexOfLeaf));
@@ -127,28 +91,28 @@ export class MerkleTree implements IMerkleTree {
     };
   }
 
-  insert(leaf: string) {
+  insert(leaf: Fr) {
     const index = this.totalLeaves;
     this.update(index, leaf, true);
     this.totalLeaves++;
   }
 
-  update(index: number, newLeaf: string, isInsert: boolean = false) {
+  update(index: number, newLeaf: Fr, isInsert: boolean = false) {
     if (!isInsert && index >= this.totalLeaves) {
       throw Error('Use insert method for new elements.');
     } else if (isInsert && index < this.totalLeaves) {
       throw Error('Use update method for existing elements.');
     }
 
-    let keyValueToStore: { key: string; value: string }[] = [];
-    let currentElement: string = newLeaf;
+    let keyValueToStore: { key: string; value: Fr }[] = [];
+    let currentElement: Fr = newLeaf;
 
-    const handleIndex = (level: number, currentIndex: number, siblingIndex: number) => {
+    const handleIndex = async (level: number, currentIndex: number, siblingIndex: number) => {
       const siblingElement =
         this.storage.get(MerkleTree.indexToKey(level, siblingIndex)) || this.zeros[level];
 
-      let left: string;
-      let right: string;
+      let left: Fr;
+      let right: Fr;
       if (currentIndex % 2 === 0) {
         left = currentElement;
         right = siblingElement;
@@ -161,7 +125,7 @@ export class MerkleTree implements IMerkleTree {
         key: MerkleTree.indexToKey(level, currentIndex),
         value: currentElement,
       });
-      currentElement = this.hashLeftRight(this.barretenberg, left, right);
+      currentElement = this.pedersenHash(left, right);
     };
 
     this.traverse(index, handleIndex);
