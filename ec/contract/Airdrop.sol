@@ -1,31 +1,34 @@
 pragma solidity ^0.8.0;
 
-import '@openzeppelin/contracts/token/ERC20/IERC20.sol';
+import '@openzeppelin/contracts/token/ERC20/ERC20.sol';
 import './plonk_vk.sol';
 import 'hardhat/console.sol';
 
 import './lib/uint2str.sol';
 
-contract Airdrop {
-    IERC20 public tokenAddress;
+contract Airdrop is ERC20 {
     bytes32 public signThis;
     bytes32 public merkleRoot;
     UltraVerifier public verifier;
+
+    uint256 public airdropAmount;
 
     mapping(bytes32 => bool) public nullifiers; // Keep track of claimed Merkle roots
 
     event TokensAirdropped(address indexed recipient, uint256 amount);
 
     constructor(
-        IERC20 _tokenAddress,
         bytes32 _merkleRoot,
-        bytes32 _signThis, // TODO put this off-chain like the merkle tree
-        UltraVerifier _verifier
-    ) {
-        tokenAddress = _tokenAddress;
+        bytes32 _signThis,
+        UltraVerifier _verifier,
+        uint256 _airdropAmount
+    ) ERC20('Airdrop', 'ADRP') {
         merkleRoot = _merkleRoot;
         signThis = _signThis;
         verifier = _verifier;
+
+        airdropAmount = _airdropAmount;
+        _mint(address(this), airdropAmount);
     }
 
     function preparePublicInputs(
@@ -39,22 +42,17 @@ contract Airdrop {
         return _publicInputs;
     }
 
-    function claim(
-        bytes calldata proof,
-        bytes32[2] memory publicKey,
-        bytes32 nullifier
-    ) public view {
-        bytes32[] memory _publicInputs = new bytes32[](129);
-        _publicInputs = preparePublicInputs(_publicInputs, publicKey[0], 0);
-        _publicInputs = preparePublicInputs(_publicInputs, publicKey[1], 32);
-        _publicInputs = preparePublicInputs(_publicInputs, signThis, 64);
-        _publicInputs = preparePublicInputs(_publicInputs, nullifier, 96);
-        _publicInputs[128] = merkleRoot;
-
+    function claim(bytes calldata proof, bytes32 nullifier) external {
+        bytes32[] memory _publicInputs = new bytes32[](66);
+        _publicInputs = preparePublicInputs(_publicInputs, signThis, 0);
+        _publicInputs = preparePublicInputs(_publicInputs, nullifier, 32);
+        _publicInputs[64] = merkleRoot;
+        _publicInputs[65] = bytes32(uint256(uint160(msg.sender)));
         verifier.verify(proof, _publicInputs);
 
-        // calculate address
         // mint tokens
+        _transfer(address(this), msg.sender, 1);
+        // emit TokensAirdropped(msg.sender, 1);
     }
 
     function getRoot() public view returns (bytes32) {
