@@ -11,18 +11,24 @@ fn main(root : pub Field, index : Field, hash_path : [Field; 2], secret: Field, 
     nullifier[0]
 }
 
-// helpers for getting note_commitments to build the merkle tree
+// Helpers for getting note_commitments to build the merkle tree.
+// To view: nargo test --show-output
 
-// fn main(priv_key : Field, secret : Field) {
-//     let note_commitment = std::hash::pedersen([priv_key, secret]);
-//     std::println("Public leaf:");
-//     std::println(note_commitment);
-// }
+#[test]
+fn test_build_merkle_tree() {
+    let secret = 9;
+    let commitment_0 =  std::hash::pedersen([0, secret])[0];
+    let commitment_1 =  std::hash::pedersen([1, secret])[0];
+    let commitment_2 =  std::hash::pedersen([2, secret])[0];
+    let commitment_3 =  std::hash::pedersen([3, secret])[0];
 
-// get hashes for building a merkle tree
+    let left_branch = std::hash::pedersen([commitment_0, commitment_1])[0];
+    let right_branch = std::hash::pedersen([commitment_2, commitment_3])[0];
 
-// fn main(first : Field, second : Field) {
-//     let note_commitment = std::hash::pedersen([first, second]);
-//     std::println("Public node:");
-//     std::println(note_commitment);
-// }
+    let root = std::hash::pedersen([left_branch, right_branch])[0];
+
+    std::println("Merkle Tree:");
+    std::println([root]);
+    std::println([left_branch, right_branch]);
+    std::println([commitment_0, commitment_1, commitment_2, commitment_3]);
+}
