@@ -32,3 +32,5 @@ See the test file [here](./test/zkVote.t.sol). Run tests with `forge test`.
 If you change the circuit at `./circuits/src/main.nr` you will need to recompile (`nargo compile p`) the circuit and regenerate the Solidity verifier (saved to `./circuits/contract/plonk_vk.sol`).
 
 The merkle tree will need to be recalculated whenever there are users added to the set or if there are any changes to the voters private keys (private keys are an input to the merkle membership commitment, so changing a key changes the corresponding leaf in the merkle tree, which changes the root). See `test_build_merkle_tree` for an example calculation.
+
+Run `nargo test --show-output` in `./circuits` to print the example merkle tree.
