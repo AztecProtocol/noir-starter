@@ -4,8 +4,6 @@ import '@openzeppelin/contracts/token/ERC20/ERC20.sol';
 import './plonk_vk.sol';
 import 'hardhat/console.sol';
 
-import './lib/uint2str.sol';
-
 contract Airdrop is ERC20 {
     bytes32 public signThis;
     bytes32 public merkleRoot;

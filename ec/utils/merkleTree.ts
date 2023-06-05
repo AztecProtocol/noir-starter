@@ -3,6 +3,7 @@ import { newBarretenbergApiSync } from '@aztec/bb.js/dest/factory';
 // @ts-ignore -- no types
 import { Fr } from '@aztec/bb.js/dest/types';
 
+// thanks @vezenovm for this beautiful merkle tree implementation
 export interface IMerkleTree {
   root: () => Fr;
   proof: (index: number) => {
