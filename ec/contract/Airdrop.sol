@@ -52,7 +52,7 @@ contract Airdrop is ERC20 {
 
         // mint tokens
         _transfer(address(this), msg.sender, 1);
-        // emit TokensAirdropped(msg.sender, 1);
+        emit TokensAirdropped(msg.sender, 1);
     }
 
     function getRoot() public view returns (bytes32) {

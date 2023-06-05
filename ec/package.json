@@ -6,7 +6,7 @@
     "dev": "next",
     "build": "npm run deploy && next build",
     "deploy": "hardhat run scripts/genContract.ts && hardhat compile && hardhat run --network ${NETWORK} scripts/deploy.ts",
-    "test": "vitest"
+    "test": "vitest --watch"
   },
   "dependencies": {
     "@aztec/bb.js": "^0.0.1-alpha.1",

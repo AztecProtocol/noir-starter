@@ -35,6 +35,7 @@ fn main(
   let mut address : Field = 0;
   let mut v : Field = 1;
 
+  // TODO why loops take so long?
   for i in 0..20 {
       let index = (20 - i);
       address += hashOfPubKey[index + 11] as Field * v;

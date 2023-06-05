@@ -15,8 +15,8 @@ import { Fr } from '@aztec/bb.js/dest/types';
 
 import airdrop from '../artifacts/contract/Airdrop.sol/Airdrop.json';
 import verifier from '../artifacts/contract/plonk_vk.sol/UltraVerifier.json';
-import { assert, test, beforeAll, describe } from 'vitest';
 
+import { test, beforeAll, describe } from 'vitest';
 interface AbiHashes {
   [key: string]: string;
 }
@@ -102,7 +102,7 @@ describe('Setup', () => {
       merkle.map(async (addr: any) => {
         // @ts-ignore
         const leaf = Fr.fromString(addr);
-        await merkleTree.insert(leaf);
+        merkleTree.insert(leaf);
       }),
     );
 
@@ -118,26 +118,30 @@ describe('Setup', () => {
   });
 
   describe('Airdrop', () => {
-    let userAbi: any;
     let user1: ethers.Wallet;
+    let user2: ethers.Wallet;
     let claimer1: ethers.Wallet;
-    let nullifier: Uint8Array;
+    let claimer2: ethers.Wallet;
 
     beforeAll(async () => {
       const provider = ethers.getDefaultProvider('http://127.0.0.1:8545');
       user1 = new ethers.Wallet(process.env.USER1_PRIVATE_KEY as string, provider);
       claimer1 = new ethers.Wallet(process.env.CLAIMER1_PRIVATE_KEY as string, provider);
-      const leaf = Fr.fromString(user1.address);
-      const pubKey = ethers.utils.arrayify(user1.publicKey).slice(1);
+      claimer2 = new ethers.Wallet(process.env.CLAIMER2_PRIVATE_KEY as string, provider);
+    });
+
+    const getUserAbi = async (user: ethers.Wallet) => {
+      const leaf = Fr.fromString(user.address);
+      const pubKey = ethers.utils.arrayify(user.publicKey).slice(1);
       const signature = await user1.signMessage(messageToHash);
       const index = merkleTree.getIndex(leaf);
       const mt = merkleTree.proof(index);
-      nullifier = blake2
+      const nullifier = blake2
         .createHash('blake2s')
         .update(ethers.utils.arrayify(signature).slice(0, 64))
         .digest();
 
-      userAbi = {
+      const userAbi = {
         pub_key: pubKey,
         signature: ethers.utils.arrayify(signature).slice(0, 64),
         hashed_message: ethers.utils.arrayify(hashedMessage),
@@ -147,22 +151,47 @@ describe('Setup', () => {
         merkle_root: mt.root.toString(),
         claimer: claimer1.address,
       };
-    });
+      return userAbi;
+    };
 
-    test('Collects tokens from a whitelisted user', async () => {
+    test('Collects tokens from an eligible user', async () => {
+      const userAbi = await getUserAbi(user1);
+      console.log('Valid ABI', userAbi);
       const proof = prove(userAbi, 'valid');
       expect(proof).to.exist;
 
-      const connectedAirdropContract = await airdropContract.connect(claimer1);
+      const connectedAirdropContract = airdropContract.connect(claimer1);
       const balanceBefore = await connectedAirdropContract.balanceOf(claimer1.address);
       expect(balanceBefore.toNumber()).to.equal(0);
       await connectedAirdropContract.claim(
         '0x' + proof.toString(),
-        ethers.utils.hexlify(nullifier),
+        ethers.utils.hexlify(userAbi.nullifier),
       );
 
       const balanceAfter = await connectedAirdropContract.balanceOf(claimer1.address);
       expect(balanceAfter.toNumber()).to.equal(1);
+    });
+
+    test('Fails to collect tokens of an eligible user with a non-authorized account (front-running)', async () => {
+      try {
+        const userAbi = await getUserAbi(user1);
+        console.log('Valid ABI', userAbi);
+        const proof = prove(userAbi, 'valid');
+        expect(proof).to.exist;
+
+        const connectedAirdropContract = airdropContract.connect(claimer2);
+        const balanceBefore = await connectedAirdropContract.balanceOf(claimer2.address);
+        expect(balanceBefore.toNumber()).to.equal(0);
+        await connectedAirdropContract.claim(
+          '0x' + proof.toString(),
+          ethers.utils.hexlify(userAbi.nullifier),
+        );
+
+        const balanceAfter = await connectedAirdropContract.balanceOf(claimer2.address);
+        expect(balanceAfter.toNumber()).to.equal(0);
+      } catch (e: any) {
+        expect(e.error.reason).to.contain('PROOF_FAILURE()');
+      }
     });
   });
 });
