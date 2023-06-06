@@ -19,7 +19,7 @@ Use examples for inspiration and to learn more about how Noir works.
 
 ## Support
 
-Need help? Join the [Noir Discord](https://discord.gg/JtqzkdeQ6G)!
+Need help? Join the [Noir Discord](https://discord.gg/JtqzkdeQ6G) or reach out on [Twitter](https://twitter.com/NoirLang).
 
 ## Contributing
 
