@@ -3,7 +3,6 @@ import ethers, { Contract } from 'ethers';
 import fs from 'fs';
 import path from 'path';
 import { exec, execSync } from 'child_process';
-import { expect } from 'chai';
 import { MerkleTree } from '../utils/merkleTree'; // MerkleTree.js
 import merkle from './merkle.json'; // merkle
 import keccak256 from 'keccak256';
@@ -16,7 +15,7 @@ import { Fr } from '@aztec/bb.js/dest/types';
 import airdrop from '../artifacts/circuits/contract/Airdrop.sol/Airdrop.json';
 import verifier from '../artifacts/circuits/contract/plonk_vk.sol/UltraVerifier.json';
 
-import { test, beforeAll, describe } from 'vitest';
+import { test, beforeAll, describe, expect } from 'vitest';
 interface AbiHashes {
   [key: string]: string;
 }
