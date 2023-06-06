@@ -17,6 +17,10 @@ Use examples for inspiration and to learn more about how Noir works.
 
 - Private Voting: [`./foundry-voting`](./foundry-voting)
 
+## Support
+
+Need help? Join the [Noir Discord](https://discord.gg/JtqzkdeQ6G)!
+
 ## Contributing
 
 We welcome contributions! Check out the [contributing guidelines](./CONTRIBUTING.md) for more info.
