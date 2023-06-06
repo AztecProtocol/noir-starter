@@ -1,0 +1,7 @@
+cache
+out
+proofs
+broadcast
+.env
+plonk_vk.sol
+circuits/target/*

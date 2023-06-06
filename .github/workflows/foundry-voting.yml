@@ -1,0 +1,39 @@
+# a github workflow that runs curl -L https://foundry.paradigm.xyz | bash then nargo codegen-verifier then nargo prove p
+
+name: Run fourndry-voting Tests on PR
+on:
+  pull_request:
+    paths:
+      - 'foundry-voting/**'
+
+jobs:
+  test:
+    defaults:
+      run:
+        working-directory: foundry-voting
+
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Install Nargo
+      uses: noir-lang/noirup@v0.1.2
+      with:
+        toolchain: stable
+
+    - name: Install Foundry
+      uses: foundry-rs/foundry-toolchain@v1
+
+    - name: Generate verifier contract
+      run: |
+        nargo codegen-verifier && cp contract/plonk_vk.sol ../src/plonk_vk.sol
+      working-directory: foundry-voting/circuits
+
+    - name: Generate proof
+      run: |
+        nargo prove p
+      working-directory: foundry-voting/circuits
+
+    - name: Test with Foundry
+      run: |
+        forge test --optimize --optimizer-runs 5000 --evm-version london
