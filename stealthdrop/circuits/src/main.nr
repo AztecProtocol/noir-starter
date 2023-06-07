@@ -1,4 +1,5 @@
 use dep::std;
+use dep::ecrecover;
 
 // TODO have this in circuits/src (check foundry voting example)
 fn main(
@@ -17,31 +18,14 @@ fn main(
 ) {
   // step 1, verify the signature of the known hash corresponds to the public key
   // of the original address
-  let mut pubKeyX : [u8; 32] = [0; 32];
-  let mut pubKeyY : [u8; 32] = [0; 32];
-  for i in 0..32 {
-    pubKeyX[i] = pub_key[i];
-    pubKeyY[i] = pub_key[i+32];
-  }
-  let isValid = std::ecdsa_secp256k1::verify_signature(pubKeyX, pubKeyY, signature, hashed_message);
-  assert(isValid == true);
+  let key = ecrecover::secp256k1::PubKey::from_unified(pub_key);
+  let address = ecrecover::ecrecover(key.pub_x, key.pub_y, signature, hashed_message);
 
   // step 2, verify the nullifier is correctly calculated as h(signature)
   let calculatedNullifier = std::hash::blake2s(signature);
   assert(calculatedNullifier == nullifier);
 
   // step 3, check leaf belongs to the merkle tree
-  let hashOfPubKey = std::hash::keccak256(pub_key);
-  let mut address : Field = 0;
-  let mut v : Field = 1;
-
-  // TODO why loops take so long?
-  for i in 0..20 {
-      let index = (20 - i);
-      address += hashOfPubKey[index + 11] as Field * v;
-      v *= 256;
-  }
-
   let new_root = std::merkle::compute_merkle_root(address, index, merkle_path);
   assert(new_root == merkle_root);
 
