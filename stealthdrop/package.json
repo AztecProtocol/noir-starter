@@ -3,9 +3,6 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "dev": "next",
-    "build": "npm run deploy && next build",
-    "deploy": "hardhat run scripts/genContract.ts && hardhat compile && hardhat run --network ${NETWORK} scripts/deploy.ts",
     "test": "vitest --watch"
   },
   "dependencies": {
