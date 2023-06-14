@@ -48,7 +48,7 @@ We're ready to test with Foundry. There's a basic test inside the `test` folder 
 By running the following command, forge will compile the contract with 5000 rounds of optimization and the London EVM version. __You need to use these optimizer settings to supress the "stack too deep" error on the solc compiler__. Then it will run the test, expecting it to pass with correct inputs, and fail with wrong inputs:
 
 ```bash
-forge test --optimize --optimizer-runs 5000 --evm-version london --ffi
+forge test --optimize --optimizer-runs 5000 --evm-version london
 ```
 
 ### Deploy with Foundry
