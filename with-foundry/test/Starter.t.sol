@@ -2,7 +2,7 @@ pragma solidity ^0.8.17;
 
 import "forge-std/Test.sol";
 import "../contract/Starter.sol";
-//import "../circuits/contract/plonk_vk.sol";
+import "../circuits/contract/plonk_vk.sol";
 
 contract StarterTest is Test {
     Starter public starter;
