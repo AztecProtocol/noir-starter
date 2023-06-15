@@ -49,7 +49,7 @@ contract StarterTest is Test {
         starter.verifyEqual(proofBytes, dynamicCorrect);
     }
 
-    function test_dynamicProofThirdTest() public {
+    function test_dynamicProofSecondTest() public {
         string[] memory _fieldNames = new string[](2);
         string[] memory _fieldValues = new string[](2);
 
@@ -64,7 +64,7 @@ contract StarterTest is Test {
         starter.verifyEqual(proofBytes, dynamicCorrect);
     }
 
-    function test_dynamicProofSecondTest() public {
+    function test_dynamicProofThirdTest() public {
         string[] memory _fieldNames = new string[](2);
         string[] memory _fieldValues = new string[](2);
 
