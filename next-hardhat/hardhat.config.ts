@@ -25,7 +25,7 @@ const config: HardhatUserConfig = {
       accounts: [process.env.SEPOIA_DEPLOYER_PRIVATE_KEY as string],
     },
     localhost: {
-      url: 'http://localhost:8545'
+      url: 'http://localhost:8545',
     },
     hardhat: {
       mining: {
@@ -35,7 +35,7 @@ const config: HardhatUserConfig = {
     },
   },
   paths: {
-    sources: './contract',
+    sources: './circuits/contract',
   },
 };
 
