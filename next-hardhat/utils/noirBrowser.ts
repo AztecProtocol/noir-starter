@@ -91,8 +91,6 @@ export class NoirBrowser {
     initialWitness.set(1, ethers.utils.hexZeroPad(`0x${input.x.toString(16)}`, 32));
     initialWitness.set(2, ethers.utils.hexZeroPad(`0x${input.y.toString(16)}`, 32));
 
-    console.log(this.bytecode, initialWitness);
-
     const witness = await executeCircuit(this.bytecode, initialWitness, () => {
       throw Error('unexpected oracle');
     });
