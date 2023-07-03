@@ -19,17 +19,6 @@ describe('It compiles noir program code, receiving circuit bytes and abi object.
     provider,
   );
 
-  // beforeAll(async () => {
-  //   await noir.compile();
-
-  //   expect(noir.compiled).to.have.property('circuit');
-  //   expect(noir.compiled).to.have.property('abi');
-
-  //   expect(noir.acir).to.have.property('opcodes');
-  //   expect(noir.acir).to.have.property('current_witness_index');
-  //   expect(noir.acir).to.have.property('public_inputs');
-  // });
-
   beforeAll(async () => {
     const Verifier = new ethers.ContractFactory(verifier.abi, verifier.bytecode, deployerWallet);
     verifierContract = await Verifier.deploy();
