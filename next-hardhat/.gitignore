@@ -40,11 +40,11 @@ next-env.d.ts
 
 # nargo
 target
-contract
+# contract
 
 # hardhat
 cache
-artifacts
+# artifacts
 typechain-types
 proofs
 

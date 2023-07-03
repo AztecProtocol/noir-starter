@@ -5,7 +5,7 @@ import {
   verify_proof,
   // @ts-ignore
 } from '@noir-lang/barretenberg';
-import { NoirServer } from '../utils/noirNode';
+import { NoirNode } from '../utils/noirNode';
 
 const input = { x: 1, y: 1 };
 
@@ -17,11 +17,12 @@ async function main() {
   // Get the address of the deployed verifier contract
   const verifierAddr = await verifier.deployed();
 
-  const noir = new NoirServer();
-  const acir = await noir.compile();
+  const noir = new NoirNode();
+
+  await noir.init();
   const witness = await noir.generateWitness(input);
-  const correctProof = await create_proof(noir.prover, noir.acir, input);
-  const functionGasFees = await verifierAddr.estimateGas.verify(correctProof);
+  const proof = await noir.generateProof(witness);
+  const functionGasFees = await verifierAddr.estimateGas.verify(proof);
 
   console.log('Gas cost to call verify(),', functionGasFees.toString());
 
