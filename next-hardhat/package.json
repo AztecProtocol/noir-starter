@@ -12,8 +12,8 @@
   "dependencies": {
     "@aztec/bb.js": "https://github.com/AztecProtocol/bb.js#multithreading",
     "@noir-lang/avcm.js": "https://github.com/noir-lang/acvm-simulator-wasm.git",
-    "@noir-lang/noir_wasm": "https://github.com/noir-lang/noir_wasm",
-    "@noir-lang/noir-source-resolver": "file:../ignore/noir-source-resolver",
+    "@noir-lang/noir_wasm": "https://github.com/signorecello/noir_wasm",
+    "@noir-lang/noir-source-resolver": "https://github.com/signorecello/noir-source-resolver.git",
     "@nomicfoundation/hardhat-chai-matchers": "^1.0.6",
     "@nomicfoundation/hardhat-toolbox": "^2.0.1",
     "@nomiclabs/hardhat-ethers": "^2.2.2",
