@@ -1,19 +1,38 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  webpack(config, { isServer, dev }) {
-    config.resolve.alias = {
-      ...config.resolve.alias,
-      // your aliases
-    };
-    // Use the client static directory in the server bundle and prod mode
-    // Fixes `Error occurred prerendering page "/"`
-    config.output.webassemblyModuleFilename =
-      isServer && !dev ? '../static/wasm/[modulehash].wasm' : 'static/wasm/[modulehash].wasm';
+  // permits loading of the worker file (barretenberg.js):
+  experimental: {
+    esmExternals: 'loose',
+  },
+  // test to check why netlify is failing:
+  webpack: (config, { dev, isServer }) => {
+    if (!dev) {
+      config.optimization.minimize = false;
 
-    // Since Webpack 5 doesn't enable WebAssembly by default, we should do it manually
-    config.experiments = { ...config.experiments, asyncWebAssembly: true };
+      if (!isServer) {
+        config.optimization.minimizer = [];
+      }
+    }
 
     return config;
+  },
+  // allows for local running of multithreads:
+  async headers() {
+    return [
+      {
+        source: '/(.*)',
+        headers: [
+          {
+            key: 'Cross-Origin-Embedder-Policy',
+            value: 'require-corp',
+          },
+          {
+            key: 'Cross-Origin-Opener-Policy',
+            value: 'same-origin',
+          },
+        ],
+      },
+    ];
   },
 };
 

@@ -5,7 +5,7 @@ import {
   verify_proof,
   // @ts-ignore
 } from '@noir-lang/barretenberg';
-import { NoirServer } from '../utils/noir/noirServer';
+import { NoirServer } from '../utils/noirNode';
 
 const input = { x: 1, y: 1 };
 

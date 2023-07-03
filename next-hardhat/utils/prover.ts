@@ -1,5 +1,5 @@
 // @ts-ignore
-import { NoirBrowser } from '../utils/noir/noirBrowser';
+import Noir from '../utils/noir';
 
 // // Add an event listener for the message event
 onmessage = async event => {
@@ -10,11 +10,13 @@ onmessage = async event => {
       return newObj;
     }, {});
 
+    const noir = new Noir();
+    noir.init();
 
-    const noir = new NoirBrowser();
-    await noir.compile();
-    const proof = await noir.createProof({ input: hexInputObj })
-    postMessage(proof);
+    // const noir = new NoirBrowser();
+    // await noir.compile();
+    // const proof = await noir.createProof({ input: hexInputObj })
+    // postMessage(proof);
   } catch (er) {
     console.log(er);
     postMessage(er);

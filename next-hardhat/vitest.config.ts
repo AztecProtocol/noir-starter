@@ -11,11 +11,5 @@ export default defineConfig({
     setupFiles: ['dotenv/config'],
     watchExclude: ['node_modules', 'artifacts', 'cache'],
     forceRerunTriggers: ['circuits/**/*.sol'],
-    deps: {
-      experimentalOptimizer: {
-        enabled: true,
-        include: ['@noir-lang/noir-source-resolver'],
-      },
-    },
   },
 });
