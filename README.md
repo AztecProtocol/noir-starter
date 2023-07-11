@@ -11,6 +11,10 @@ Use templates as a starting point for your project.
 - Next.js + Hardhat: [`./next-hardhat`](./next-hardhat)
 - Foundry: [`./with-foundry`](./with-foundry)
 
+## Example Projects
+
+You can view more complete example projects written in Noir in the [Noir By Example](https://github.com/noir-lang/noir-by-example) repo.
+
 ## Support
 
 Need help? Join the [Noir Discord](https://discord.gg/JtqzkdeQ6G) or reach out on [Twitter](https://twitter.com/NoirLang).
