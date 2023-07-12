@@ -13,7 +13,7 @@ Use templates as a starting point for your project.
 
 ## Example Projects
 
-You can view more complete example projects written in Noir in the [Noir By Example](https://github.com/noir-lang/noir-by-example) repo.
+You can view more complete example projects written in Noir in the [Noir Examples](https://github.com/noir-lang/noir-examples) repo.
 
 ## Support
 
