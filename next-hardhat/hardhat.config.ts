@@ -20,9 +20,9 @@ const config: HardhatUserConfig = {
       url: `https://polygon-mumbai.g.alchemy.com/v2/${process.env.MUMBAI_ALCHEMY_KEY}`,
       accounts: [process.env.MUMBAI_DEPLOYER_PRIVATE_KEY as string],
     },
-    sepoia: {
-      url: `https://eth-sepolia.g.alchemy.com/v2/${process.env.SEPOIA_ALCHEMY_KEY}`,
-      accounts: [process.env.SEPOIA_DEPLOYER_PRIVATE_KEY as string],
+    sepolia: {
+      url: `https://eth-sepolia.g.alchemy.com/v2/${process.env.SEPOLIA_ALCHEMY_KEY}`,
+      accounts: [process.env.SEPOLIA_DEPLOYER_PRIVATE_KEY as string],
     },
     localhost: {
       url: 'http://localhost:8545'
