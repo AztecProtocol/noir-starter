@@ -74,12 +74,12 @@ PRIVATE_KEY=<the private key you just got from anvil>
 
 #### (Option 2) Prepare for testnet
 
-Pick a testnet like Sepoia or Goerli. Generate a private key and use a faucet (like [this one for Sepoia](https://sepoliafaucet.com/)) to get some coins in there.
+Pick a testnet like Sepolia or Goerli. Generate a private key and use a faucet (like [this one for Sepolia](https://sepoliafaucet.com/)) to get some coins in there.
 
 Edit your `.env` file to look like:
 
 ```env
-SEPOIA_RPC=https://rpc2.sepolia.org
+SEPOLIA_RPC=https://rpc2.sepolia.org
 PRIVATE_KEY=<the private key of the account with your coins>
 ```
 

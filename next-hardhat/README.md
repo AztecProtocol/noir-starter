@@ -65,7 +65,7 @@ In `./circuits`:
 - Copy `./.env.example` to `./.env` and add keys for alchemy (to act as a node) and the deployer's private key. Make sure you have funds in this account.
 - Run `NETWORK=localhost npm build` to build the project and deploy contracts to the local development chain
 
-You can choose any other network in `hardhat.config.ts` and deploy there using this `NETWORK` environment variable. For example, `NETWORK=mumbai npm build` or `NETWORK=sepoia npm build`. Feel free to contribute with other networks in `hardhat.config.ts`
+You can choose any other network in `hardhat.config.ts` and deploy there using this `NETWORK` environment variable. For example, `NETWORK=mumbai npm build` or `NETWORK=sepolia npm build`. Feel free to contribute with other networks in `hardhat.config.ts`
 
 ## Testing
 
