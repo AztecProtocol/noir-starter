@@ -11,8 +11,8 @@
     "verify_gas": "hardhat run scripts/genContract.ts && hardhat run scripts/verificationGas.ts"
   },
   "dependencies": {
-    "@aztec/bb.js": "https://github.com/AztecProtocol/bb.js#multithreading",
-    "@noir-lang/avcm.js": "https://github.com/noir-lang/acvm-simulator-wasm.git",
+    "@aztec/bb.js": "^0.3.3",
+    "@noir-lang/acvm_js": "github:noir-lang/acvm-simulator-wasm.git",
     "@noir-lang/noir_wasm": "https://github.com/signorecello/noir_wasm",
     "@noir-lang/noir-source-resolver": "https://github.com/signorecello/noir-source-resolver.git",
     "@nomicfoundation/hardhat-chai-matchers": "^1.0.6",
