@@ -9,8 +9,8 @@ import {
   newBarretenbergApiSync,
   newBarretenbergApiAsync,
   RawBuffer,
-} from '@aztec/bb.js/dest';
-import { Ptr } from '@aztec/bb.js/dest/types';
+} from '@aztec/bb.js/dest/node';
+import { Ptr } from '@aztec/bb.js/dest/node/types';
 
 import { gunzipSync } from 'zlib';
 import fs, { readFileSync } from 'fs';

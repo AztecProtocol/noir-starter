@@ -1,11 +1,19 @@
 import initNoirWasm, { compile } from '@noir-lang/noir_wasm';
-import initACVM, { executeCircuit, compressWitness } from '@noir-lang/avcm.js';
+import { WitnessMap, executeCircuit, compressWitness } from '@noir-lang/acvm_js';
 import { ethers } from 'ethers';
 
 import { initialiseResolver } from '@noir-lang/noir-source-resolver';
-import { Crs, BarretenbergApiAsync, RawBuffer } from '@aztec/bb.js/dest/browser';
+import {
+  Crs,
+  BarretenbergApiAsync,
+  BarretenbergApiSync,
+  newBarretenbergApiSync,
+  newBarretenbergApiAsync,
+  RawBuffer,
+  BarretenbergWasm,
+} from '@aztec/bb.js/dest/browser';
+
 import { Ptr } from '@aztec/bb.js/dest/browser/types';
-import * as bbjs from '@aztec/bb.js/dest/browser';
 
 // Maximum we support.
 const MAX_CIRCUIT_SIZE = 2 ** 19;
@@ -56,7 +64,7 @@ export class NoirBrowser {
 
     this.bytecode = compiled_noir.circuit;
 
-    const { wasm, worker } = await bbjs.BarretenbergWasm.newWorker(NUM_THREADS);
+    const { wasm, worker } = await BarretenbergWasm.newWorker(NUM_THREADS);
     const api = new BarretenbergApiAsync(worker, wasm);
 
     const circuitSize = await getGates(api, this.bytecode);
@@ -85,8 +93,6 @@ export class NoirBrowser {
   }
 
   async generateWitness(input: any) {
-    await initACVM();
-
     const initialWitness = new Map<number, string>();
     initialWitness.set(1, ethers.utils.hexZeroPad(`0x${input.x.toString(16)}`, 32));
     initialWitness.set(2, ethers.utils.hexZeroPad(`0x${input.y.toString(16)}`, 32));
