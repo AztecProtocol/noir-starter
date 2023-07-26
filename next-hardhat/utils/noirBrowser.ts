@@ -55,14 +55,18 @@ export class NoirBrowser {
   async init() {
     await initNoirWasm();
     const code = await this.fetchCode();
+    console.log(code);
     initialiseResolver((id: any) => {
-      console.log(id);
+      console.log(code[id]);
       return code[id];
     });
 
-    const compiled_noir = compile({});
+    const compiled_noir = compile({
+      entry_point: 'main.nr',
+    });
 
     this.bytecode = compiled_noir.circuit;
+    console.log(this.bytecode);
 
     const { wasm, worker } = await BarretenbergWasm.newWorker(NUM_THREADS);
     const api = new BarretenbergApiAsync(worker, wasm);
