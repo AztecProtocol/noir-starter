@@ -48,8 +48,12 @@ export class NoirNode {
   acirComposer = {} as Ptr;
 
   async init() {
-    this.acir = getBytecode('circuits/target/main.json');
-    this.acirBuffer = Buffer.from(this.acir, 'base64');
+    const compiled_noir = compile({
+      entry_point: `${__dirname}/../circuits/src/main.nr`,
+    });
+    console.log(compiled_noir);
+
+    this.acirBuffer = Buffer.from(compiled_noir.circuit, 'base64');
     this.acirBufferUncompressed = gunzipSync(this.acirBuffer);
 
     const api = await newBarretenbergApiAsync(4);

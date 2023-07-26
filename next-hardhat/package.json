@@ -13,7 +13,7 @@
   "dependencies": {
     "@aztec/bb.js": "^0.3.3",
     "@noir-lang/acvm_js": "github:noir-lang/acvm-simulator-wasm.git",
-    "@noir-lang/noir_wasm": "https://github.com/signorecello/noir_wasm",
+    "@noir-lang/noir_wasm": "github:signorecello/noir_wasm",
     "@noir-lang/noir-source-resolver": "https://github.com/signorecello/noir-source-resolver.git",
     "@nomicfoundation/hardhat-chai-matchers": "^1.0.6",
     "@nomicfoundation/hardhat-toolbox": "^2.0.1",
