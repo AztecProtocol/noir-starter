@@ -23,18 +23,43 @@ function Component() {
   // Calculates proof
   const calculateProof = async () => {
     setPending(true);
-
-    const witness = await noir.generateWitness(input);
-    const proof = await noir.generateProof(witness);
-    setProof(proof);
+    try {
+      const witness = await noir.generateWitness(input);
+      const proof = await noir.generateProof(witness);
+      setProof(proof);
+    } catch (err) {
+      toast.error('Error generating proof');
+    }
     setPending(false);
   };
 
   const verifyProof = async () => {
     // only launch if we do have an acir and a proof to verify
     if (proof) {
-      const verification = await noir.verifyProof(proof);
-      setVerification(verification);
+      try {
+        const verification = await noir.verifyProof(proof);
+        console.log(verification);
+        setVerification(verification);
+        toast.success('Proof verified!');
+
+        const ethers = new Ethers();
+
+        const yBytes32 = ethers.utils.hexZeroPad(`0x${Number(input.y).toString(16)}`, 32);
+
+        let publicInputs = [yBytes32];
+        const slicedProof = proof.slice(32);
+
+        const ver = await ethers.contract.verify(slicedProof, publicInputs);
+        if (ver) {
+          toast.success('Proof verified on-chain!');
+          setVerification(true);
+        } else {
+          toast.error('Proof failed on-chain verification');
+          setVerification(false);
+        }
+      } catch (err) {
+        toast.error('Error verifying your proof');
+      }
     }
   };
 
@@ -52,16 +77,8 @@ function Component() {
   };
 
   useEffect(() => {
-    new Ethers();
     initNoir();
   }, []);
-
-  // Shows verification result
-  useEffect(() => {
-    if (verification) {
-      toast.success('Proof verified!');
-    }
-  }, [verification]);
 
   return (
     <div className="gameContainer">

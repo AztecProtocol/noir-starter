@@ -31,7 +31,6 @@ describe('It compiles noir program code, receiving circuit bytes and abi object.
     const input = { x: 1, y: 2 };
     await noir.init();
     const witness = await noir.generateWitness(input);
-    console.log(witness);
     const proof = await noir.generateProof(witness);
 
     expect(proof instanceof Uint8Array).to.be.true;

@@ -1,5 +1,5 @@
 import initNoirWasm, { compile } from '@noir-lang/noir_wasm';
-import { WitnessMap, executeCircuit, compressWitness } from '@noir-lang/acvm_js';
+import initACVM, { WitnessMap, executeCircuit, compressWitness } from '@noir-lang/acvm_js';
 import { ethers } from 'ethers';
 
 import { initialiseResolver } from '@noir-lang/noir-source-resolver';
@@ -12,7 +12,7 @@ import {
   RawBuffer,
   BarretenbergWasm,
 } from '@aztec/bb.js/dest/browser';
-
+import { unzipSync, decompressSync } from 'fflate';
 import { Ptr } from '@aztec/bb.js/dest/browser/types';
 
 // Maximum we support.
@@ -40,12 +40,14 @@ export class NoirBrowser {
   bytecode: Uint8Array = Uint8Array.from([]);
   api = {} as BarretenbergApiAsync;
   acirComposer = {} as Ptr;
+  acirBuffer: Uint8Array = Uint8Array.from([]);
+  acirBufferUncompressed: Uint8Array = Uint8Array.from([]);
 
   async fetchCode() {
     let code: { [key: string]: string } = {};
     for (const path of await listCircuits()) {
-      const fileUrl = `/api/readCircuitFile?filename=${path.replace('/', '')}`;
-      code[path.replace('/', '')] = await fetch(fileUrl)
+      const fileUrl = `/api/readCircuitFile?filename=${path}`;
+      code[`/${path}`] = await fetch(fileUrl)
         .then(r => r.text())
         .then(code => code);
     }
@@ -56,22 +58,20 @@ export class NoirBrowser {
     await initNoirWasm();
     const code = await this.fetchCode();
     console.log(code);
+
     initialiseResolver((id: any) => {
-      console.log(code[id]);
       return code[id];
     });
 
-    const compiled_noir = compile({
-      entry_point: 'main.nr',
-    });
-
-    this.bytecode = compiled_noir.circuit;
-    console.log(this.bytecode);
-
+    const compiled_noir = compile({});
     const { wasm, worker } = await BarretenbergWasm.newWorker(NUM_THREADS);
     const api = new BarretenbergApiAsync(worker, wasm);
 
-    const circuitSize = await getGates(api, this.bytecode);
+    this.acirBuffer = Buffer.from(compiled_noir.circuit, 'base64');
+    this.acirBufferUncompressed = decompressSync(this.acirBuffer);
+
+    const circuitSize = await getGates(api, this.acirBufferUncompressed);
+
     const subgroupSize = Math.pow(2, Math.ceil(Math.log2(circuitSize)));
     if (subgroupSize > MAX_CIRCUIT_SIZE) {
       throw new Error(
@@ -96,24 +96,33 @@ export class NoirBrowser {
     this.acirComposer = await api.acirNewAcirComposer(subgroupSize);
   }
 
-  async generateWitness(input: any) {
-    const initialWitness = new Map<number, string>();
+  async generateWitness(input: any): Promise<Uint8Array> {
+    await initACVM();
+
+    const initialWitness: WitnessMap = new Map<number, string>();
     initialWitness.set(1, ethers.utils.hexZeroPad(`0x${input.x.toString(16)}`, 32));
     initialWitness.set(2, ethers.utils.hexZeroPad(`0x${input.y.toString(16)}`, 32));
 
-    const witness = await executeCircuit(this.bytecode, initialWitness, () => {
+    const witnessMap = await executeCircuit(this.acirBuffer, initialWitness, () => {
       throw Error('unexpected oracle');
     });
-    const witnessBuff = compressWitness(witness);
+
+    const witnessBuff = compressWitness(witnessMap);
     return witnessBuff;
   }
 
   async generateProof(witness: Uint8Array) {
-    const proof = await this.api.acirCreateProof(this.acirComposer, this.bytecode, witness, false);
+    const proof = await this.api.acirCreateProof(
+      this.acirComposer,
+      this.acirBufferUncompressed,
+      decompressSync(witness),
+      false,
+    );
     return proof;
   }
 
   async verifyProof(proof: Uint8Array) {
+    await this.api.acirInitProvingKey(this.acirComposer, this.acirBufferUncompressed);
     const verified = await this.api.acirVerifyProof(this.acirComposer, proof, false);
     return verified;
   }

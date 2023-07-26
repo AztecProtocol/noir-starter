@@ -48,6 +48,7 @@ class Ethers {
         }
       }
       this.contract = this.contract.connect(this.signer);
+      // console.log(this.contract);
     }
   }
 }

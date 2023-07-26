@@ -51,7 +51,6 @@ export class NoirNode {
     const compiled_noir = compile({
       entry_point: `${__dirname}/../circuits/src/main.nr`,
     });
-    console.log(compiled_noir);
 
     this.acirBuffer = Buffer.from(compiled_noir.circuit, 'base64');
     this.acirBufferUncompressed = gunzipSync(this.acirBuffer);
@@ -87,6 +86,10 @@ export class NoirNode {
     const initialWitness: WitnessMap = new Map<number, string>();
     initialWitness.set(1, ethers.utils.hexZeroPad(`0x${input.x.toString(16)}`, 32));
     initialWitness.set(2, ethers.utils.hexZeroPad(`0x${input.y.toString(16)}`, 32));
+
+    console.log(this.acirBuffer);
+
+    console.log(initialWitness);
     const witnessMap = await executeCircuit(this.acirBuffer, initialWitness, () => {
       throw Error('unexpected oracle');
     });
