@@ -51,6 +51,18 @@ By running the following command, forge will compile the contract with 5000 roun
 forge test --optimize --optimizer-runs 5000 --evm-version london
 ```
 
+#### Testing On-chain
+
+You can test that the Noir Solidity verifier contract works on a given chain by running the `Verify.s.sol` script against the appropriate RPC endpoint.
+
+```bash
+forge script script/Verify.s.sol --rpc-url $RPC_ENDPOINT  --broadcast     
+```
+
+If that doesn't work, you can add the network to Metamask and deploy and test via [Remix](https://remix.ethereum.org/).
+
+Note that some EVM network infrastructure may behave differently and this script may fail for reasons unrelated to the compatibility of the verifier contract.
+
 ### Deploy with Foundry
 
 This template also has a script to help you deploy on your own network. But for that you need to run your own node or, alternatively, deploy on a testnet.
@@ -74,12 +86,12 @@ PRIVATE_KEY=<the private key you just got from anvil>
 
 #### (Option 2) Prepare for testnet
 
-Pick a testnet like Sepoia or Goerli. Generate a private key and use a faucet (like [this one for Sepoia](https://sepoliafaucet.com/)) to get some coins in there.
+Pick a testnet like Sepolia or Goerli. Generate a private key and use a faucet (like [this one for Sepolia](https://sepoliafaucet.com/)) to get some coins in there.
 
 Edit your `.env` file to look like:
 
 ```env
-SEPOIA_RPC=https://rpc2.sepolia.org
+SEPOLIA_RPC=https://rpc2.sepolia.org
 PRIVATE_KEY=<the private key of the account with your coins>
 ```
 
