@@ -43,13 +43,10 @@ function Component() {
         toast.success('Proof verified!');
 
         const ethers = new Ethers();
-
-        const yBytes32 = ethers.utils.hexZeroPad(`0x${Number(input.y).toString(16)}`, 32);
-
-        let publicInputs = [yBytes32];
+        const publicInputs = proof.slice(0, 32);
         const slicedProof = proof.slice(32);
 
-        const ver = await ethers.contract.verify(slicedProof, publicInputs);
+        const ver = await ethers.contract.verify(slicedProof, [publicInputs]);
         if (ver) {
           toast.success('Proof verified on-chain!');
           setVerification(true);
