@@ -2,7 +2,7 @@
 import { expect } from 'chai';
 import ethers, { Contract } from 'ethers';
 import path from 'path';
-import { NoirNode } from '../utils/noirNode';
+import { NoirNode } from '../utils/noir/noirNode';
 import { execSync } from 'child_process';
 
 const noir = new NoirNode();

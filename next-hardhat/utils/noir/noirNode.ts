@@ -49,7 +49,7 @@ export class NoirNode {
 
   async init() {
     const compiled_noir = compile({
-      entry_point: `${__dirname}/../circuits/src/main.nr`,
+      entry_point: `${__dirname}/../../circuits/src/main.nr`,
     });
 
     this.acirBuffer = Buffer.from(compiled_noir.circuit, 'base64');

@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import Ethers from '../utils/ethers';
 import React from 'react';
-import { NoirBrowser } from '../utils/noirBrowser';
+import { NoirBrowser } from '../utils/noir/noirBrowser';
 
 import { ThreeDots } from 'react-loader-spinner';
 
