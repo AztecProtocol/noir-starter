@@ -1,4 +1,5 @@
-import { compile } from '@noir-lang/noir_wasm';
+// TODO use the JSON directly for now
+// import { compile } from '@noir-lang/noir_wasm';
 import { WitnessMap, executeCircuit, compressWitness } from '@noir-lang/acvm_js';
 import { ethers } from 'ethers';
 
@@ -48,11 +49,14 @@ export class NoirNode {
   acirComposer = {} as Ptr;
 
   async init() {
-    const compiled_noir = compile({
-      entry_point: `${__dirname}/../../circuits/src/main.nr`,
-    });
+    // TODO disabled until we get a fix for std
+    // const compiled_noir = compile({
+    //   entry_point: `${__dirname}/../../circuits/src/main.nr`,
+    // });
 
-    this.acirBuffer = Buffer.from(compiled_noir.circuit, 'base64');
+    const compiled_noir = getBytecode(`circuits/target/main.json`);
+
+    this.acirBuffer = Buffer.from(compiled_noir, 'base64');
     this.acirBufferUncompressed = gunzipSync(this.acirBuffer);
 
     const api = await newBarretenbergApiAsync(4);

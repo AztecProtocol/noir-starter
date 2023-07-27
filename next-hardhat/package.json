@@ -3,18 +3,15 @@
   "version": "1.0.0",
   "description": "A template repository to get started with writing zero knowledge programs with Noir.",
   "scripts": {
-    "dev": "next",
-    "build": "hardhat compile && npm run deploy && next build",
+    "dev": "hardhat compile && yarn deploy && next",
+    "build": "hardhat compile && yarn deploy && next build",
     "start": "next start",
     "deploy": "hardhat compile && hardhat run --network ${NETWORK} scripts/deploy.ts",
-    "test": "hardhat compile && vitest",
-    "verify_gas": "hardhat run scripts/genContract.ts && hardhat run scripts/verificationGas.ts"
+    "test": "hardhat compile && vitest"
   },
   "dependencies": {
     "@aztec/bb.js": "^0.3.4",
     "@noir-lang/acvm_js": "github:noir-lang/acvm-simulator-wasm.git",
-    "@noir-lang/noir_wasm": "github:signorecello/noir_wasm",
-    "@noir-lang/noir-source-resolver": "https://github.com/signorecello/noir-source-resolver.git",
     "@nomicfoundation/hardhat-chai-matchers": "^1.0.6",
     "@nomicfoundation/hardhat-toolbox": "^2.0.1",
     "@nomiclabs/hardhat-ethers": "^2.2.2",
@@ -22,6 +19,7 @@
     "dotenv": "^16.0.3",
     "ethers": "^5.7.2",
     "fflate": "^0.8.0",
+    "hardhat": "^2.17.0",
     "next": "latest",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

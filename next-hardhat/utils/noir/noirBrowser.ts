@@ -1,8 +1,10 @@
-import initNoirWasm, { compile } from '@noir-lang/noir_wasm';
+// TODO use the JSON directly for now
+// import initNoirWasm, { compile } from '@noir-lang/noir_wasm';
+// import { initialiseResolver } from '@noir-lang/noir-source-resolver';
+
 import initACVM, { WitnessMap, executeCircuit, compressWitness } from '@noir-lang/acvm_js';
 import { ethers } from 'ethers';
 
-import { initialiseResolver } from '@noir-lang/noir-source-resolver';
 import {
   Crs,
   BarretenbergApiAsync,
@@ -43,11 +45,22 @@ export class NoirBrowser {
   acirBuffer: Uint8Array = Uint8Array.from([]);
   acirBufferUncompressed: Uint8Array = Uint8Array.from([]);
 
-  async fetchCode() {
-    let code: { [key: string]: string } = {};
+  // async fetchCode() {
+  //   let code: { [key: string]: string } = {};
+  //   for (const path of await listCircuits()) {
+  //     const fileUrl = `/api/readCircuitFile?filename=${path}`;
+  //     code[`/${path}`] = await fetch(fileUrl)
+  //       .then(r => r.text())
+  //       .then(code => code);
+  //   }
+  //   return code;
+  // }
+
+  async fetchJSON() {
+    let code: string = '';
     for (const path of await listCircuits()) {
-      const fileUrl = `/api/readCircuitFile?filename=${path}`;
-      code[`/${path}`] = await fetch(fileUrl)
+      const fileUrl = `/api/readCircuitJson?filename=${path.replace('.nr', '.json')}`;
+      code = await fetch(fileUrl)
         .then(r => r.text())
         .then(code => code);
     }
@@ -55,19 +68,20 @@ export class NoirBrowser {
   }
 
   async init() {
-    await initNoirWasm();
-    const code = await this.fetchCode();
-    console.log(code);
+    // TODO using JSON for now until the std bug is fixed
+    // await initNoirWasm();
+    // const code = await this.fetchCode();
+    // initialiseResolver((id: any) => {
+    //   return code[id];
+    // });
+    // const compiled_noir = compile({});
 
-    initialiseResolver((id: any) => {
-      return code[id];
-    });
+    const compiled_noir = JSON.parse(await this.fetchJSON()).bytecode;
 
-    const compiled_noir = compile({});
     const { wasm, worker } = await BarretenbergWasm.newWorker(NUM_THREADS);
     const api = new BarretenbergApiAsync(worker, wasm);
 
-    this.acirBuffer = Buffer.from(compiled_noir.circuit, 'base64');
+    this.acirBuffer = Buffer.from(compiled_noir, 'base64');
     this.acirBufferUncompressed = decompressSync(this.acirBuffer);
 
     const circuitSize = await getGates(api, this.acirBufferUncompressed);
