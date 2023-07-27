@@ -22,6 +22,8 @@ function Component() {
 
   // Calculates proof
   const calculateProof = async () => {
+    console.log('calculate proof');
+
     setPending(true);
     try {
       const witness = await noir.generateWitness(input);
@@ -38,7 +40,6 @@ function Component() {
     if (proof) {
       try {
         const verification = await noir.verifyProof(proof);
-        console.log(verification);
         setVerification(verification);
         toast.success('Proof verified!');
 
@@ -56,6 +57,8 @@ function Component() {
         }
       } catch (err) {
         toast.error('Error verifying your proof');
+      } finally {
+        noir.destroy();
       }
     }
   };
@@ -68,14 +71,13 @@ function Component() {
   }, [proof]);
 
   const initNoir = async () => {
-    await noir.init();
-    await noir.fetchCode();
+    noir.init();
     setNoir(noir);
   };
 
   useEffect(() => {
     initNoir();
-  }, []);
+  }, [proof]);
 
   return (
     <div className="gameContainer">

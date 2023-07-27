@@ -96,6 +96,10 @@ export class NoirBrowser {
     this.acirComposer = await api.acirNewAcirComposer(subgroupSize);
   }
 
+  destroy() {
+    this.api.destroy();
+  }
+
   async generateWitness(input: any): Promise<Uint8Array> {
     await initACVM();
 
