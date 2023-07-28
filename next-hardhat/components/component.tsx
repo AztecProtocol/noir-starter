@@ -22,16 +22,17 @@ function Component() {
 
   // Calculates proof
   const calculateProof = async () => {
-    console.log('calculate proof');
-
     setPending(true);
+
     try {
       const witness = await noir.generateWitness(input);
       const proof = await noir.generateProof(witness);
       setProof(proof);
     } catch (err) {
+      console.log(err);
       toast.error('Error generating proof');
     }
+
     setPending(false);
   };
 
@@ -71,8 +72,12 @@ function Component() {
   }, [proof]);
 
   const initNoir = async () => {
-    noir.init();
+    setPending(true);
+
+    await noir.init();
     setNoir(noir);
+
+    setPending(false);
   };
 
   useEffect(() => {
