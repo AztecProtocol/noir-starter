@@ -3,7 +3,7 @@ import { ethers } from 'hardhat';
 
 async function main() {
   // Deploy the verifier contract
-  const Verifier = await ethers.getContractFactory('TurboVerifier');
+  const Verifier = await ethers.getContractFactory('UltraVerifier');
   const verifier = await Verifier.deploy();
 
   // Get the address of the deployed verifier contract

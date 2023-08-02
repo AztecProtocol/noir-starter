@@ -11,7 +11,6 @@ const config: HardhatUserConfig = {
   solidity: {
     version: '0.8.18',
     settings: {
-      evmVersion: 'london',
       optimizer: { enabled: true, runs: 5000 },
     },
   },
@@ -25,7 +24,7 @@ const config: HardhatUserConfig = {
       accounts: [process.env.SEPOLIA_DEPLOYER_PRIVATE_KEY as string],
     },
     localhost: {
-      url: 'http://localhost:8545'
+      url: 'http://127.0.0.1:8545',
     },
     hardhat: {
       mining: {
@@ -35,7 +34,7 @@ const config: HardhatUserConfig = {
     },
   },
   paths: {
-    sources: './contract',
+    sources: './circuits/contract',
   },
 };
 

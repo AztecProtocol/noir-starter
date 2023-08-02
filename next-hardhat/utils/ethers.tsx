@@ -1,6 +1,6 @@
 import { ethers } from 'ethers';
 import addresses from './addresses.json';
-import artifacts from '../artifacts/contract/plonk_vk.sol/TurboVerifier.json';
+import artifacts from '../artifacts/circuits/contract/plonk_vk.sol/UltraVerifier.json';
 import { toast } from 'react-toastify';
 
 declare global {

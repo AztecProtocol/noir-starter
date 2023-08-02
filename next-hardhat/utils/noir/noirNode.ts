@@ -6,13 +6,13 @@ import {
   Crs,
   newBarretenbergApiAsync,
   RawBuffer,
-} from '@aztec/bb.js/dest/browser/index.js';
-import initACVM, { executeCircuit, compressWitness } from '@noir-lang/acvm_js';
+} from '@aztec/bb.js/dest/node/index.js';
+import { executeCircuit, compressWitness } from '@noir-lang/acvm_js';
 import { ethers } from 'ethers'; // I'm lazy so I'm using ethers to pad my input
 import circuit from '../../circuits/target/main.json';
 import { Ptr } from '@aztec/bb.js/dest/node/types';
 
-export class NoirBrowser {
+export class NoirNode {
   acir: string = '';
   acirBuffer: Uint8Array = Uint8Array.from([]);
   acirBufferUncompressed: Uint8Array = Uint8Array.from([]);
@@ -21,7 +21,6 @@ export class NoirBrowser {
   acirComposer = {} as Ptr;
 
   async init() {
-    await initACVM();
     // TODO disabled until we get a fix for std
     // const compiled_noir = compile({
     //   entry_point: `${__dirname}/../../circuits/src/main.nr`,
@@ -46,7 +45,7 @@ export class NoirBrowser {
     this.acirComposer = await this.api.acirNewAcirComposer(subgroupSize);
   }
 
-  async generateWitness(input: any): Promise<Uint8Array> {
+  async generateWitness(input: any, acirBuffer: Buffer): Promise<Uint8Array> {
     const initialWitness = new Map<number, string>();
     initialWitness.set(1, ethers.utils.hexZeroPad(`0x${input.x.toString(16)}`, 32));
     initialWitness.set(2, ethers.utils.hexZeroPad(`0x${input.y.toString(16)}`, 32));
