@@ -36,6 +36,8 @@ Compile your circuits with `nargo compile main`.
 
 You can choose any other network in `hardhat.config.ts` and deploy there using this `NETWORK` environment variable. For example, `NETWORK=mumbai yarn build` or `NETWORK=sepolia yarn build`. Feel free to contribute with other networks in `hardhat.config.ts`
 
+Once your contracts are deployed and the build is finished, start the web app with `yarn start`.
+
 ## Testing
 
 There is a basic [example test file](./test/index.ts) that shows the usage of Noir in a typescript `node.js` environment.
