@@ -8,25 +8,27 @@ It also features multiple files and different entry points by resolving multiple
 
 ## Getting Started
 
-1. Install dependencies with
+1. [Install nargo](https://noir-lang.org/getting_started/nargo_installation#option-1-noirup) version 0.9.0 with `noirup -v 0.9.0`
+
+2. Install dependencies with
 
 ```bash
 yarn
 ```
 
-1. Write circuits in `./circuits/src`.
+3. Write circuits in `./circuits/src`.
 
 You can read more about writing circuits in Noir on the [Noir docs](https://noir-lang.org/).
 
-2. Create the verifier contract
+4. Create the verifier contract
 
 Navigate to the `.circuits/` directory and run `nargo codegen-verifier`
 
-3. Compile your circuit
+5. Compile your circuit
 
-Compile your circuits if you haven't already with `nargo compile main`.
+Compile your circuits with `nargo compile main`.
 
-4. Deploy
+6. Deploy
 
 - Start a local development EVM at <http://localhost:8545>, for example with `npx hardhat node`.
 - Copy `./.env.example` to `./.env` and add keys for alchemy (to act as a node) and the deployer's private key. Make sure you have funds in this account.
