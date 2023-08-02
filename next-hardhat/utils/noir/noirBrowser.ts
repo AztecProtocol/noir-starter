@@ -1,123 +1,53 @@
 // TODO use the JSON directly for now
-// import initNoirWasm, { compile } from '@noir-lang/noir_wasm';
-// import { initialiseResolver } from '@noir-lang/noir-source-resolver';
-
-import initACVM, { WitnessMap, executeCircuit, compressWitness } from '@noir-lang/acvm_js';
-import { ethers } from 'ethers';
-
+// import { compile } from '@noir-lang/noir_wasm';
+import { decompressSync } from 'fflate';
 import {
-  Crs,
   BarretenbergApiAsync,
-  BarretenbergApiSync,
-  newBarretenbergApiSync,
+  Crs,
   newBarretenbergApiAsync,
   RawBuffer,
-  BarretenbergWasm,
-} from '@aztec/bb.js/dest/browser';
-import { unzipSync, decompressSync } from 'fflate';
-import { Ptr } from '@aztec/bb.js/dest/browser/types';
-
-// Maximum we support.
-const MAX_CIRCUIT_SIZE = 2 ** 19;
-const NUM_THREADS = 2;
-
-async function getGates(api: BarretenbergApiAsync, bytecode: Uint8Array) {
-  const { total } = await computeCircuitSize(api, bytecode);
-  return total;
-}
-
-async function computeCircuitSize(api: BarretenbergApiAsync, bytecode: Uint8Array) {
-  const [exact, total, subgroup] = await api.acirGetCircuitSizes(bytecode);
-  return { exact, total, subgroup };
-}
-
-const listCircuits = async () => {
-  const response = await fetch('/api/listDirectory');
-  const data = await response.json();
-  const files = data.files;
-  return files;
-};
+} from '@aztec/bb.js/dest/browser/index.js';
+import initACVM, { executeCircuit, compressWitness } from '@noir-lang/acvm_js';
+import { ethers } from 'ethers'; // I'm lazy so I'm using ethers to pad my input
+import circuit from '../../circuits/target/main.json';
+import { Ptr } from '@aztec/bb.js/dest/node/types';
 
 export class NoirBrowser {
-  bytecode: Uint8Array = Uint8Array.from([]);
-  api = {} as BarretenbergApiAsync;
-  acirComposer = {} as Ptr;
+  acir: string = '';
   acirBuffer: Uint8Array = Uint8Array.from([]);
   acirBufferUncompressed: Uint8Array = Uint8Array.from([]);
 
-  // async fetchCode() {
-  //   let code: { [key: string]: string } = {};
-  //   for (const path of await listCircuits()) {
-  //     const fileUrl = `/api/readCircuitFile?filename=${path}`;
-  //     code[`/${path}`] = await fetch(fileUrl)
-  //       .then(r => r.text())
-  //       .then(code => code);
-  //   }
-  //   return code;
-  // }
-
-  async fetchJSON() {
-    let code: string = '';
-    for (const path of await listCircuits()) {
-      const fileUrl = `/api/readCircuitJson?filename=${path.replace('.nr', '.json')}`;
-      code = await fetch(fileUrl)
-        .then(r => r.text())
-        .then(code => code);
-    }
-    return code;
-  }
+  api = {} as BarretenbergApiAsync;
+  acirComposer = {} as Ptr;
 
   async init() {
-    // TODO using JSON for now until the std bug is fixed
-    // await initNoirWasm();
-    // const code = await this.fetchCode();
-    // initialiseResolver((id: any) => {
-    //   return code[id];
+    await initACVM();
+    // TODO disabled until we get a fix for std
+    // const compiled_noir = compile({
+    //   entry_point: `${__dirname}/../../circuits/src/main.nr`,
     // });
-    // const compiled_noir = compile({});
-
-    const compiled_noir = JSON.parse(await this.fetchJSON()).bytecode;
-
-    const { wasm, worker } = await BarretenbergWasm.newWorker(NUM_THREADS);
-    const api = new BarretenbergApiAsync(worker, wasm);
-
-    this.acirBuffer = Buffer.from(compiled_noir, 'base64');
+    this.acirBuffer = Buffer.from(circuit.bytecode, 'base64');
     this.acirBufferUncompressed = decompressSync(this.acirBuffer);
 
-    const circuitSize = await getGates(api, this.acirBufferUncompressed);
+    this.api = await newBarretenbergApiAsync(4);
 
-    const subgroupSize = Math.pow(2, Math.ceil(Math.log2(circuitSize)));
-    if (subgroupSize > MAX_CIRCUIT_SIZE) {
-      throw new Error(
-        `Circuit size of ${subgroupSize} exceeds max supported of ${MAX_CIRCUIT_SIZE}`,
-      );
-    }
-    // Plus 1 needed! (Move +1 into Crs?)
+    const [exact, total, subgroup] = await this.api.acirGetCircuitSizes(
+      this.acirBufferUncompressed,
+    );
+    const subgroupSize = Math.pow(2, Math.ceil(Math.log2(total)));
     const crs = await Crs.new(subgroupSize + 1);
-
-    // Important to init slab allocator as first thing, to ensure maximum memory efficiency.
-    await api.commonInitSlabAllocator(subgroupSize);
-
-    // Load CRS into wasm global CRS state.
-    // TODO: Make RawBuffer be default behaviour, and have a specific Vector type for when wanting length prefixed.
-    await api.srsInitSrs(
+    await this.api.commonInitSlabAllocator(subgroupSize);
+    await this.api.srsInitSrs(
       new RawBuffer(crs.getG1Data()),
       crs.numPoints,
       new RawBuffer(crs.getG2Data()),
     );
 
-    this.api = api;
-    this.acirComposer = await api.acirNewAcirComposer(subgroupSize);
-  }
-
-  destroy() {
-    this.api.destroy();
+    this.acirComposer = await this.api.acirNewAcirComposer(subgroupSize);
   }
 
   async generateWitness(input: any): Promise<Uint8Array> {
-    await initACVM();
-
-    const initialWitness: WitnessMap = new Map<number, string>();
+    const initialWitness = new Map<number, string>();
     initialWitness.set(1, ethers.utils.hexZeroPad(`0x${input.x.toString(16)}`, 32));
     initialWitness.set(2, ethers.utils.hexZeroPad(`0x${input.y.toString(16)}`, 32));
 
@@ -143,5 +73,9 @@ export class NoirBrowser {
     await this.api.acirInitProvingKey(this.acirComposer, this.acirBufferUncompressed);
     const verified = await this.api.acirVerifyProof(this.acirComposer, proof, false);
     return verified;
+  }
+
+  async destroy() {
+    await this.api.destroy();
   }
 }

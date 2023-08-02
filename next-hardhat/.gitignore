@@ -48,3 +48,7 @@ proofs
 
 # other
 .vscode
+crs
+.DS_Store
+contract
+artifacts

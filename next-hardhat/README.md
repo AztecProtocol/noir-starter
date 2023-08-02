@@ -40,5 +40,5 @@ There is a basic [example test file](./test/index.ts) that shows the usage of No
 You can run the tests with:
 
 ```sh
-yarn t
+yarn test
 ```
