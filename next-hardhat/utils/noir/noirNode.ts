@@ -9,7 +9,7 @@ import {
 } from '@aztec/bb.js/dest/node/index.js';
 import { executeCircuit, compressWitness } from '@noir-lang/acvm_js';
 import { ethers } from 'ethers'; // I'm lazy so I'm using ethers to pad my input
-import circuit from '../../circuits/target/main.json';
+import circuit from '../../circuits/target/noirstarter.json';
 import { Ptr } from '@aztec/bb.js/dest/node/types';
 
 export class NoirNode {
