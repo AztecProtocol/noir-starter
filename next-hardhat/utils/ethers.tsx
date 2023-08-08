@@ -1,6 +1,6 @@
 import { ethers } from 'ethers';
 import addresses from './addresses.json';
-import artifacts from '../artifacts/circuits/contract/plonk_vk.sol/UltraVerifier.json';
+import artifacts from '../artifacts/circuits/contract/noirstarter/plonk_vk.sol/UltraVerifier.json';
 import { toast } from 'react-toastify';
 
 declare global {
@@ -41,7 +41,9 @@ class Ethers {
         } catch (error) {
           console.error('Error switching network:', error);
           if (error.code === 4902) {
-            toast('Please add the network to your MetaMask wallet', { type: 'error' });
+            toast(`Please add the mumbai network to your MetaMask wallet`, {
+              type: 'error',
+            });
           } else {
             console.error('User rejected the request.');
           }

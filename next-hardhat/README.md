@@ -40,7 +40,7 @@ Once your contracts are deployed and the build is finished, start the web app wi
 
 ## Testing
 
-There is a basic [example test file](./test/index.ts) that shows the usage of Noir in a typescript `node.js` environment.
+There is a basic [example test file](./test/index.test.ts) that shows the usage of Noir in a typescript `node.js` environment.
 You can run the tests with:
 
 ```sh
