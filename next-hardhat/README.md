@@ -1,6 +1,6 @@
 # Noir with Next and Hardhat
 
-[![Netlify Status](https://api.netlify.com/api/v1/badges/e4bd1ebc-6be1-4ed2-8be8-18f70382ae22/deploy-status)](https://app.netlify.com/sites/spiffy-lollipop-5d763a/deploys)
+[![Netlify Status](https://api.netlify.com/api/v1/badges/e4bd1ebc-6be1-4ed2-8be8-18f70382ae22/deploy-status)](https://app.netlify.com/sites/noir-next-hardhat/deploys)
 
 This example uses [Next.js](https://nextjs.org/) as the frontend framework, and [Hardhat](https://hardhat.org/) to deploy and test.
 
