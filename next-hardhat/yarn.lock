@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@aztec/bb.js@^0.3.4":
-  version "0.3.4"
-  resolved "https://registry.npmjs.org/@aztec/bb.js/-/bb.js-0.3.4.tgz"
-  integrity sha512-h6Od6UrtHa4Bz8QqCzHGn1VYco1P6K12yaFWDeF8PKFvuJwilVlBEffMWGGNUlaTeZtx46QYoXxUMZ2862/m4g==
+"@aztec/bb.js@^0.3.5":
+  version "0.3.6"
+  resolved "https://registry.yarnpkg.com/@aztec/bb.js/-/bb.js-0.3.6.tgz#8865d119c0292291aef6f65250b5418d71bf12cb"
+  integrity sha512-7s/SZ3k5R1wfnVoU6sz9BBxBaI7ubkXPnvsI2KsJso2J2pwbXGxJsfOzn+uol+v3ZPooIa84/+SHk3UaPbMJGw==
   dependencies:
     comlink "^4.4.1"
     commander "^10.0.1"
@@ -799,9 +799,9 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
-"@noir-lang/acvm_js@git+https://github.com/noir-lang/acvm-simulator-wasm.git#c56eec56f67f90fef90126c5575b85190bdcd1e1":
-  version "0.0.0-3cc4575"
-  resolved "git+https://github.com/noir-lang/acvm-simulator-wasm.git#c56eec56f67f90fef90126c5575b85190bdcd1e1"
+"@noir-lang/acvm_js@git+https://github.com/noir-lang/acvm-simulator-wasm.git":
+  version "0.0.0-d576736"
+  resolved "git+https://github.com/noir-lang/acvm-simulator-wasm.git#b9d9ca9dfc5140839f23998d9466307215607c42"
 
 "@nomicfoundation/ethereumjs-block@5.0.1":
   version "5.0.1"

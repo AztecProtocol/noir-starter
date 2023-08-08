@@ -10,8 +10,8 @@
     "test": "hardhat compile && vitest"
   },
   "dependencies": {
-    "@aztec/bb.js": "^0.3.4",
-    "@noir-lang/acvm_js": "git+https://github.com/noir-lang/acvm-simulator-wasm.git#c56eec56f67f90fef90126c5575b85190bdcd1e1",
+    "@aztec/bb.js": "^0.3.5",
+    "@noir-lang/acvm_js": "git+https://github.com/noir-lang/acvm-simulator-wasm.git",
     "@nomicfoundation/hardhat-chai-matchers": "^1.0.6",
     "@nomicfoundation/hardhat-network-helpers": "^1.0.0",
     "@nomicfoundation/hardhat-toolbox": "^2.0.1",
