@@ -10,8 +10,8 @@ It also features multiple files and different entry points by resolving multiple
 
 ## Getting Started
 
-1. [Install nargo nightly](https://noir-lang.org/getting_started/nargo_installation#option-1-noirup),
-   with `noirup -n`.
+1. [Install nargo 0.9.0](https://noir-lang.org/getting_started/nargo_installation#option-1-noirup),
+   with `noirup -v 0.9.0`.
 
 2. Install dependencies with
 
