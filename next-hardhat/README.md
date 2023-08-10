@@ -10,8 +10,8 @@ It also features multiple files and different entry points by resolving multiple
 
 ## Getting Started
 
-1. [Install nargo 0.9.0](https://noir-lang.org/getting_started/nargo_installation#option-1-noirup),
-   with `noirup -v 0.9.0`.
+1. [Install nargo nightly](https://noir-lang.org/getting_started/nargo_installation#option-1-noirup),
+   with `noirup -n`.
 
 2. Install dependencies with
 
@@ -38,7 +38,8 @@ Compile your circuits with `nargo compile`.
 - Copy `./.env.example` to `./.env` and add keys for alchemy (to act as a node) and the deployer's
   private key. Make sure you have funds in this account.
 - Run `NETWORK=localhost yarn build` to build the project and deploy contracts to the local
-  development chain. If the deployment fails, try removing `yarn.lock` and reinstalling dependencies with `yarn`.
+  development chain. If the deployment fails, try removing `yarn.lock` and reinstalling dependencies
+  with `yarn`.
 
 You can choose any other network in `hardhat.config.ts` and deploy there using this `NETWORK`
 environment variable. For example, `NETWORK=mumbai yarn build` or `NETWORK=sepolia yarn build`. Feel
