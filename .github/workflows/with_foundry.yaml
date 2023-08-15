@@ -19,7 +19,7 @@ jobs:
     - name: Install Nargo
       uses: noir-lang/noirup@v0.1.2
       with:
-        toolchain: nightly
+        toolchain: 0.9.0
 
     - name: Install Foundry
       uses: foundry-rs/foundry-toolchain@v1
@@ -31,7 +31,7 @@ jobs:
 
     - name: Generate proof
       run: |
-        nargo prove
+        nargo prove p
       working-directory: with-foundry/circuits
 
     - name: Test with Foundry
