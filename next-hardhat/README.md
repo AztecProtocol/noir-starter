@@ -12,13 +12,24 @@ It also features multiple files and different entry points by resolving multiple
 
 1. [Install Node.js ≥v18](https://nodejs.org/en) (tested on v18.17.0)
 
-2. [Install Nix](https://noir-lang.org/getting_started/nargo_installation#installing-nix)
+2. [Install noirup](https://noir-lang.org/getting_started/nargo_installation/#option-1-noirup)
 
-3. Install Nargo with
+3. Install nightly Nargo with
 
-```bash
-nix profile install github:noir-lang/noir/ad118eb8165ef83402e25b3001dfe27cf3a358b1
-```
+   ```bash
+   noirup -n
+   ```
+
+   > If you're later faced with Noir <> ACVM <> bb.js incomaptibility issues, install Nargo from the
+   > tested commit instead:
+   >
+   > 1. [Install Nix](https://noir-lang.org/getting_started/nargo_installation#installing-nix)
+   >
+   > 2. Install Nargo with
+   >
+   > ```bash
+   > nix profile install github:noir-lang/noir/7d0178987641f5cb8f8e95507c54c3cc367bf7d2
+   > ```
 
 4. Install dependencies with
 
@@ -43,7 +54,7 @@ nargo codegen-verifier
 Compile your circuits with
 
 ```bash
-nargo compile noirstarter
+nargo compile
 ```
 
 ## Testing locally

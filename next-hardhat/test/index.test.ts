@@ -6,7 +6,7 @@ import { NoirNode } from '../utils/noir/noirNode';
 import { execSync } from 'child_process';
 
 const noir = new NoirNode();
-import verifier from '../artifacts/circuits/contract/plonk_vk.sol/UltraVerifier.json';
+import verifier from '../artifacts/circuits/contract/noirstarter/plonk_vk.sol/UltraVerifier.json';
 
 import { test, beforeAll, describe } from 'vitest';
 
