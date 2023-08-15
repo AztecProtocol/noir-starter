@@ -2,7 +2,7 @@
 # yarn lockfile v1
 
 
-"@aztec/bb.js@^0.3.5":
+"@aztec/bb.js@0.3.6":
   version "0.3.6"
   resolved "https://registry.yarnpkg.com/@aztec/bb.js/-/bb.js-0.3.6.tgz#8865d119c0292291aef6f65250b5418d71bf12cb"
   integrity sha512-7s/SZ3k5R1wfnVoU6sz9BBxBaI7ubkXPnvsI2KsJso2J2pwbXGxJsfOzn+uol+v3ZPooIa84/+SHk3UaPbMJGw==
@@ -790,9 +790,9 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
-"@noir-lang/acvm_js@git+https://github.com/noir-lang/acvm-simulator-wasm.git":
+"@noir-lang/acvm_js@git+https://git@github.com/noir-lang/acvm-simulator-wasm.git#b9d9ca9dfc5140839f23998d9466307215607c42":
   version "0.0.0-d576736"
-  resolved "git+https://github.com/noir-lang/acvm-simulator-wasm.git#b9d9ca9dfc5140839f23998d9466307215607c42"
+  resolved "git+https://git@github.com/noir-lang/acvm-simulator-wasm.git#b9d9ca9dfc5140839f23998d9466307215607c42"
 
 "@nomicfoundation/ethereumjs-block@5.0.1":
   version "5.0.1"

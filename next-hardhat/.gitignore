@@ -38,16 +38,17 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# contract
-
 # hardhat
 cache
+
 # artifacts
 typechain-types
 proofs
 
+# noir
+crs
+
 # other
 .vscode
-crs
 .DS_Store
 artifacts
