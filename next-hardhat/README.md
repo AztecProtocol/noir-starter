@@ -10,47 +10,80 @@ It also features multiple files and different entry points by resolving multiple
 
 ## Getting Started
 
-1. [Install nargo nightly](https://noir-lang.org/getting_started/nargo_installation#option-1-noirup),
-   with `noirup -n`.
+1. [Install Node.js ≥v18](https://nodejs.org/en) (tested on v18.17.0)
 
-2. Install dependencies with
+2. [Install Nix](https://noir-lang.org/getting_started/nargo_installation#installing-nix)
+
+3. Install Nargo with
+
+```bash
+nix profile install github:noir-lang/noir/ad118eb8165ef83402e25b3001dfe27cf3a358b1
+```
+
+4. Install dependencies with
 
 ```bash
 yarn
 ```
 
-3. Write circuits in `./circuits/src`.
+5. Write circuits in `./circuits/src`.
 
 You can read more about writing circuits in Noir on the [Noir docs](https://noir-lang.org/).
 
-4. Create the verifier contract
+6. Create the verifier contract
 
-Navigate to the `.circuits/` directory and run `nargo codegen-verifier`
+Navigate to the `.circuits/` directory and run
 
-5. Compile your circuit
+```bash
+nargo codegen-verifier
+```
 
-Compile your circuits with `nargo compile`.
+7. Compile your circuit
 
-1. Deploy
+Compile your circuits with
 
-- Start a local development EVM at <http://localhost:8545>, for example with `npx hardhat node` or
-  `anvil`.
-- Copy `./.env.example` to `./.env` and add keys for alchemy (to act as a node) and the deployer's
-  private key. Make sure you have funds in this account.
-- Run `NETWORK=localhost yarn build` to build the project and deploy contracts to the local
-  development chain. If the deployment fails, try removing `yarn.lock` and reinstalling dependencies with `yarn`.
+```bash
+nargo compile noirstarter
+```
 
-You can choose any other network in `hardhat.config.ts` and deploy there using this `NETWORK`
-environment variable. For example, `NETWORK=mumbai yarn build` or `NETWORK=sepolia yarn build`. Feel
-free to contribute with other networks in `hardhat.config.ts`
+## Testing locally
 
-Once your contracts are deployed and the build is finished, start the web app with `yarn start`.
+1. Copy `./.env.example` to a new file `./.env`.
 
-## Testing
+2. Start a local development EVM at <http://localhost:8545>, for example with `npx hardhat node` or
+   `anvil`.
 
-There is a basic [example test file](./test/index.test.ts) that shows the usage of Noir in a
-typescript `node.js` environment. You can run the tests with:
+3. Run the [example test file](./test/index.test.ts) with
 
 ```sh
 yarn test
 ```
+
+The test demonstrates basic usage of Noir in a typescript `node.js` environment.
+
+## Deploy locally (WIP)
+
+1. Copy `./.env.example` to a new file `./.env`.
+
+2. Start a local development EVM at <http://localhost:8545>, for example with `npx hardhat node` or
+   `anvil`.
+
+3. Run `NETWORK=localhost yarn build` to build the project and deploy contracts to the local
+   development chain.
+
+   If the deployment fails, try removing `yarn.lock` and reinstalling dependencies with `yarn`.
+
+4. Once your contracts are deployed and the build is finished, start the web app with `yarn start`.
+
+## Deploying on other networks
+
+You can choose any other network in `hardhat.config.ts` and deploy there using this `NETWORK`
+environment variable. For example, `NETWORK=mumbai yarn build` or `NETWORK=sepolia yarn build`.
+
+Make sure you:
+
+- Update the deployer private keys in `./.env`
+- Have funds in the deployer account
+- Add keys for alchemy (to act as a node) in `./.env`
+
+Feel free to contribute with other networks in `hardhat.config.ts`
