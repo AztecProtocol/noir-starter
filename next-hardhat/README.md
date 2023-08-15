@@ -14,15 +14,9 @@ It also features multiple files and different entry points by resolving multiple
 
 2. [Install noirup](https://noir-lang.org/getting_started/nargo_installation/#option-1-noirup)
 
-3. Install nightly Nargo with
+3. Install Nargo with the following instructions. We are working on a stable release that is
+   maintains compatibility across packages and will make it easier to install these packages.
 
-   ```bash
-   noirup -n
-   ```
-
-   > If you're later faced with Noir <> ACVM <> bb.js incomaptibility issues, install Nargo from the
-   > tested commit instead:
-   >
    > 1. [Install Nix](https://noir-lang.org/getting_started/nargo_installation#installing-nix)
    >
    > 2. Install Nargo with

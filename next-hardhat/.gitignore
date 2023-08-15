@@ -47,8 +47,6 @@ proofs
 
 # noir
 crs
-circuits/target
-circuits/contract
 
 # other
 .vscode
