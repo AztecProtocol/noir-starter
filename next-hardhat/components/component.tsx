@@ -8,7 +8,7 @@ import { NoirBrowser } from '../utils/noir/noirBrowser';
 import { ThreeDots } from 'react-loader-spinner';
 
 function Component() {
-  const [input, setInput] = useState({ x: '', y: '' });
+  const [input, setInput] = useState({ x: 0, y: 0});
   const [pending, setPending] = useState(false);
   const [proof, setProof] = useState(Uint8Array.from([]));
   const [verification, setVerification] = useState(false);
@@ -89,8 +89,8 @@ function Component() {
       <h1>Example starter</h1>
       <h2>This circuit checks that x and y are different</h2>
       <p>Try it!</p>
-      <input name="x" type={'text'} onChange={handleChange} value={input.x} />
-      <input name="y" type={'text'} onChange={handleChange} value={input.y} />
+      <input name="x" type={'number'} onChange={handleChange} value={input.x} />
+      <input name="y" type={'number'} onChange={handleChange} value={input.y} />
       <button onClick={calculateProof}>Calculate proof</button>
       {pending && <ThreeDots wrapperClass="spinner" color="#000000" height={100} width={100} />}
     </div>

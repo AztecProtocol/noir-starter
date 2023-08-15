@@ -6,7 +6,8 @@ This example uses Foundry to deploy and test a verifier.
 
 ### Install nargo
 
-Follow the [Noir Docs](https://noir-lang.org/getting_started/nargo_installation) to install nargo. For this template, ensure you're on UltraPlonk versions (at least 0.5.0).
+Follow the [Noir Docs](https://noir-lang.org/getting_started/nargo_installation) to install nargo.
+For this template, ensure you're using Noir version 0.9.0. You can install with `noirup -v 0.9.0`.
 
 ### Install foundryup
 
@@ -16,7 +17,8 @@ run
 curl -L https://foundry.paradigm.xyz | bash
 ```
 
-and follow the instructions on screen. You should then have all the foundry tools like `forge`, `cast`, `anvil` and `chisel`.
+and follow the instructions on screen. You should then have all the foundry tools like `forge`,
+`cast`, `anvil` and `chisel`.
 
 ### Generate verifier contract and proof
 
@@ -33,7 +35,8 @@ A file named `plonk_vk.sol` should appear in the `circuits` folder.
 
 #### Proof
 
-You also need a proof, as this template currently doesn't employ `ffi` to call `nargo prove` by itself. For this, ensure your prover parameters are correct in `Prover.toml` and run:
+You also need a proof, as this template currently doesn't employ `ffi` to call `nargo prove` by
+itself. For this, ensure your prover parameters are correct in `Prover.toml` and run:
 
 ```bash
 nargo prove p
@@ -43,9 +46,14 @@ A file named `p.proof` should appear in the `proofs` folder.
 
 ### Test with Foundry
 
-We're ready to test with Foundry. There's a basic test inside the `test` folder that deploys the verifier contract, the `Starter` contract and two bytes32 arrays correspondent to good and bad solutions to your circuit.
+We're ready to test with Foundry. There's a basic test inside the `test` folder that deploys the
+verifier contract, the `Starter` contract and two bytes32 arrays correspondent to good and bad
+solutions to your circuit.
 
-By running the following command, forge will compile the contract with 5000 rounds of optimization and the London EVM version. __You need to use these optimizer settings to supress the "stack too deep" error on the solc compiler__. Then it will run the test, expecting it to pass with correct inputs, and fail with wrong inputs:
+By running the following command, forge will compile the contract with 5000 rounds of optimization
+and the London EVM version. **You need to use these optimizer settings to supress the "stack too
+deep" error on the solc compiler**. Then it will run the test, expecting it to pass with correct
+inputs, and fail with wrong inputs:
 
 ```bash
 forge test --optimize --optimizer-runs 5000 --evm-version london
@@ -53,19 +61,23 @@ forge test --optimize --optimizer-runs 5000 --evm-version london
 
 #### Testing On-chain
 
-You can test that the Noir Solidity verifier contract works on a given chain by running the `Verify.s.sol` script against the appropriate RPC endpoint.
+You can test that the Noir Solidity verifier contract works on a given chain by running the
+`Verify.s.sol` script against the appropriate RPC endpoint.
 
 ```bash
-forge script script/Verify.s.sol --rpc-url $RPC_ENDPOINT  --broadcast     
+forge script script/Verify.s.sol --rpc-url $RPC_ENDPOINT  --broadcast
 ```
 
-If that doesn't work, you can add the network to Metamask and deploy and test via [Remix](https://remix.ethereum.org/).
+If that doesn't work, you can add the network to Metamask and deploy and test via
+[Remix](https://remix.ethereum.org/).
 
-Note that some EVM network infrastructure may behave differently and this script may fail for reasons unrelated to the compatibility of the verifier contract.
+Note that some EVM network infrastructure may behave differently and this script may fail for
+reasons unrelated to the compatibility of the verifier contract.
 
 ### Deploy with Foundry
 
-This template also has a script to help you deploy on your own network. But for that you need to run your own node or, alternatively, deploy on a testnet.
+This template also has a script to help you deploy on your own network. But for that you need to run
+your own node or, alternatively, deploy on a testnet.
 
 #### (Option 1) Run a local node
 
@@ -75,7 +87,8 @@ If you want to deploy locally, run a node by opening a terminal and running
 anvil
 ```
 
-This should start a local node listening on `http://localhost:8545`. It will also give you many private keys.
+This should start a local node listening on `http://localhost:8545`. It will also give you many
+private keys.
 
 Edit your `.env` file to look like:
 
@@ -86,7 +99,8 @@ PRIVATE_KEY=<the private key you just got from anvil>
 
 #### (Option 2) Prepare for testnet
 
-Pick a testnet like Sepolia or Goerli. Generate a private key and use a faucet (like [this one for Sepolia](https://sepoliafaucet.com/)) to get some coins in there.
+Pick a testnet like Sepolia or Goerli. Generate a private key and use a faucet (like
+[this one for Sepolia](https://sepoliafaucet.com/)) to get some coins in there.
 
 Edit your `.env` file to look like:
 
@@ -113,6 +127,9 @@ Replace `$ANVIL_RPC` with the testnet RPC, if you're deploying on a testnet.
 
 ## Developing on this template
 
-This template doesn't include settings you may need to deal with syntax highlighting and IDE-specific settings (i.e. VScode). Please follow the instructions on the [Foundy book](https://book.getfoundry.sh/config/vscode) to set that up.
+This template doesn't include settings you may need to deal with syntax highlighting and
+IDE-specific settings (i.e. VScode). Please follow the instructions on the
+[Foundy book](https://book.getfoundry.sh/config/vscode) to set that up.
 
-It's __highly recommended__ you get familiar with [Foundry](https://book.getfoundry.sh) before developing on this template.
+It's **highly recommended** you get familiar with [Foundry](https://book.getfoundry.sh) before
+developing on this template.

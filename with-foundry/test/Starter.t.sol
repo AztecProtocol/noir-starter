@@ -11,7 +11,6 @@ contract StarterTest is Test {
     bytes32[] public dynamicCorrect = new bytes32[](1);
     bytes32[] public correct = new bytes32[](1);
     bytes32[] public wrong = new bytes32[](1);
-    
 
     function setUp() public {
         verifier = new UltraVerifier();
@@ -45,7 +44,7 @@ contract StarterTest is Test {
 
         // Set expected dynamic proof outcome
         dynamicCorrect[0] = bytes32(0x0000000000000000000000000000000000000000000000000000000000000005);
-        bytes memory proofBytes = generateDynamicProof("test1",_fieldNames,_fieldValues);
+        bytes memory proofBytes = generateDynamicProof("test1", _fieldNames, _fieldValues);
         starter.verifyEqual(proofBytes, dynamicCorrect);
     }
 
@@ -60,7 +59,7 @@ contract StarterTest is Test {
 
         // Set expected dynamic proof outcome
         dynamicCorrect[0] = bytes32(0x0000000000000000000000000000000000000000000000000000000000000008);
-        bytes memory proofBytes = generateDynamicProof("test2",_fieldNames,_fieldValues);
+        bytes memory proofBytes = generateDynamicProof("test2", _fieldNames, _fieldValues);
         starter.verifyEqual(proofBytes, dynamicCorrect);
     }
 
@@ -75,30 +74,32 @@ contract StarterTest is Test {
 
         // Set expected dynamic proof outcome
         dynamicCorrect[0] = bytes32(0x0000000000000000000000000000000000000000000000000000000000000007);
-        bytes memory proofBytes = generateDynamicProof("test3",_fieldNames,_fieldValues);
+        bytes memory proofBytes = generateDynamicProof("test3", _fieldNames, _fieldValues);
         starter.verifyEqual(proofBytes, dynamicCorrect);
     }
 
     /// @dev This function generates dynamic proofs using 2 scripts in the /script directory
-    /// 
+    ///
     /// @param _testName a random string to identify the test by, this is used to create a unique folder name in the /tmp directory
     /// @param _fields The field names within the Prover.toml file
     /// @param _fieldValues The field values associated with fields names within the Prover.toml file
-    function generateDynamicProof(string memory _testName,string[] memory _fields, string[] memory _fieldValues) public returns (bytes memory) {
-        require(_fields.length == _fieldValues.length,"generateProof: Input arrays not the same length");
-        
+    function generateDynamicProof(string memory _testName, string[] memory _fields, string[] memory _fieldValues)
+        public
+        returns (bytes memory)
+    {
+        require(_fields.length == _fieldValues.length, "generateProof: Input arrays not the same length");
+
         // Copy files and create Prover.toml in /tmp directory
         string[] memory filecreateCommand = new string[] (2);
         filecreateCommand[0] = "./script/createFile.sh";
         filecreateCommand[1] = _testName;
         bytes memory fileCreateResponse = vm.ffi(filecreateCommand);
         console.log(string(fileCreateResponse));
-        
-        string memory _file = string.concat("/tmp/",_testName,"/Prover.toml");
-        vm.writeFile(_file,"");
-        for(uint256 i; i < _fields.length; i++)
-        {
-            vm.writeLine(_file, string.concat( _fields[i] , " = " , _fieldValues[i]));
+
+        string memory _file = string.concat("/tmp/", _testName, "/Prover.toml");
+        vm.writeFile(_file, "");
+        for (uint256 i; i < _fields.length; i++) {
+            vm.writeLine(_file, string.concat(_fields[i], " = ", _fieldValues[i]));
         }
 
         // now generate the proof by calling the script using ffi
@@ -107,8 +108,7 @@ contract StarterTest is Test {
         ffi_command[1] = _testName;
         bytes memory commandResponse = vm.ffi(ffi_command);
         console.log(string(commandResponse));
-        string memory _newProof = vm.readLine(string.concat("/tmp/",_testName,"/proofs/d.proof"));
+        string memory _newProof = vm.readLine(string.concat("/tmp/", _testName, "/proofs/d.proof"));
         return vm.parseBytes(_newProof);
-
     }
 }
