@@ -41,10 +41,10 @@ function Component() {
     // only launch if we do have an acir and a proof to verify
     if (proof) {
       try {
-        const verification = await noir.verifyProof(proof);
-        console.log(verification);
-        setVerification(verification);
-        toast.success('Proof verified!');
+        // const verification = await noir.verifyProof(proof);
+        // console.log(verification);
+        // setVerification(verification);
+        // toast.success('Proof verified!');
 
         const ethers = new Ethers();
         const publicInputs = proof.slice(0, 32);
