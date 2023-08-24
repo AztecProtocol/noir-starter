@@ -28,6 +28,7 @@ function Component() {
       const witness = await noir.generateWitness(input);
       const proof = await noir.generateProof(witness);
       setProof(proof);
+      console.log(proof);
     } catch (err) {
       console.log(err);
       toast.error('Error generating proof');
@@ -41,6 +42,7 @@ function Component() {
     if (proof) {
       try {
         const verification = await noir.verifyProof(proof);
+        console.log(verification);
         setVerification(verification);
         toast.success('Proof verified!');
 
@@ -57,6 +59,7 @@ function Component() {
           setVerification(false);
         }
       } catch (err) {
+        console.log(err);
         toast.error('Error verifying your proof');
       } finally {
         noir.destroy();

@@ -28,7 +28,7 @@ describe('It compiles noir program code, receiving circuit bytes and abi object.
   });
 
   it('Should generate valid proof for correct input', async () => {
-    const input = { x: 1, y: 2 };
+    const input = { x: 1 };
     await noir.init();
     const witness = await noir.generateWitness(input);
     const proof = await noir.generateProof(witness);
