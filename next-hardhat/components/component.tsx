@@ -8,7 +8,7 @@ import { NoirBrowser } from '../utils/noir/noirBrowser';
 import { ThreeDots } from 'react-loader-spinner';
 
 function Component() {
-  const [input, setInput] = useState({ x: '', y: '' });
+  const [input, setInput] = useState({ x: '' });
   const [pending, setPending] = useState(false);
   const [proof, setProof] = useState(Uint8Array.from([]));
   const [verification, setVerification] = useState(false);
@@ -41,10 +41,10 @@ function Component() {
     // only launch if we do have an acir and a proof to verify
     if (proof) {
       try {
-        // const verification = await noir.verifyProof(proof);
-        // console.log(verification);
-        // setVerification(verification);
-        // toast.success('Proof verified!');
+        const verification = await noir.verifyProof(proof);
+        console.log(verification);
+        setVerification(verification);
+        toast.success('Proof verified!');
 
         const ethers = new Ethers();
         const publicInputs = proof.slice(0, 32);
@@ -90,10 +90,8 @@ function Component() {
   return (
     <div className="gameContainer">
       <h1>Example starter</h1>
-      <h2>This circuit checks that x and y are different</h2>
       <p>Try it!</p>
       <input name="x" type={'text'} onChange={handleChange} value={input.x} />
-      <input name="y" type={'text'} onChange={handleChange} value={input.y} />
       <button onClick={calculateProof}>Calculate proof</button>
       {pending && <ThreeDots wrapperClass="spinner" color="#000000" height={100} width={100} />}
     </div>
