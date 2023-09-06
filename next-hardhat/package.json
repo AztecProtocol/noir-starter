@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@aztec/bb.js": "0.3.6",
-    "@noir-lang/acvm_js": "git+https://git@github.com/noir-lang/acvm-simulator-wasm.git#b9d9ca9dfc5140839f23998d9466307215607c42",
+    "@noir-lang/acvm_js": "git+https://git@github.com/noir-lang/acvm-js-wasm.git#b9d9ca9dfc5140839f23998d9466307215607c42",
     "@nomicfoundation/hardhat-chai-matchers": "^1.0.6",
     "@nomicfoundation/hardhat-network-helpers": "^1.0.0",
     "@nomicfoundation/hardhat-toolbox": "^2.0.1",
