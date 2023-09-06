@@ -5,6 +5,7 @@ import {
   Crs,
   Barretenberg,
   RawBuffer,
+  // @ts-ignore
 } from '@aztec/bb.js';
 import initACVM, { executeCircuit, compressWitness } from '@noir-lang/acvm_js';
 import { ethers } from 'ethers'; // I'm lazy so I'm using ethers to pad my input
