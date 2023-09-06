@@ -2,7 +2,7 @@ pragma solidity ^0.8.17;
 
 import "forge-std/Test.sol";
 import "../contract/Starter.sol";
-import "../circuits/contract/plonk_vk.sol";
+import "../circuits/contract/with_foundry/plonk_vk.sol";
 
 contract StarterTest is Test {
     Starter public starter;
@@ -21,14 +21,14 @@ contract StarterTest is Test {
     }
 
     function testVerifyProof() public {
-        string memory proof = vm.readLine("./circuits/proofs/p.proof");
+        string memory proof = vm.readLine("./circuits/proofs/with_foundry.proof");
         bytes memory proofBytes = vm.parseBytes(proof);
         starter.verifyEqual(proofBytes, correct);
     }
 
     function test_wrongProof() public {
         vm.expectRevert();
-        string memory proof = vm.readLine("./circuits/proofs/p.proof");
+        string memory proof = vm.readLine("./circuits/proofs/with_foundry.proof");
         bytes memory proofBytes = vm.parseBytes(proof);
         starter.verifyEqual(proofBytes, wrong);
     }
@@ -108,7 +108,7 @@ contract StarterTest is Test {
         ffi_command[1] = _testName;
         bytes memory commandResponse = vm.ffi(ffi_command);
         console.log(string(commandResponse));
-        string memory _newProof = vm.readLine(string.concat("/tmp/", _testName, "/proofs/d.proof"));
+        string memory _newProof = vm.readLine(string.concat("/tmp/", _testName, "/proofs/with_foundry.proof"));
         return vm.parseBytes(_newProof);
     }
 }
