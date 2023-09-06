@@ -2,11 +2,10 @@
 // import { compile } from '@noir-lang/noir_wasm';
 import { decompressSync } from 'fflate';
 import {
-  BarretenbergApiAsync,
+  Barretenberg,
   Crs,
-  newBarretenbergApiAsync,
   RawBuffer,
-} from '@aztec/bb.js/dest/node/index.js';
+} from '@aztec/bb.js';
 import { executeCircuit, compressWitness } from '@noir-lang/acvm_js';
 import { ethers } from 'ethers'; // I'm lazy so I'm using ethers to pad my input
 import circuit from '../../circuits/target/noirstarter.json';
@@ -17,7 +16,7 @@ export class NoirNode {
   acirBuffer: Uint8Array = Uint8Array.from([]);
   acirBufferUncompressed: Uint8Array = Uint8Array.from([]);
 
-  api = {} as BarretenbergApiAsync;
+  api = {} as Barretenberg;
   acirComposer = {} as Ptr;
 
   async init() {
@@ -28,7 +27,7 @@ export class NoirNode {
     this.acirBuffer = Buffer.from(circuit.bytecode, 'base64');
     this.acirBufferUncompressed = decompressSync(this.acirBuffer);
 
-    this.api = await newBarretenbergApiAsync(4);
+    this.api = await Barretenberg.new(4);
 
     const [exact, total, subgroup] = await this.api.acirGetCircuitSizes(
       this.acirBufferUncompressed,
