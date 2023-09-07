@@ -19,7 +19,7 @@ jobs:
     - name: Install Nargo
       uses: noir-lang/noirup@v0.1.2
       with:
-        toolchain: 0.10.5
+        toolchain: 0.11.0
 
     - name: Install Foundry
       uses: foundry-rs/foundry-toolchain@v1
