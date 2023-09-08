@@ -20,11 +20,15 @@ It also features multiple files and different entry points by resolving multiple
    curl -L https://raw.githubusercontent.com/noir-lang/noirup/main/install | bash
    ```
 
-4. Install Nargo v0.10.1 with
+4. Install Nargo v0.11.0 with
 
    ```bash
-   noirup -v 0.10.1
+   noirup -v 0.11.0
    ```
+
+If you had a lower version of `nargo` installed previously and are running into errors when
+compiling, you may need to uninstall it, instructions
+[here](https://noir-lang.org/getting_started/nargo_installation#uninstalling-nargo).
 
 5. Install dependencies with
 

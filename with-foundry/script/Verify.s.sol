@@ -1,7 +1,7 @@
 pragma solidity ^0.8.17;
 
 import "forge-std/Script.sol";
-import "../circuits/contract/plonk_vk.sol";
+import "../circuits/contract/with_foundry/plonk_vk.sol";
 import "../contract/Starter.sol";
 
 contract VerifyScript is Script {
@@ -10,7 +10,7 @@ contract VerifyScript is Script {
 
     function setUp() public {}
 
-    function run() public returns (bool){
+    function run() public returns (bool) {
         uint256 deployerPrivateKey = vm.envUint("PRIVATE_KEY");
         vm.startBroadcast(deployerPrivateKey);
 
@@ -22,7 +22,7 @@ contract VerifyScript is Script {
 
         bytes32[] memory correct = new bytes32[](1);
         correct[0] = bytes32(0x0000000000000000000000000000000000000000000000000000000000000003);
-        
+
         bool equal = starter.verifyEqual(proofBytes, correct);
         return equal;
     }
