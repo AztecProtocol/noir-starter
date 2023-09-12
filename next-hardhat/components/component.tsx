@@ -3,16 +3,16 @@ import { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import Ethers from '../utils/ethers';
 import React from 'react';
-import { NoirBrowser } from '../utils/noir/noirBrowser';
+import { Noir } from '../utils/noir';
 
 import { ThreeDots } from 'react-loader-spinner';
 
 function Component() {
-  const [input, setInput] = useState({ x: 0, y: 0});
+  const [input, setInput] = useState({ x: 0, y: 0 });
   const [pending, setPending] = useState(false);
   const [proof, setProof] = useState(Uint8Array.from([]));
   const [verification, setVerification] = useState(false);
-  const [noir, setNoir] = useState(new NoirBrowser());
+  const [noir, setNoir] = useState(new Noir());
 
   // Handles input state
   const handleChange = e => {

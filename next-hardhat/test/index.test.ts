@@ -2,10 +2,10 @@
 import { expect } from 'chai';
 import ethers, { Contract } from 'ethers';
 import path from 'path';
-import { NoirNode } from '../utils/noir/noirNode';
+import { Noir } from '../utils/noir';
 import { execSync } from 'child_process';
 
-const noir = new NoirNode();
+const noir = new Noir();
 import verifier from '../artifacts/circuits/contract/noirstarter/plonk_vk.sol/UltraVerifier.json';
 
 import { test, beforeAll, describe } from 'vitest';

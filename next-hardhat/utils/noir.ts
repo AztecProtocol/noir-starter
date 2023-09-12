@@ -9,22 +9,36 @@ import {
 } from '@aztec/bb.js';
 import { executeCircuit, compressWitness } from '@noir-lang/acvm_js';
 import { ethers } from 'ethers'; // I'm lazy so I'm using ethers to pad my input
-import circuit from '../../circuits/target/noirstarter.json';
-import { Ptr } from '@aztec/bb.js/dest/node/types';
+import circuit from '../circuits/target/noirstarter.json';
 
-export class NoirNode {
+export class Noir {
   acir: string = '';
   acirBuffer: Uint8Array = Uint8Array.from([]);
   acirBufferUncompressed: Uint8Array = Uint8Array.from([]);
 
   api = {} as Barretenberg;
-  acirComposer = {} as Ptr;
+  acirComposer = {} as any;
 
   async init() {
     // TODO disabled until we get a fix for std
     // const compiled_noir = compile({
     //   entry_point: `${__dirname}/../../circuits/src/main.nr`,
     // });
+
+    // Detect if code is running in a browser
+    const isBrowser = typeof window !== 'undefined';
+
+    if (isBrowser) {
+      // Dynamic import for browser
+      const { default: initACVM } = await import('@noir-lang/acvm_js');
+      await initACVM();
+    }
+
+    // Rest of your existing code
+    this.acirBuffer = Buffer.from(circuit.bytecode, 'base64');
+    this.acirBufferUncompressed = decompressSync(this.acirBuffer);
+    // ... (rest of your
+
     this.acirBuffer = Buffer.from(circuit.bytecode, 'base64');
     this.acirBufferUncompressed = decompressSync(this.acirBuffer);
 
