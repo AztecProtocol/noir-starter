@@ -7,7 +7,7 @@ This example uses Foundry to deploy and test a verifier.
 ### Install nargo
 
 Follow the [Noir Docs](https://noir-lang.org/getting_started/nargo_installation) to install nargo.
-For this template, ensure you're using Noir version 0.9.0. You can install with `noirup -v 0.9.0`.
+For this template, ensure you're using Noir version 0.11.0 You can install with `noirup -v 0.11.0`.
 
 ### Install foundryup
 
@@ -31,7 +31,7 @@ cd circuits
 nargo codegen-verifier
 ```
 
-A file named `plonk_vk.sol` should appear in the `circuits` folder.
+A file named `plonk_vk.sol` should appear in the `circuits/contracts/with_foundry` folder.
 
 #### Proof
 
@@ -39,10 +39,10 @@ You also need a proof, as this template currently doesn't employ `ffi` to call `
 itself. For this, ensure your prover parameters are correct in `Prover.toml` and run:
 
 ```bash
-nargo prove p
+nargo prove
 ```
 
-A file named `p.proof` should appear in the `proofs` folder.
+A file named `with_foundry.proof` should appear in the `./circuits/proofs` folder.
 
 ### Test with Foundry
 
