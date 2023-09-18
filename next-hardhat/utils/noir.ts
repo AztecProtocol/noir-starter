@@ -1,22 +1,17 @@
 // TODO use the JSON directly for now
 // import { compile } from '@noir-lang/noir_wasm';
 import { decompressSync } from 'fflate';
-import {
-  Barretenberg,
-  Crs,
-  RawBuffer,
-  // @ts-ignore
-} from '@aztec/bb.js';
 import { executeCircuit, compressWitness } from '@noir-lang/acvm_js';
 import { ethers } from 'ethers'; // I'm lazy so I'm using ethers to pad my input
 import circuit from '../circuits/target/noirstarter.json';
+import { Barretenberg } from '@aztec/bb.js/dest/node';
 
 export class Noir {
   acir: string = '';
   acirBuffer: Uint8Array = Uint8Array.from([]);
   acirBufferUncompressed: Uint8Array = Uint8Array.from([]);
 
-  api = {} as Barretenberg;
+  api: Barretenberg = {} as any;
   acirComposer = {} as any;
 
   async init() {
@@ -25,13 +20,21 @@ export class Noir {
     //   entry_point: `${__dirname}/../../circuits/src/main.nr`,
     // });
 
-    // Detect if code is running in a browser
-    const isBrowser = typeof window !== 'undefined';
+    let Barretenberg, RawBuffer, Crs;
 
-    if (isBrowser) {
-      // Dynamic import for browser
+    if (typeof window !== 'undefined') {
+      // init ACVM needed for browser
       const { default: initACVM } = await import('@noir-lang/acvm_js');
       await initACVM();
+
+      // Dynamic import for browser
+      const bbjs = await import('@aztec/bb.js');
+      // @ts-ignore
+      ({ Barretenberg, RawBuffer, Crs } = bbjs);
+    } else {
+      // Dynamic import for node
+      const { loadModule } = await import('@aztec/bb.js');
+      ({ Barretenberg, RawBuffer, Crs } = await loadModule());
     }
 
     // Rest of your existing code
@@ -42,11 +45,11 @@ export class Noir {
     this.acirBuffer = Buffer.from(circuit.bytecode, 'base64');
     this.acirBufferUncompressed = decompressSync(this.acirBuffer);
 
-    this.api = await Barretenberg.new(4);
-
+    this.api = (await Barretenberg.new(4)) as Barretenberg;
     const [exact, total, subgroup] = await this.api.acirGetCircuitSizes(
       this.acirBufferUncompressed,
     );
+
     const subgroupSize = Math.pow(2, Math.ceil(Math.log2(total)));
     const crs = await Crs.new(subgroupSize + 1);
     await this.api.commonInitSlabAllocator(subgroupSize);
@@ -69,6 +72,7 @@ export class Noir {
     });
 
     const witnessBuff = compressWitness(witnessMap);
+    console.log('witnessBuff: ', witnessBuff);
     return witnessBuff;
   }
 
@@ -79,12 +83,14 @@ export class Noir {
       decompressSync(witness),
       false,
     );
+    console.log('proof: ', proof);
     return proof;
   }
 
   async verifyProof(proof: Uint8Array) {
     await this.api.acirInitProvingKey(this.acirComposer, this.acirBufferUncompressed);
     const verified = await this.api.acirVerifyProof(this.acirComposer, proof, false);
+    console.log('verified: ', verified);
     return verified;
   }
 
