@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@aztec/bb.js@0.5.1":
-  version "0.5.1"
-  resolved "https://registry.yarnpkg.com/@aztec/bb.js/-/bb.js-0.5.1.tgz#3c322a82834fc8c78aebc0d39add62f7bc08e78d"
-  integrity sha512-6464VrHgztws/rejJG0b3RUbycQ6subNoYODtuz7yDSZ9/s32ikjYOYADcAqSdK3QsohCifIvmkyis+KOpyJYQ==
+"@aztec/bb.js@^0.7.2":
+  version "0.7.5"
+  resolved "https://registry.yarnpkg.com/@aztec/bb.js/-/bb.js-0.7.5.tgz#5e3d465f737b9f4d68baa3a3a23f5f46824d94da"
+  integrity sha512-LQTOFo0x0uDAW/4ZVBVJ3bFkrk5dnHUkgTIyL7Pb8qsWeCU6no7YPJdgVsN402aSRN4UiTD2peibCBjWOEG83g==
   dependencies:
     comlink "^4.4.1"
     commander "^10.0.1"
@@ -821,9 +821,10 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
-"@noir-lang/acvm_js@git+https://git@github.com/noir-lang/acvm-js-wasm.git#b9d9ca9dfc5140839f23998d9466307215607c42":
-  version "0.0.0-d576736"
-  resolved "git+https://git@github.com/noir-lang/acvm-js-wasm.git#b9d9ca9dfc5140839f23998d9466307215607c42"
+"@noir-lang/acvm_js@^0.26.1":
+  version "0.26.1"
+  resolved "https://registry.yarnpkg.com/@noir-lang/acvm_js/-/acvm_js-0.26.1.tgz#5dc5d4f54a1663ff0096ab3e7633c126418bd0f0"
+  integrity sha512-pEZxMIV90nryLbFEzSBEWX3sYpjjN8rTnkD78Vd0ctTFFBdl202sX58LGe11NNH3BOLGvxcJXzv3XXjrVir0Tw==
 
 "@nomicfoundation/ethereumjs-block@5.0.2":
   version "5.0.2"

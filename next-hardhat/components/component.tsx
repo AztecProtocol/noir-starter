@@ -3,16 +3,12 @@ import { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import Ethers from '../utils/ethers';
 import React from 'react';
-import { NoirBrowser } from '../utils/noir/noirBrowser';
-
-import { ThreeDots } from 'react-loader-spinner';
+import { Noir } from '../utils/noir';
 
 function Component() {
-  const [input, setInput] = useState({ x: 0, y: 0});
-  const [pending, setPending] = useState(false);
+  const [input, setInput] = useState({ x: 0, y: 0 });
   const [proof, setProof] = useState(Uint8Array.from([]));
-  const [verification, setVerification] = useState(false);
-  const [noir, setNoir] = useState(new NoirBrowser());
+  const [noir, setNoir] = useState(new Noir());
 
   // Handles input state
   const handleChange = e => {
@@ -22,67 +18,80 @@ function Component() {
 
   // Calculates proof
   const calculateProof = async () => {
-    setPending(true);
-
-    try {
+    const calc = new Promise(async (resolve, reject) => {
       const witness = await noir.generateWitness(input);
       const proof = await noir.generateProof(witness);
       setProof(proof);
-    } catch (err) {
-      console.log(err);
-      toast.error('Error generating proof');
-    }
-
-    setPending(false);
+      resolve(proof);
+    });
+    toast.promise(calc, {
+      pending: 'Calculating proof...',
+      success: 'Proof calculated!',
+      error: 'Error calculating proof',
+    });
   };
 
   const verifyProof = async () => {
-    // only launch if we do have an acir and a proof to verify
-    if (proof) {
-      try {
+    const verifyOffChain = new Promise(async (resolve, reject) => {
+      if (proof) {
         const verification = await noir.verifyProof(proof);
-        setVerification(verification);
-        toast.success('Proof verified!');
+        resolve(verification);
+      }
+    });
 
+    const verifyOnChain = new Promise(async (resolve, reject) => {
+      if (proof) {
         const ethers = new Ethers();
+
         const publicInputs = proof.slice(0, 32);
         const slicedProof = proof.slice(32);
 
-        const ver = await ethers.contract.verify(slicedProof, [publicInputs]);
-        if (ver) {
-          toast.success('Proof verified on-chain!');
-          setVerification(true);
-        } else {
-          toast.error('Proof failed on-chain verification');
-          setVerification(false);
-        }
-      } catch (err) {
-        toast.error('Error verifying your proof');
-      } finally {
-        noir.destroy();
+        const verification = await ethers.contract.verify(slicedProof, [publicInputs]);
+        resolve(verification);
       }
-    }
+    });
+
+    toast.promise(verifyOffChain, {
+      pending: 'Verifying proof off-chain...',
+      success: 'Proof verified off-chain!',
+      error: 'Error verifying proof',
+    });
+
+    toast.promise(verifyOnChain, {
+      pending: 'Verifying proof on-chain...',
+      success: 'Proof verified on-chain!',
+      error: 'Error verifying proof on-chain',
+    });
   };
 
   // Verifier the proof if there's one in state
   useEffect(() => {
     if (proof.length > 0) {
       verifyProof();
+
+      return () => {
+        noir.destroy();
+      };
     }
   }, [proof]);
 
   const initNoir = async () => {
-    setPending(true);
+    const init = new Promise(async (resolve, reject) => {
+      await noir.init();
+      setNoir(noir);
+      resolve(noir);
+    });
 
-    await noir.init();
-    setNoir(noir);
-
-    setPending(false);
+    toast.promise(init, {
+      pending: 'Initializing Noir...',
+      success: 'Noir initialized!',
+      error: 'Error initializing Noir',
+    });
   };
 
   useEffect(() => {
     initNoir();
-  }, [proof]);
+  }, []);
 
   return (
     <div className="gameContainer">
@@ -92,7 +101,6 @@ function Component() {
       <input name="x" type={'number'} onChange={handleChange} value={input.x} />
       <input name="y" type={'number'} onChange={handleChange} value={input.y} />
       <button onClick={calculateProof}>Calculate proof</button>
-      {pending && <ThreeDots wrapperClass="spinner" color="#000000" height={100} width={100} />}
     </div>
   );
 }
