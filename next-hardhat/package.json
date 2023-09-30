@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "A template repository to get started with writing zero knowledge programs with Noir.",
   "scripts": {
-    "dev": "NETWORK=localhost hardhat compile && yarn deploy && next dev",
+    "dev": "hardhat compile && yarn deploy && next",
     "build": "hardhat compile && yarn deploy && next build",
     "start": "next start",
     "deploy": "hardhat compile && hardhat run --network ${NETWORK} scripts/deploy.ts",
