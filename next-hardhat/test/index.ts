@@ -1,49 +1,55 @@
 import { expect } from 'chai';
-// import { Contract } from 'ethers';
-// import { Noir } from '../utils/noir';
-// import { Noir } from '../utils/noir';
-// import hre from 'hardhat';
+import hre from 'hardhat';
 
-// import { Backend } from '@noir-lang/noir_js/test/backend/barretenberg';
-import { generateWitness, witnessMapToUint8Array } from '@noir-lang/noir_js';
 import circuit from '../circuits/target/noirstarter.json';
-
-// const noir = new Noir();
+import { Noir } from '@kevaundray/noir_js';
+import { BarretenbergBackend } from '@kevaundray/backend_barretenberg';
 
 describe('It compiles noir program code, receiving circuit bytes and abi object.', () => {
-  let correctProof: any;
 
-  // before(async () => {
-  //   const verifierContract = await hre.ethers.deployContract('UltraVerifier');
+  before(async () => {
+    const verifierContract = await hre.ethers.deployContract('UltraVerifier');
 
-  //   const verifierAddr = await verifierContract.deployed();
-  //   console.log(`Verifier deployed to ${verifierAddr.address}`);
-  // });
+    const verifierAddr = await verifierContract.deployed();
+    console.log(`Verifier deployed to ${verifierAddr.address}`);
+  });
 
   it('Should generate valid proof for correct input', async () => {
     const input = { x: 1, y: 2 };
-    // const prover = new Backend(circuit.bytecode);
-    // await prover.init();
-    const solvedWitness = await generateWitness(circuit, input);
-    // const witness = witnessMapToUint8Array(solvedWitness);
-    // const proof = await prover.generateOuterProof(witness);
-    expect(solvedWitness).to.be.an.instanceOf(Uint8Array);
-    // expect(proof instanceof Uint8Array).to.be.true;
+
+    const backend = new BarretenbergBackend(circuit);
+    // Initialize program
+    const program = new Noir(circuit, backend);
+    // Generate proof
+    const proof = await program.generateFinalProof(input);
+
+    // Proof verification
+    const isValid = await program.verifyFinalProof(proof);
+    expect(isValid).to.be.true;
   });
 
+  // TODO(Ze): My understanding is that this test was previously using a global noir instance
+  // TODO: Why was this the case and is this more indicative of the real workflow? 
   // it('Should verify valid proof for correct input', async () => {
-  //   const verification = await noir.verifyProof(correctProof);
+  //   const verification = await program.verifyFinalProof(correctProof);
   //   expect(verification).to.be.true;
   // });
 
-  // it('Should fail to generate valid proof for incorrect input', async () => {
-  //   try {
-  //     const input = { x: 1, y: 1 };
-  //     await noir.init();
-  //     const witness = await noir.generateWitness(input);
-  //     correctProof = await noir.generateProof(witness);
-  //   } catch (err) {
-  //     expect(err instanceof Error).to.be.true;
-  //   }
-  // });
+  it('Should fail to generate valid proof for incorrect input', async () => {
+    try {
+      const input = { x: 1, y: 1 };
+      
+      const backend = new BarretenbergBackend(circuit);
+      // Initialize program
+      const program = new Noir(circuit, backend);
+      // Generate proof
+      await program.generateFinalProof(input);
+    } catch (err) {
+
+      // TODO(Ze): Not sure how detailed we want this test to be
+      expect(err instanceof Error).to.be.true;
+      const error = err as Error;
+      expect(error.message).to.contain('Cannot satisfy constraint');
+    }
+  });
 });
