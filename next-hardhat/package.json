@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "A template repository to get started with writing zero knowledge programs with Noir.",
   "scripts": {
-    "dev": "hardhat compile && yarn deploy && next",
+    "dev": "NETWORK=localhost hardhat compile && yarn deploy && next dev",
     "build": "hardhat compile && yarn deploy && next build",
     "start": "next start",
     "deploy": "hardhat compile && hardhat run --network ${NETWORK} scripts/deploy.ts",
@@ -11,8 +11,8 @@
   },
   "packageManager": "yarn@3.6.3",
   "dependencies": {
-    "@kevaundray/backend_barretenberg": "0.7.10-kw-play-around-f87a92a3e",
-    "@kevaundray/noir_js": "0.15.0-kw-play-around-f87a92a3e",
+    "@kevaundray/backend_barretenberg": "0.7.10-kw-play-around-2e45944cc",
+    "@kevaundray/noir_js": "0.15.0-kw-play-around-2e45944cc",
     "@nomicfoundation/hardhat-chai-matchers": "^1.0.6",
     "@nomicfoundation/hardhat-network-helpers": "^1.0.0",
     "@nomicfoundation/hardhat-toolbox": "^2.0.1",
