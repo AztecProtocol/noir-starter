@@ -5,7 +5,7 @@ __metadata:
   version: 6
   cacheKey: 8
 
-"@aztec/bb.js@npm:^0.7.2":
+"@aztec/bb.js@npm:0.7.10":
   version: 0.7.10
   resolution: "@aztec/bb.js@npm:0.7.10"
   dependencies:
@@ -534,6 +534,52 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@kevaundray/acvm_js@npm:0.27.4-kw-play-around-f87a92a3e":
+  version: 0.27.4-kw-play-around-f87a92a3e
+  resolution: "@kevaundray/acvm_js@npm:0.27.4-kw-play-around-f87a92a3e"
+  checksum: 5a6279a969855f0d18e186ad1b48163d58e97f056464c6136b7315969b8ba662b10d13edb562572f32ce2d5b8337464170ded7034562925f74b4e1f1db916379
+  languageName: node
+  linkType: hard
+
+"@kevaundray/backend_barretenberg@npm:0.7.10-kw-play-around-f87a92a3e":
+  version: 0.7.10-kw-play-around-f87a92a3e
+  resolution: "@kevaundray/backend_barretenberg@npm:0.7.10-kw-play-around-f87a92a3e"
+  dependencies:
+    "@aztec/bb.js": 0.7.10
+    "@kevaundray/types": 0.14.1-kw-play-around-f87a92a3e
+    fflate: ^0.8.0
+  peerDependencies:
+    "@kevaundray/backend_barretenberg": "workspace:*"
+  checksum: 14262ee39aaee255889e8670e4c65d14f5746ee4421fcaba9c218197d665c516be12e8b6e30170c58afabbbb6f3093db67323e0b35358a86bee61a01af642582
+  languageName: node
+  linkType: hard
+
+"@kevaundray/noir_js@npm:0.15.0-kw-play-around-f87a92a3e":
+  version: 0.15.0-kw-play-around-f87a92a3e
+  resolution: "@kevaundray/noir_js@npm:0.15.0-kw-play-around-f87a92a3e"
+  dependencies:
+    "@kevaundray/acvm_js": 0.27.4-kw-play-around-f87a92a3e
+    "@kevaundray/noirc_abi": 0.15.0-kw-play-around-f87a92a3e
+    "@kevaundray/types": 0.14.1-kw-play-around-f87a92a3e
+    fflate: ^0.8.0
+  checksum: c2bbb1faca4562337ac89393986906e027cdfd95556ac1e0cdb5607be69d8966293df8797bb557e88fa173c05d82e37f4955248c8cbb6eae446c9a085423510a
+  languageName: node
+  linkType: hard
+
+"@kevaundray/noirc_abi@npm:0.15.0-kw-play-around-f87a92a3e":
+  version: 0.15.0-kw-play-around-f87a92a3e
+  resolution: "@kevaundray/noirc_abi@npm:0.15.0-kw-play-around-f87a92a3e"
+  checksum: 9bedc4cf3ea0efce1e2e782a5aa3bbb0832ba171cbe4156167f7a3b55dd4749f3556307dcd423b1406cef9569f2e126853a213a17c5ab78d6329a235173c146c
+  languageName: node
+  linkType: hard
+
+"@kevaundray/types@npm:0.14.1-kw-play-around-f87a92a3e":
+  version: 0.14.1-kw-play-around-f87a92a3e
+  resolution: "@kevaundray/types@npm:0.14.1-kw-play-around-f87a92a3e"
+  checksum: fb747b4cd651185175946776b82dcc16e03b42e10fb125356853eac7e5110e69ca37c78dd201d42d59ecf756266b66b9fc977baa515fd1db9b4a52a9e1158244
+  languageName: node
+  linkType: hard
+
 "@metamask/eth-sig-util@npm:^4.0.0":
   version: 4.0.1
   resolution: "@metamask/eth-sig-util@npm:4.0.1"
@@ -673,28 +719,6 @@ __metadata:
   checksum: 190c643f156d8f8f277bf2a6078af1ffde1fd43f498f187c2db24d35b4b4b5785c02c7dc52e356497b9a1b65b13edc996de08de0b961c32844364da02986dc53
   languageName: node
   linkType: hard
-
-"@noir-lang/acvm_js@portal:../../noir/acvm-repo/acvm_js::locator=noir-starter%40workspace%3A.":
-  version: 0.0.0-use.local
-  resolution: "@noir-lang/acvm_js@portal:../../noir/acvm-repo/acvm_js::locator=noir-starter%40workspace%3A."
-  languageName: node
-  linkType: soft
-
-"@noir-lang/noir_js@portal:../../noir/tooling/noir_js::locator=noir-starter%40workspace%3A.":
-  version: 0.0.0-use.local
-  resolution: "@noir-lang/noir_js@portal:../../noir/tooling/noir_js::locator=noir-starter%40workspace%3A."
-  dependencies:
-    "@noir-lang/acvm_js": "workspace:*"
-    "@noir-lang/noirc_abi": "workspace:*"
-    fflate: ^0.8.0
-  languageName: node
-  linkType: soft
-
-"@noir-lang/noirc_abi@portal:../../noir/tooling/noirc_abi_wasm::locator=noir-starter%40workspace%3A.":
-  version: 0.0.0-use.local
-  resolution: "@noir-lang/noirc_abi@portal:../../noir/tooling/noirc_abi_wasm::locator=noir-starter%40workspace%3A."
-  languageName: node
-  linkType: soft
 
 "@nomicfoundation/ethereumjs-block@npm:5.0.2":
   version: 5.0.2
@@ -5380,9 +5404,8 @@ next@latest:
   version: 0.0.0-use.local
   resolution: "noir-starter@workspace:."
   dependencies:
-    "@aztec/bb.js": ^0.7.2
-    "@noir-lang/acvm_js": ^0.26.1
-    "@noir-lang/noir_js": ^0.12.0
+    "@kevaundray/backend_barretenberg": 0.7.10-kw-play-around-f87a92a3e
+    "@kevaundray/noir_js": 0.15.0-kw-play-around-f87a92a3e
     "@nomicfoundation/hardhat-chai-matchers": ^1.0.6
     "@nomicfoundation/hardhat-network-helpers": ^1.0.0
     "@nomicfoundation/hardhat-toolbox": ^2.0.1
