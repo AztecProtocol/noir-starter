@@ -3,12 +3,14 @@ import { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import Ethers from '../utils/ethers';
 import React from 'react';
-import { Noir } from '../utils/noir';
-
+import { Noir } from '@kevaundray/noir_js';
+import { BarretenbergBackend } from '@kevaundray/backend_barretenberg';
+import circuit from '../circuits/target/noirstarter.json';
 function Component() {
   const [input, setInput] = useState({ x: 0, y: 0 });
   const [proof, setProof] = useState(Uint8Array.from([]));
-  const [noir, setNoir] = useState(new Noir());
+  const [backend, setBackend] = useState(new BarretenbergBackend(circuit));
+  const [noir, setNoir] = useState(new Noir(circuit, backend));
 
   // Handles input state
   const handleChange = e => {
@@ -19,8 +21,8 @@ function Component() {
   // Calculates proof
   const calculateProof = async () => {
     const calc = new Promise(async (resolve, reject) => {
-      const witness = await noir.generateWitness(input);
-      const proof = await noir.generateProof(witness);
+      const proof = await noir.generateFinalProof(input);
+      console.log("Proof created: ", proof);
       setProof(proof);
       resolve(proof);
     });
@@ -34,7 +36,8 @@ function Component() {
   const verifyProof = async () => {
     const verifyOffChain = new Promise(async (resolve, reject) => {
       if (proof) {
-        const verification = await noir.verifyProof(proof);
+        const verification = await noir.verifyFinalProof(proof);
+        console.log("Proof verified: ", verification);
         resolve(verification);
       }
     });
@@ -70,7 +73,8 @@ function Component() {
       verifyProof();
 
       return () => {
-        noir.destroy();
+        // TODO: we can add a destroy method to Noir to save on memory
+        // noir.destroy();
       };
     }
   }, [proof]);
@@ -78,6 +82,11 @@ function Component() {
   const initNoir = async () => {
     const init = new Promise(async (resolve, reject) => {
       await noir.init();
+
+      // Init of the backend is done dynamically when we call generateFinalProof
+      // Or any method that requires the circuit to be initialized
+      setBackend(backend);
+      resolve(backend);
       setNoir(noir);
       resolve(noir);
     });
