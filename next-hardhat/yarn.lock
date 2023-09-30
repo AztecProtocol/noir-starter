@@ -534,51 +534,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-<<<<<<< HEAD
-"@kevaundray/acvm_js@npm:0.27.4-kw-play-around-2e45944cc":
-  version: 0.27.4-kw-play-around-2e45944cc
-  resolution: "@kevaundray/acvm_js@npm:0.27.4-kw-play-around-2e45944cc"
-  checksum: 2405ae8492475ae517f0334a59fad3d298aaadbc8f198a59e46e693cfc6c9d65a147c0af3c97e705da91d3ff130ea1ab30d408162834cb5e5c03da8656ec9770
-  languageName: node
-  linkType: hard
-
-"@kevaundray/backend_barretenberg@npm:0.7.10-kw-play-around-2e45944cc":
-  version: 0.7.10-kw-play-around-2e45944cc
-  resolution: "@kevaundray/backend_barretenberg@npm:0.7.10-kw-play-around-2e45944cc"
-  dependencies:
-    "@aztec/bb.js": 0.7.10
-    "@kevaundray/types": 0.14.1-kw-play-around-2e45944cc
-    fflate: ^0.8.0
-  peerDependencies:
-    "@kevaundray/backend_barretenberg": "workspace:*"
-  checksum: a432d6e571806c2c4606aac0aec99e898049a16e82b10eb7930ceff2329b12ab026f28c6f9855ea74b6d7d17da711c6ab54cf8f8c6e3ebb529dc9b9d176ffde5
-  languageName: node
-  linkType: hard
-
-"@kevaundray/noir_js@npm:0.15.0-kw-play-around-2e45944cc":
-  version: 0.15.0-kw-play-around-2e45944cc
-  resolution: "@kevaundray/noir_js@npm:0.15.0-kw-play-around-2e45944cc"
-  dependencies:
-    "@kevaundray/acvm_js": 0.27.4-kw-play-around-2e45944cc
-    "@kevaundray/noirc_abi": 0.15.0-kw-play-around-2e45944cc
-    "@kevaundray/types": 0.14.1-kw-play-around-2e45944cc
-    fflate: ^0.8.0
-  checksum: 734d0d26831e101cbf73b77650238ae92e40e480680c75238701169663ebcb1eeafbf5d0b6a8e2372feb11c5979ff8131331eec02938d42c2c4c415755d69704
-  languageName: node
-  linkType: hard
-
-"@kevaundray/noirc_abi@npm:0.15.0-kw-play-around-2e45944cc":
-  version: 0.15.0-kw-play-around-2e45944cc
-  resolution: "@kevaundray/noirc_abi@npm:0.15.0-kw-play-around-2e45944cc"
-  checksum: 13d928dfb0da900df2008c01a6c780cc9b7abf1dffddd989145d6457a7f48791fbec5ba07059662c856d457498581adb611d2e621c70ccf270ba67bcd7adf6ed
-  languageName: node
-  linkType: hard
-
-"@kevaundray/types@npm:0.14.1-kw-play-around-2e45944cc":
-  version: 0.14.1-kw-play-around-2e45944cc
-  resolution: "@kevaundray/types@npm:0.14.1-kw-play-around-2e45944cc"
-  checksum: 3b20c3c14f501997c82572b37d5997cef78af68ecae576d36a058373e7c163ca8b6f202571ec22a1646f048a2ebb5d9db0aa03d7742d86c820ce87f558d2147f
-=======
 "@kevaundray/acvm_js@npm:0.27.4-kw-play-around-f3626e5f8":
   version: 0.27.4-kw-play-around-f3626e5f8
   resolution: "@kevaundray/acvm_js@npm:0.27.4-kw-play-around-f3626e5f8"
@@ -622,7 +577,6 @@ __metadata:
   version: 0.14.1-kw-play-around-f3626e5f8
   resolution: "@kevaundray/types@npm:0.14.1-kw-play-around-f3626e5f8"
   checksum: 9e9aa6c5542bafae20a6c9fa0178f71b772a070e1f80d25567e07f3c7532822665825501896850cf167ad01e744f27946da79a722a4fc53beb8585cb3b2ad29d
->>>>>>> kw/local-experiment
   languageName: node
   linkType: hard
 
@@ -5450,13 +5404,8 @@ next@latest:
   version: 0.0.0-use.local
   resolution: "noir-starter@workspace:."
   dependencies:
-<<<<<<< HEAD
-    "@kevaundray/backend_barretenberg": 0.7.10-kw-play-around-2e45944cc
-    "@kevaundray/noir_js": 0.15.0-kw-play-around-2e45944cc
-=======
     "@kevaundray/backend_barretenberg": 0.7.10-kw-play-around-f3626e5f8
     "@kevaundray/noir_js": 0.15.0-kw-play-around-f3626e5f8
->>>>>>> kw/local-experiment
     "@nomicfoundation/hardhat-chai-matchers": ^1.0.6
     "@nomicfoundation/hardhat-network-helpers": ^1.0.0
     "@nomicfoundation/hardhat-toolbox": ^2.0.1
