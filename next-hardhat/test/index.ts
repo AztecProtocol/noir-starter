@@ -1,12 +1,11 @@
 import { expect } from 'chai';
-import { Contract } from 'ethers';
-import { Noir } from '../utils/noir';
 import hre from 'hardhat';
 
-const noir = new Noir();
+import circuit from '../circuits/target/noirstarter.json';
+import { Noir } from '@kevaundray/noir_js';
+import { BarretenbergBackend } from '@kevaundray/backend_barretenberg';
 
 describe('It compiles noir program code, receiving circuit bytes and abi object.', () => {
-  let correctProof: any;
 
   before(async () => {
     const verifierContract = await hre.ethers.deployContract('UltraVerifier');
@@ -17,26 +16,40 @@ describe('It compiles noir program code, receiving circuit bytes and abi object.
 
   it('Should generate valid proof for correct input', async () => {
     const input = { x: 1, y: 2 };
-    await noir.init();
-    const witness = await noir.generateWitness(input);
-    correctProof = await noir.generateProof(witness);
 
-    expect(correctProof instanceof Uint8Array).to.be.true;
+    const backend = new BarretenbergBackend(circuit);
+    // Initialize program
+    const program = new Noir(circuit, backend);
+    // Generate proof
+    const proof = await program.generateFinalProof(input);
+
+    // Proof verification
+    const isValid = await program.verifyFinalProof(proof);
+    expect(isValid).to.be.true;
   });
 
-  it('Should verify valid proof for correct input', async () => {
-    const verification = await noir.verifyProof(correctProof);
-    expect(verification).to.be.true;
-  });
+  // TODO(Ze): My understanding is that this test was previously using a global noir instance
+  // TODO: Why was this the case and is this more indicative of the real workflow? 
+  // it('Should verify valid proof for correct input', async () => {
+  //   const verification = await program.verifyFinalProof(correctProof);
+  //   expect(verification).to.be.true;
+  // });
 
   it('Should fail to generate valid proof for incorrect input', async () => {
     try {
       const input = { x: 1, y: 1 };
-      await noir.init();
-      const witness = await noir.generateWitness(input);
-      correctProof = await noir.generateProof(witness);
+      
+      const backend = new BarretenbergBackend(circuit);
+      // Initialize program
+      const program = new Noir(circuit, backend);
+      // Generate proof
+      await program.generateFinalProof(input);
     } catch (err) {
+
+      // TODO(Ze): Not sure how detailed we want this test to be
       expect(err instanceof Error).to.be.true;
+      const error = err as Error;
+      expect(error.message).to.contain('Cannot satisfy constraint');
     }
   });
 });
