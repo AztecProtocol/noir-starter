@@ -10,11 +10,9 @@
     "test": "hardhat test"
   },
   "packageManager": "yarn@3.6.3",
-  "dependencies": {
-    "@kevaundray/backend_barretenberg": "0.7.10-kw-play-around-f3626e5f8",
-    "@kevaundray/noir_js": "0.15.0-kw-play-around-f3626e5f8"
-  },
   "devDependencies": {
+    "@kevaundray/backend_barretenberg": "0.7.10-kw-play-around-f3626e5f8",
+    "@kevaundray/noir_js": "0.15.0-kw-play-around-f3626e5f8",
     "@nomicfoundation/hardhat-chai-matchers": "^1.0.6",
     "@nomicfoundation/hardhat-network-helpers": "^1.0.0",
     "@nomicfoundation/hardhat-toolbox": "^2.0.1",
