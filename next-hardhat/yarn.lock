@@ -4641,7 +4641,6 @@ __metadata:
     chai: ^4.2.0
     dotenv: ^16.0.3
     ethers: ^5.7.2
-    fflate: ^0.8.0
     hardhat: ^2.17.0
     hardhat-gas-reporter: ^1.0.8
     next: latest
