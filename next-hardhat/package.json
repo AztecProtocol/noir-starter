@@ -12,10 +12,7 @@
   "packageManager": "yarn@3.6.3",
   "dependencies": {
     "@kevaundray/backend_barretenberg": "0.7.10-kw-play-around-f3626e5f8",
-    "@kevaundray/noir_js": "0.15.0-kw-play-around-f3626e5f8",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-toastify": "^9.1.1"
+    "@kevaundray/noir_js": "0.15.0-kw-play-around-f3626e5f8"
   },
   "devDependencies": {
     "@nomicfoundation/hardhat-chai-matchers": "^1.0.6",
@@ -34,6 +31,9 @@
     "hardhat": "^2.17.0",
     "hardhat-gas-reporter": "^1.0.8",
     "next": "latest",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-toastify": "^9.1.1",
     "solidity-coverage": "^0.8.1",
     "ts-node": "^10.9.1",
     "typechain": "^8.1.0",
