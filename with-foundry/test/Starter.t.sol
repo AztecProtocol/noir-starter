@@ -34,6 +34,7 @@ contract StarterTest is Test {
     }
 
     function test_dynamicProof() public {
+        string memory testName = "test1";
         string[] memory _fieldNames = new string[](2);
         string[] memory _fieldValues = new string[](2);
 
@@ -44,11 +45,13 @@ contract StarterTest is Test {
 
         // Set expected dynamic proof outcome
         dynamicCorrect[0] = bytes32(0x0000000000000000000000000000000000000000000000000000000000000005);
-        bytes memory proofBytes = generateDynamicProof("test1", _fieldNames, _fieldValues);
+        bytes memory proofBytes = generateDynamicProof(testName, _fieldNames, _fieldValues);
         starter.verifyEqual(proofBytes, dynamicCorrect);
+        cleanup(testName);
     }
 
     function test_dynamicProofSecondTest() public {
+        string memory testName = "test2";
         string[] memory _fieldNames = new string[](2);
         string[] memory _fieldValues = new string[](2);
 
@@ -59,11 +62,14 @@ contract StarterTest is Test {
 
         // Set expected dynamic proof outcome
         dynamicCorrect[0] = bytes32(0x0000000000000000000000000000000000000000000000000000000000000008);
-        bytes memory proofBytes = generateDynamicProof("test2", _fieldNames, _fieldValues);
+        bytes memory proofBytes = generateDynamicProof(testName, _fieldNames, _fieldValues);
         starter.verifyEqual(proofBytes, dynamicCorrect);
+        cleanup(testName);
+
     }
 
     function test_dynamicProofThirdTest() public {
+        string memory testName = "test3";
         string[] memory _fieldNames = new string[](2);
         string[] memory _fieldValues = new string[](2);
 
@@ -74,8 +80,9 @@ contract StarterTest is Test {
 
         // Set expected dynamic proof outcome
         dynamicCorrect[0] = bytes32(0x0000000000000000000000000000000000000000000000000000000000000007);
-        bytes memory proofBytes = generateDynamicProof("test3", _fieldNames, _fieldValues);
+        bytes memory proofBytes = generateDynamicProof(testName, _fieldNames, _fieldValues);
         starter.verifyEqual(proofBytes, dynamicCorrect);
+        cleanup(testName);
     }
 
     /// @dev This function generates dynamic proofs using 2 scripts in the /script directory
@@ -96,7 +103,7 @@ contract StarterTest is Test {
         bytes memory fileCreateResponse = vm.ffi(filecreateCommand);
         console.log(string(fileCreateResponse));
 
-        string memory _file = string.concat("/tmp/", _testName, "/Prover.toml");
+        string memory _file = string.concat("./tmp/", _testName, "/Prover.toml");
         vm.writeFile(_file, "");
         for (uint256 i; i < _fields.length; i++) {
             vm.writeLine(_file, string.concat(_fields[i], " = ", _fieldValues[i]));
@@ -108,7 +115,15 @@ contract StarterTest is Test {
         ffi_command[1] = _testName;
         bytes memory commandResponse = vm.ffi(ffi_command);
         console.log(string(commandResponse));
-        string memory _newProof = vm.readLine(string.concat("/tmp/", _testName, "/proofs/with_foundry.proof"));
+        string memory _newProof = vm.readLine(string.concat("./tmp/", _testName, "/proofs/with_foundry.proof"));
         return vm.parseBytes(_newProof);
+    }
+
+    function cleanup(string memory _testName) public {
+        string[] memory cleanupCommand = new string[] (2);
+        cleanupCommand[0] = "./script/cleanup.sh";
+        cleanupCommand[1] = _testName;
+        bytes memory cleanupResponse = vm.ffi(cleanupCommand);
+        console.log(string(cleanupResponse));
     }
 }

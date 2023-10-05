@@ -17,7 +17,7 @@ contract VerifyScript is Script {
         verifier = new UltraVerifier();
         starter = new Starter(verifier);
 
-        string memory proof = vm.readLine("./circuits/proofs/p.proof");
+        string memory proof = vm.readLine("./circuits/proofs/with_foundry.proof");
         bytes memory proofBytes = vm.parseBytes(proof);
 
         bytes32[] memory correct = new bytes32[](1);
