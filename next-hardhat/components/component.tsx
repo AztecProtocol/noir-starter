@@ -1,16 +1,18 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, SetStateAction } from 'react';
 
 import { toast } from 'react-toastify';
 import Ethers from '../utils/ethers';
 import React from 'react';
-import { Noir } from '@kevaundray/noir_js';
-import { BarretenbergBackend } from '@kevaundray/backend_barretenberg';
+
+import { Noir } from '@noir-lang/noir_js';
+import { BarretenbergBackend } from '@noir-lang/backend_barretenberg';
 import circuit from '../circuits/target/noirstarter.json';
+
 function Component() {
   const [input, setInput] = useState({ x: 0, y: 0 });
   const [proof, setProof] = useState(Uint8Array.from([]));
-  const [backend, setBackend] = useState(new BarretenbergBackend(circuit));
-  const [noir, setNoir] = useState(new Noir(circuit, backend));
+  const [noir, setNoir] = useState<Noir | null>(null);
+  const [backend, setBackend] = useState<BarretenbergBackend | null>(null);
 
   // Handles input state
   const handleChange = e => {
@@ -21,8 +23,8 @@ function Component() {
   // Calculates proof
   const calculateProof = async () => {
     const calc = new Promise(async (resolve, reject) => {
-      const proof = await noir.generateFinalProof(input);
-      console.log("Proof created: ", proof);
+      const proof = await noir!.generateFinalProof(input);
+      console.log('Proof created: ', proof);
       setProof(proof);
       resolve(proof);
     });
@@ -36,14 +38,16 @@ function Component() {
   const verifyProof = async () => {
     const verifyOffChain = new Promise(async (resolve, reject) => {
       if (proof) {
-        const verification = await noir.verifyFinalProof(proof);
-        console.log("Proof verified: ", verification);
+        const verification = await noir!.verifyFinalProof(proof);
+        console.log('Proof verified: ', verification);
         resolve(verification);
       }
     });
 
     const verifyOnChain = new Promise(async (resolve, reject) => {
-      if (proof) {
+      if (!proof) return reject(new Error('No proof'));
+      if (!window.ethereum) return reject(new Error('No ethereum provider'));
+      try {
         const ethers = new Ethers();
 
         const publicInputs = proof.slice(0, 32);
@@ -51,6 +55,9 @@ function Component() {
 
         const verification = await ethers.contract.verify(slicedProof, [publicInputs]);
         resolve(verification);
+      } catch (err) {
+        console.log(err);
+        reject(new Error("Couldn't verify proof on-chain"));
       }
     });
 
@@ -63,7 +70,11 @@ function Component() {
     toast.promise(verifyOnChain, {
       pending: 'Verifying proof on-chain...',
       success: 'Proof verified on-chain!',
-      error: 'Error verifying proof on-chain',
+      error: {
+        render({ data }: any) {
+          return `Error: ${data.message}`;
+        },
+      },
     });
   };
 
@@ -73,29 +84,23 @@ function Component() {
       verifyProof();
 
       return () => {
-        // TODO: we can add a destroy method to Noir to save on memory
-        // noir.destroy();
+        // TODO: Backend should be destroyed by Noir JS so we don't have to
+        // store backend in state
+        backend!.destroy();
       };
     }
   }, [proof]);
 
   const initNoir = async () => {
-    const init = new Promise(async (resolve, reject) => {
-      await noir.init();
-
-      // Init of the backend is done dynamically when we call generateFinalProof
-      // Or any method that requires the circuit to be initialized
-      setBackend(backend);
-      resolve(backend);
-      setNoir(noir);
-      resolve(noir);
-    });
-
-    toast.promise(init, {
+    const backend = new BarretenbergBackend(circuit);
+    setBackend(backend);
+    const noir = new Noir(circuit, backend);
+    await toast.promise(noir.init(), {
       pending: 'Initializing Noir...',
       success: 'Noir initialized!',
       error: 'Error initializing Noir',
     });
+    setNoir(noir);
   };
 
   useEffect(() => {
@@ -103,7 +108,7 @@ function Component() {
   }, []);
 
   return (
-    <div className="gameContainer">
+    <div className="container">
       <h1>Example starter</h1>
       <h2>This circuit checks that x and y are different</h2>
       <p>Try it!</p>
