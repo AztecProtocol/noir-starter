@@ -7,8 +7,6 @@ plonk_vk.sol
 circuits/target/*
 .tmp
 
-
-
 # NEXT JS
 
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
