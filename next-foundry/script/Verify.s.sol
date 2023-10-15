@@ -1,7 +1,7 @@
 pragma solidity ^0.8.17;
 
 import "forge-std/Script.sol";
-import "../circuits/contract/with_foundry/plonk_vk.sol";
+import "../circuits/contract/next_foundry/plonk_vk.sol";
 import "../contract/Starter.sol";
 
 contract VerifyScript is Script {
@@ -17,7 +17,7 @@ contract VerifyScript is Script {
         verifier = new UltraVerifier();
         starter = new Starter(verifier);
 
-        string memory proof = vm.readLine("./circuits/proofs/p.proof");
+        string memory proof = vm.readLine("./circuits/proofs/next_foundry.proof");
         bytes memory proofBytes = vm.parseBytes(proof);
 
         bytes32[] memory correct = new bytes32[](1);

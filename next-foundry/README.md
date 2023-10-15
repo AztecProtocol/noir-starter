@@ -1,8 +1,30 @@
 # Noir with Foundry
 
-This example uses Foundry to deploy and test a verifier.
+This example uses Foundry to deploy and test a verifier, and [Next.js](https://nextjs.org/) as the frontend framework
 
 ## Getting Started
+
+### Install Nextjs
+
+1. Install [yarn](https://yarnpkg.com/) (tested on yarn v1.22.19)
+
+2. Install [Node.js ≥v18](https://nodejs.org/en) (tested on v18.17.0)
+
+3. Install dependencies with
+   ```bash
+   yarn
+   ```
+
+4. Navigate to the circuits directory with
+
+   ```bash
+   cd circuits
+   ```
+
+5. Write your Noir program in `./circuits/src`.
+
+   > **Note:** You can read more about writing Noir programs in the
+   > [Noir docs](https://noir-lang.org/).
 
 ### Install nargo
 
@@ -31,7 +53,7 @@ cd circuits
 nargo codegen-verifier
 ```
 
-A file named `plonk_vk.sol` should appear in the `circuits/contracts/with_foundry` folder.
+A file named `plonk_vk.sol` should appear in the `circuits/contracts/next_foundry` folder.
 
 #### Proof
 
@@ -42,7 +64,7 @@ itself. For this, ensure your prover parameters are correct in `Prover.toml` and
 nargo prove
 ```
 
-A file named `with_foundry.proof` should appear in the `./circuits/proofs` folder.
+A file named `next_foundry.proof` should appear in the `./circuits/proofs` folder.
 
 ### Test with Foundry
 
@@ -65,7 +87,7 @@ You can test that the Noir Solidity verifier contract works on a given chain by 
 `Verify.s.sol` script against the appropriate RPC endpoint.
 
 ```bash
-forge script script/Verify.s.sol --rpc-url $RPC_ENDPOINT  --broadcast
+forge script script/Verify.s.sol --rpc-url $RPC_ENDPOINT --broadcast
 ```
 
 If that doesn't work, you can add the network to Metamask and deploy and test via
@@ -74,7 +96,7 @@ If that doesn't work, you can add the network to Metamask and deploy and test vi
 Note that some EVM network infrastructure may behave differently and this script may fail for
 reasons unrelated to the compatibility of the verifier contract.
 
-### Deploy with Foundry
+### Deploy Locally
 
 This template also has a script to help you deploy on your own network. But for that you need to run
 your own node or, alternatively, deploy on a testnet.
@@ -123,7 +145,28 @@ Then run the deployment with:
 forge script script/Starter.s.sol --rpc-url $ANVIL_RPC --broadcast --verify
 ```
 
-Replace `$ANVIL_RPC` with the testnet RPC, if you're deploying on a testnet.
+Replace `$ANVIL_RPC` with the testnet RPC, if you're deploying on a testnet. Save the address of the deployed contract and replace the value fo the contractAddress variable on the `./components/component.tsx` file.
+
+#### Build the project
+
+Build the project and deploy contracts to the local development chain with:
+
+```bash
+yarn build
+```
+
+> **Note:** If the deployment fails, try removing `yarn.lock` and reinstalling dependencies with
+> `yarn`.
+
+Add the address of the deployed contract
+
+#### Start the app
+
+Once your contracts are deployed and the build is finished, start the web app with
+
+ ```bash
+yarn start
+```
 
 ## Developing on this template
 

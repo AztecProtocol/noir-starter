@@ -5,6 +5,7 @@ broadcast
 .env
 plonk_vk.sol
 circuits/target/*
+.tmp
 
 
 
@@ -45,3 +46,11 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# noir
+crs
+
+# other
+.vscode
+artifacts
+.yarn/
