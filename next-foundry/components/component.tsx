@@ -1,20 +1,20 @@
 import { useState, useEffect, SetStateAction } from 'react';
 
 import { toast } from 'react-toastify';
-import { ethers } from "ethers";
+import { ethers } from 'ethers';
 import React from 'react';
 
 import { Noir } from '@noir-lang/noir_js';
 import { BarretenbergBackend } from '@noir-lang/backend_barretenberg';
 import circuit from '../circuits/target/next_foundry.json';
-import circuitContract from "../out/Starter.sol/Starter.json"
+import circuitContract from '../out/Starter.sol/Starter.json';
 
 function Component() {
   const [input, setInput] = useState({ x: 0, y: 0 });
   const [proof, setProof] = useState(Uint8Array.from([]));
   const [noir, setNoir] = useState<Noir | null>(null);
   const [backend, setBackend] = useState<BarretenbergBackend | null>(null);
-  const contractAddress = ""; // Edit this to the deployed contract address
+  const contractAddress = ''; // Edit this to the deployed contract address
 
   // Handles input state
   const handleChange = e => {
@@ -55,7 +55,7 @@ function Component() {
         const signer = await provider.getSigner();
         const publicInputs = proof.slice(0, 32);
         const slicedProof = proof.slice(32);
-        const contract =new ethers.Contract(contractAddress, circuitContract.abi, signer);
+        const contract = new ethers.Contract(contractAddress, circuitContract.abi, signer);
         const verification = await contract.verifyEqual(slicedProof, [publicInputs]);
         resolve(verification);
       } catch (err) {
