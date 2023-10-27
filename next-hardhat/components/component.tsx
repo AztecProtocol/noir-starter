@@ -6,11 +6,27 @@ import React from 'react';
 
 import { Noir } from '@noir-lang/noir_js';
 import { BarretenbergBackend } from '@noir-lang/backend_barretenberg';
-import circuit from '../circuits/target/noirstarter.json';
+import { CompiledCircuit, ProofData } from '@noir-lang/types';
+import newCompiler, { compile } from '@noir-lang/noir_wasm';
+import { initializeResolver } from '@noir-lang/source-resolver';
+import axios from 'axios';
+
+async function getCircuit(name: string) {
+  await newCompiler();
+  const { data: noirSource } = await axios.get('/api/readCircuitFile?filename=' + name);
+
+  initializeResolver((id: string) => {
+    const source = noirSource;
+    return source;
+  });
+
+  const compiled = compile('main');
+  return compiled;
+}
 
 function Component() {
   const [input, setInput] = useState({ x: 0, y: 0 });
-  const [proof, setProof] = useState(Uint8Array.from([]));
+  const [proof, setProof] = useState<ProofData>();
   const [noir, setNoir] = useState<Noir | null>(null);
   const [backend, setBackend] = useState<BarretenbergBackend | null>(null);
 
@@ -23,9 +39,9 @@ function Component() {
   // Calculates proof
   const calculateProof = async () => {
     const calc = new Promise(async (resolve, reject) => {
-      const proof = await noir!.generateFinalProof(input);
+      const { proof, publicInputs } = await noir!.generateFinalProof(input);
       console.log('Proof created: ', proof);
-      setProof(proof);
+      setProof({ proof, publicInputs });
       resolve(proof);
     });
     toast.promise(calc, {
@@ -38,7 +54,10 @@ function Component() {
   const verifyProof = async () => {
     const verifyOffChain = new Promise(async (resolve, reject) => {
       if (proof) {
-        const verification = await noir!.verifyFinalProof(proof);
+        const verification = await noir!.verifyFinalProof({
+          proof: proof.proof,
+          publicInputs: proof.publicInputs,
+        });
         console.log('Proof verified: ', verification);
         resolve(verification);
       }
@@ -50,10 +69,7 @@ function Component() {
       try {
         const ethers = new Ethers();
 
-        const publicInputs = proof.slice(0, 32);
-        const slicedProof = proof.slice(32);
-
-        const verification = await ethers.contract.verify(slicedProof, [publicInputs]);
+        const verification = await ethers.contract.verify(proof.proof, [proof.publicInputs]);
         resolve(verification);
       } catch (err) {
         console.log(err);
@@ -80,7 +96,7 @@ function Component() {
 
   // Verifier the proof if there's one in state
   useEffect(() => {
-    if (proof.length > 0) {
+    if (proof) {
       verifyProof();
 
       return () => {
@@ -92,9 +108,11 @@ function Component() {
   }, [proof]);
 
   const initNoir = async () => {
-    const backend = new BarretenbergBackend(circuit);
+    const circuit = await getCircuit('main');
+
+    const backend = new BarretenbergBackend(circuit as CompiledCircuit, { threads: 8 });
     setBackend(backend);
-    const noir = new Noir(circuit, backend);
+    const noir = new Noir(circuit as CompiledCircuit, backend);
     await toast.promise(noir.init(), {
       pending: 'Initializing Noir...',
       success: 'Noir initialized!',
