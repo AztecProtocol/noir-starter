@@ -1,0 +1,7 @@
+[package]
+name="next_foundry"
+type="bin"
+authors = ["critesjosh"]
+compiler_version = "~0.11.0"
+
+[dependencies]
