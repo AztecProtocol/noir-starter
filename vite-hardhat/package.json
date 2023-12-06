@@ -25,7 +25,6 @@
     "@typechain/hardhat": "^6.1.2",
     "dotenv": "^16.0.3",
     "hardhat": "^2.19.2",
-    "next": "latest",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-toastify": "^9.1.1",
