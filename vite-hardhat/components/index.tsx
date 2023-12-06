@@ -1,24 +1,30 @@
-import { useState, useEffect, SetStateAction } from 'react';
+import {
+  useState,
+  useEffect,
+  SetStateAction,
+  ReactEventHandler,
+  FormEvent,
+  ChangeEvent,
+} from 'react';
 
 import { toast } from 'react-toastify';
-import Ethers from '../utils/ethers';
+import Ethers from '../utils/ethers.jsx';
 import React from 'react';
 
 import { Noir } from '@noir-lang/noir_js';
 import { BarretenbergBackend, flattenPublicInputs } from '@noir-lang/backend_barretenberg';
 import { CompiledCircuit, ProofData } from '@noir-lang/types';
-import newCompiler, { compile } from '@noir-lang/noir_wasm';
+import { compile } from '@noir-lang/noir_wasm';
+
+// @ts-ignore
 import { initializeResolver } from '@noir-lang/source-resolver';
 import axios from 'axios';
 
 async function getCircuit(name: string) {
-  await newCompiler();
   const res = await fetch(new URL('../circuits/src/main.nr', import.meta.url));
-
   const noirSource = await res.text();
 
   initializeResolver((id: string) => {
-    console.log(id);
     const source = noirSource;
     return source;
   });
@@ -34,9 +40,9 @@ function Component() {
   const [backend, setBackend] = useState<BarretenbergBackend | null>(null);
 
   // Handles input state
-  const handleChange = e => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
-    setInput({ ...input, [e.target.name]: e.target.value });
+    if (e.target) setInput({ ...input, [e.target.name]: e.target.value });
   };
 
   // Calculates proof
@@ -116,8 +122,11 @@ function Component() {
   const initNoir = async () => {
     const circuit = await getCircuit('main');
 
+    // @ts-ignore
     const backend = new BarretenbergBackend(circuit.program, { threads: 8 });
     setBackend(backend);
+
+    // @ts-ignore
     const noir = new Noir(circuit.program, backend);
     await toast.promise(noir.init(), {
       pending: 'Initializing Noir...',

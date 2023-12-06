@@ -1,5 +1,6 @@
 import { writeFileSync } from 'fs';
-import { ethers } from 'hardhat';
+import hre from 'hardhat';
+const { ethers, network } = hre;
 
 async function main() {
   // Deploy the verifier contract

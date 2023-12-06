@@ -24,7 +24,9 @@ describe('It compiles noir program code, receiving circuit bytes and abi object.
     const verifierAddr = await verifierContract.deployed();
     console.log(`Verifier deployed to ${verifierAddr.address}`);
 
+    // @ts-ignore
     const backend = new BarretenbergBackend(compiled.program);
+    // @ts-ignore
     noir = new Noir(compiled.program, backend);
   });
 
