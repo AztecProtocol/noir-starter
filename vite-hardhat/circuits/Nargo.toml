@@ -2,6 +2,6 @@
 name = "noirstarter"
 type = "bin"
 authors = [""]
-compiler_version = "0.11.0"
+compiler_version = "0.19.4"
 
 [dependencies]

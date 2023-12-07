@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "es2020",
+    "target": "es2022",
     "useDefineForClassFields": true,
     "lib": ["DOM", "DOM.Iterable", "ESNext"],
     "allowJs": false,
@@ -9,8 +9,8 @@
     "allowSyntheticDefaultImports": true,
     "strict": true,
     "forceConsistentCasingInFileNames": true,
-    "module": "CommonJS",
-    "moduleResolution": "Node",
+    "module": "node16",
+    "moduleResolution": "Node16",
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
@@ -19,7 +19,11 @@
     "strictNullChecks": true,
     "incremental": true
   },
+  "ts-node": {
+    "experimentalResolver": true,
+    "files": true
+  },
   "exclude": ["dist", "node_modules"],
-  "include": ["./test", "./src", "./scripts"],
-  "files": ["./hardhat.config.ts"]
+  "include": ["./test", "./components", "./scripts"],
+  "files": ["hardhat.config.cts"]
 }

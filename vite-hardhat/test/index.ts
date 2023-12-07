@@ -4,7 +4,7 @@ import hre from 'hardhat';
 import { Noir } from '@noir-lang/noir_js';
 import { BarretenbergBackend } from '@noir-lang/backend_barretenberg';
 
-import { compile } from '@noir-lang/noir_wasm';
+import { CompileResult, CompiledProgram, compile } from '@noir-lang/noir_wasm';
 import path from 'path';
 import { ProofData } from '@noir-lang/types';
 
@@ -18,14 +18,16 @@ describe('It compiles noir program code, receiving circuit bytes and abi object.
   let correctProof: ProofData;
 
   before(async () => {
-    const circuit = await getCircuit('main');
-    const verifierContract = await hre.ethers.deployContract('UltraVerifier');
+    const compiled = await getCircuit('main');
+    const verifierContract = await hre.viem.deployContract('UltraVerifier');
 
-    const verifierAddr = await verifierContract.deployed();
-    console.log(`Verifier deployed to ${verifierAddr.address}`);
+    const verifierAddr = verifierContract.address;
+    console.log(`Verifier deployed to ${verifierAddr}`);
 
-    const backend = new BarretenbergBackend(circuit);
-    noir = new Noir(circuit, backend);
+    // @ts-ignore
+    const backend = new BarretenbergBackend(compiled.program);
+    // @ts-ignore
+    noir = new Noir(compiled.program, backend);
   });
 
   it('Should generate valid proof for correct input', async () => {

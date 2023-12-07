@@ -1,1 +1,44 @@
-{"hash":11749626988244162825,"backend":"acvm-backend-barretenberg","abi":{"parameters":[{"name":"x","type":{"kind":"field"},"visibility":"private"},{"name":"y","type":{"kind":"field"},"visibility":"public"}],"param_witnesses":{"x":[1],"y":[2]},"return_type":null,"return_witnesses":[]},"bytecode":"H4sIAAAAAAAA/7VTQQ6EIAwsKh73LS0FKbf9ypLF/z/BxGBClJtlLiUcpjPTdgUAC0/MtX5rxXcg03Axbt6X6Aox/dClLAF9yJuQUJDwd8JcxEtMOUVM5LnQHhLvlWxS5Jr1PJ5cppOlUc5SU3Ord+m8p85OrAM8wa3PPcdP50+1+YghLQN4Legt/yjfVn9G2FA+NL/NwYL+QZlGZ3tEFw56E7wBeQUAAA=="}
+{
+    "noir_version": "0.18.0+1de0e6d0acb18f3164a3b1fbc1be6438ef16be39",
+    "hash": 16035314490478570843,
+    "backend": "acvm-backend-barretenberg",
+    "abi": {
+        "parameters": [
+            {
+                "name": "x",
+                "type": {
+                    "kind": "field"
+                },
+                "visibility": "private"
+            },
+            {
+                "name": "y",
+                "type": {
+                    "kind": "field"
+                },
+                "visibility": "public"
+            },
+            {
+                "name": "z",
+                "type": {
+                    "kind": "field"
+                },
+                "visibility": "public"
+            }
+        ],
+        "param_witnesses": {
+            "x": [
+                1
+            ],
+            "y": [
+                2
+            ],
+            "z": [
+                3
+            ]
+        },
+        "return_type": null,
+        "return_witnesses": []
+    },
+    "bytecode": "H4sIAAAAAAAA/+1U0Q6DIAysOpnsYd/SCmh526/MDP//EzYylxD1zTbZkl1CSngo1zs4CwAX2KJZ6m2pDgfv09gncnTHPk4c0IdpYGIKHB49O5fY8xinOGIk7xLNIboZ36iKXngMVAvyOsnxwqxZtaNltdISj4EkOZd829c6Lft65y0YhVlgdc9av+vOmejlGua0Cn0NyD16rbmNvEdYtNxwPqqDUeIpHZ61oE+NIK8z/F54SnIu+XbwD08RczqFvha+Ozzz3FbeI9XwtCD/kXL9fJ5cG9jiCSvxgUKyCgAA"
+}
