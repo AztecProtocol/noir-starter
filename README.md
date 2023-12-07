@@ -10,6 +10,7 @@ Use templates as a starting point for your project.
 
 - Next.js + Hardhat: [`./next-hardhat`](./next-hardhat)
 - Foundry: [`./with-foundry`](./with-foundry)
+- Vite + Hardhat: [`./vite-hardhat`](./vite-hardhat)
 
 ## Example Projects
 
