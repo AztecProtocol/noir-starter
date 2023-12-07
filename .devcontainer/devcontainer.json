@@ -1,0 +1,18 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the
+// README at: https://github.com/devcontainers/templates/tree/main/src/docker-existing-dockerfile
+{
+	"name": "Existing Dockerfile",
+	"build": {
+		"context": ".",
+		"dockerfile": "Dockerfile"
+	},
+	  "customizations": {
+			// Configure properties specific to VS Code.
+			"vscode": {
+				// Set *default* container specific settings.json values on container create.
+				"settings": {},
+				"extensions": ["noir-lang.vscode-noir"]
+			  }
+	    },
+	"postCreateCommand": "nargo"
+}
