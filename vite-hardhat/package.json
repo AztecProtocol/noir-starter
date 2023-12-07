@@ -5,7 +5,7 @@
   "description": "A template repository to get started with writing zero knowledge programs with Noir.",
   "scripts": {
     "dev": "hardhat compile && yarn deploy && vite",
-    "build": "hardhat compile && yarn deploy && tsc && vite build",
+    "build": "hardhat compile && yarn deploy && vite build",
     "preview": "vite preview",
     "deploy": "hardhat compile && NODE_OPTIONS='--experimental-loader ts-node/esm/transpile-only' hardhat run --network ${NETWORK} scripts/deploy.ts",
     "test": "hardhat test"
