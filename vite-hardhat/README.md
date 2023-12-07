@@ -1,18 +1,15 @@
-# Noir with Next and Hardhat
+# Noir with Vite and Hardhat
 
-[![Netlify Status](https://api.netlify.com/api/v1/badges/e4bd1ebc-6be1-4ed2-8be8-18f70382ae22/deploy-status)](https://app.netlify.com/sites/noir-next-hardhat/deploys)
+[![Netlify Status](https://api.netlify.com/api/v1/badges/e4bd1ebc-6be1-4ed2-8be8-18f70382ae22/deploy-status)](https://app.netlify.com/sites/noir-vite-hardhat/deploys)
 
-This example uses [Next.js](https://nextjs.org/) as the frontend framework, and
+This example uses [Vite](https://vite.dev/) as the frontend framework, and
 [Hardhat](https://hardhat.org/) to deploy and test.
-
-It also features multiple files and different entry points by resolving multiple files and using the
-`entry_point` parameter to the `compile` function.
 
 ## Getting Started
 
 1. Install [yarn](https://yarnpkg.com/) (tested on yarn v1.22.19)
 
-2. Install [Node.js ≥v18](https://nodejs.org/en) (tested on v18.17.0)
+2. Install [Node.js >20.10 (latest LTS)](https://nodejs.org/en) (tested on v18.17.0)
 
 3. Install [noirup](https://noir-lang.org/getting_started/nargo_installation/#option-1-noirup) with
 
@@ -20,15 +17,11 @@ It also features multiple files and different entry points by resolving multiple
    curl -L https://raw.githubusercontent.com/noir-lang/noirup/main/install | bash
    ```
 
-4. Install Nargo v0.17.0 with
+4. Install Nargo v0.19.4 with
 
    ```bash
-   noirup -v 0.17.0
+   noirup -v 0.19.4
    ```
-
-If you had a lower version of `nargo` installed previously and are running into errors when
-compiling, you may need to uninstall it, instructions
-[here](https://noir-lang.org/getting_started/nargo_installation#uninstalling-nargo).
 
 5. Install dependencies with
 
@@ -53,13 +46,7 @@ compiling, you may need to uninstall it, instructions
    nargo codegen-verifier
    ```
 
-9. Compile your Noir program with
-
-   ```bash
-   nargo compile
-   ```
-
-10. Navigate back into the _next-hardhat_ directory with
+9. Navigate back into the vite-hardhat_ directory with
 
     ```bash
     cd ..
@@ -67,7 +54,7 @@ compiling, you may need to uninstall it, instructions
 
 ## Test locally
 
-1. Copy `next-hardhat/.env.example` to a new file `next-hardhat/.env`.
+1. Copy `vite-hardhat/.env.example` to a new file `vite-hardhat/.env`.
 
 2. Start a local development EVM at <http://localhost:8545> with
 
@@ -91,7 +78,7 @@ The test demonstrates basic usage of Noir in a TypeScript Node.js environment.
 
 ## Deploy locally
 
-1. Copy `next-hardhat/.env.example` to a new file `next-hardhat/.env`.
+1. Copy `vite-hardhat/.env.example` to a new file `vite-hardhat/.env`.
 
 2. Start a local development EVM at <http://localhost:8545> with
 
@@ -129,8 +116,8 @@ For example, `NETWORK=mumbai yarn build` or `NETWORK=sepolia yarn build`.
 
 Make sure you:
 
-- Update the deployer private keys in `next-hardhat/.env`
+- Update the deployer private keys in `vite-hardhat/.env`
 - Have funds in the deployer account
-- Add keys for alchemy (to act as a node) in `next-hardhat/.env`
+- Add keys for alchemy (to act as a node) in `vite-hardhat/.env`
 
 Feel free to contribute with other networks in `hardhat.config.ts`
