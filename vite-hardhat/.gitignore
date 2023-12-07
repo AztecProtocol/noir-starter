@@ -53,3 +53,5 @@ crs
 .DS_Store
 artifacts
 .yarn/
+
+circuits/target
