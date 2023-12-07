@@ -101,10 +101,10 @@ The test demonstrates basic usage of Noir in a TypeScript Node.js environment.
    > **Note:** If the deployment fails, try removing `yarn.lock` and reinstalling dependencies with
    > `yarn`.
 
-4. Once your contracts are deployed and the build is finished, start the web app with
+4. Once your contracts are deployed and the build is finished, you can preview the built website with
 
    ```bash
-   yarn start
+   yarn preview
    ```
 
 ## Deploy on networks

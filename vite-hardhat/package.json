@@ -8,7 +8,7 @@
     "build": "hardhat compile && yarn deploy && vite build",
     "preview": "vite preview",
     "deploy": "hardhat compile && NODE_OPTIONS='--experimental-loader ts-node/esm/transpile-only' hardhat run --network ${NETWORK} scripts/deploy.ts",
-    "test": "hardhat test"
+    "test": "NODE_OPTIONS='--experimental-loader ts-node/esm/transpile-only' hardhat test"
   },
   "dependencies": {
     "@noir-lang/backend_barretenberg": "^0.19.4",

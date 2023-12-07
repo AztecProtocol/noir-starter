@@ -55,3 +55,4 @@ artifacts
 .yarn/
 
 circuits/target
+dist

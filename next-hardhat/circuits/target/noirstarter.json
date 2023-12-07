@@ -1,0 +1,44 @@
+{
+    "noir_version": "0.18.0+1de0e6d0acb18f3164a3b1fbc1be6438ef16be39",
+    "hash": 16035314490478570843,
+    "backend": "acvm-backend-barretenberg",
+    "abi": {
+        "parameters": [
+            {
+                "name": "x",
+                "type": {
+                    "kind": "field"
+                },
+                "visibility": "private"
+            },
+            {
+                "name": "y",
+                "type": {
+                    "kind": "field"
+                },
+                "visibility": "public"
+            },
+            {
+                "name": "z",
+                "type": {
+                    "kind": "field"
+                },
+                "visibility": "public"
+            }
+        ],
+        "param_witnesses": {
+            "x": [
+                1
+            ],
+            "y": [
+                2
+            ],
+            "z": [
+                3
+            ]
+        },
+        "return_type": null,
+        "return_witnesses": []
+    },
+    "bytecode": "H4sIAAAAAAAA/+1U0Q6DIAysOpnsYd/SCmh526/MDP//EzYylxD1zTbZkl1CSngo1zs4CwAX2KJZ6m2pDgfv09gncnTHPk4c0IdpYGIKHB49O5fY8xinOGIk7xLNIboZ36iKXngMVAvyOsnxwqxZtaNltdISj4EkOZd829c6Lft65y0YhVlgdc9av+vOmejlGua0Cn0NyD16rbmNvEdYtNxwPqqDUeIpHZ61oE+NIK8z/F54SnIu+XbwD08RczqFvha+Ozzz3FbeI9XwtCD/kXL9fJ5cG9jiCSvxgUKyCgAA"
+}
