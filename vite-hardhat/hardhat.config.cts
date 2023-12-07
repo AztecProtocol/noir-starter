@@ -1,5 +1,5 @@
-import '@nomicfoundation/hardhat-toolbox';
-import '@nomiclabs/hardhat-ethers';
+import '@nomicfoundation/hardhat-toolbox-viem';
+import '@nomicfoundation/hardhat-viem';
 import '@nomicfoundation/hardhat-chai-matchers';
 
 import { HardhatUserConfig } from 'hardhat/config';

@@ -1,19 +1,17 @@
 import { writeFileSync } from 'fs';
 import hre from 'hardhat';
-const { ethers, network } = hre;
+const { viem } = hre;
 
 async function main() {
-  // Deploy the verifier contract
-  const Verifier = await ethers.getContractFactory('UltraVerifier');
-  const verifier = await Verifier.deploy();
+  const publicClient = await viem.getPublicClient();
 
-  // Get the address of the deployed verifier contract
-  const verifierAddr = await verifier.deployed();
+  // Deploy the verifier contract
+  const verifier = await viem.deployContract('UltraVerifier');
 
   // Create a config object
   const config = {
-    chainId: ethers.provider.network.chainId,
-    verifier: verifierAddr.address,
+    chainId: publicClient.chain.id,
+    verifier: verifier.address,
   };
 
   // Print the config

@@ -19,10 +19,10 @@ describe('It compiles noir program code, receiving circuit bytes and abi object.
 
   before(async () => {
     const compiled = await getCircuit('main');
-    const verifierContract = await hre.ethers.deployContract('UltraVerifier');
+    const verifierContract = await hre.viem.deployContract('UltraVerifier');
 
-    const verifierAddr = await verifierContract.deployed();
-    console.log(`Verifier deployed to ${verifierAddr.address}`);
+    const verifierAddr = verifierContract.address;
+    console.log(`Verifier deployed to ${verifierAddr}`);
 
     // @ts-ignore
     const backend = new BarretenbergBackend(compiled.program);

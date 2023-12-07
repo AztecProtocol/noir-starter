@@ -8,7 +8,6 @@ import {
 } from 'react';
 
 import { toast } from 'react-toastify';
-import Ethers from '../utils/ethers.jsx';
 import React from 'react';
 
 import { Noir } from '@noir-lang/noir_js';
@@ -18,7 +17,9 @@ import { compile } from '@noir-lang/noir_wasm';
 
 // @ts-ignore
 import { initializeResolver } from '@noir-lang/source-resolver';
-import axios from 'axios';
+import { useAccount, useConnect, useContractWrite } from 'wagmi';
+import { contractCallConfig } from '../utils/wagmi.jsx';
+import { bytesToHex } from 'viem';
 
 async function getCircuit(name: string) {
   const res = await fetch(new URL('../circuits/src/main.nr', import.meta.url));
@@ -38,6 +39,14 @@ function Component() {
   const [proof, setProof] = useState<ProofData>();
   const [noir, setNoir] = useState<Noir | null>(null);
   const [backend, setBackend] = useState<BarretenbergBackend | null>(null);
+
+  const { isConnected } = useAccount();
+  const { connect, connectors } = useConnect();
+
+  const { write, data, error, isLoading, isError } = useContractWrite({
+    ...contractCallConfig,
+    functionName: 'verify',
+  });
 
   // Handles input state
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -72,52 +81,33 @@ function Component() {
       }
     });
 
-    const verifyOnChain = new Promise(async (resolve, reject) => {
-      if (!proof) return reject(new Error('No proof'));
-      if (!window.ethereum) return reject(new Error('No ethereum provider'));
-      try {
-        const ethers = new Ethers();
-
-        const verification = await ethers.contract.verify(
-          proof.proof,
-          flattenPublicInputs(proof.publicInputs),
-        );
-        resolve(verification);
-      } catch (err) {
-        console.log(err);
-        reject(new Error("Couldn't verify proof on-chain"));
-      }
-    });
-
     toast.promise(verifyOffChain, {
       pending: 'Verifying proof off-chain...',
       success: 'Proof verified off-chain!',
       error: 'Error verifying proof',
     });
 
-    toast.promise(verifyOnChain, {
-      pending: 'Verifying proof on-chain...',
-      success: 'Proof verified on-chain!',
-      error: {
-        render({ data }: any) {
-          return `Error: ${data.message}`;
-        },
-      },
-    });
+    connectors.map(c => c.ready && connect({ connector: c }));
+
+    if (proof) {
+      write?.({
+        args: [bytesToHex(proof.proof), flattenPublicInputs(proof.publicInputs)],
+      });
+    }
   };
 
-  // Verifier the proof if there's one in state
   useEffect(() => {
     if (proof) {
       verifyProof();
-
       return () => {
-        // TODO: Backend should be destroyed by Noir JS so we don't have to
-        // store backend in state
         backend!.destroy();
       };
     }
   }, [proof]);
+
+  useEffect(() => {
+    toast.success('Proof verified on-chain!');
+  }, [data]);
 
   const initNoir = async () => {
     const circuit = await getCircuit('main');

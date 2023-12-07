@@ -4,7 +4,7 @@
   "type": "module",
   "description": "A template repository to get started with writing zero knowledge programs with Noir.",
   "scripts": {
-    "dev": "hardhat compile && yarn deploy && tsc && vite",
+    "dev": "hardhat compile && yarn deploy && vite",
     "build": "hardhat compile && yarn deploy && tsc && vite build",
     "preview": "vite preview",
     "deploy": "hardhat compile && NODE_OPTIONS='--experimental-loader ts-node/esm/transpile-only' hardhat run --network ${NETWORK} scripts/deploy.ts",
@@ -16,21 +16,21 @@
     "@noir-lang/noir_wasm": "^0.19.4",
     "@noir-lang/source-resolver": "^0.19.4",
     "@noir-lang/types": "^0.19.4",
-    "@nomicfoundation/hardhat-chai-matchers": "^1.0.6",
     "@nomicfoundation/hardhat-network-helpers": "^1.0.0",
-    "@nomicfoundation/hardhat-toolbox": "^2.0.1",
-    "@nomiclabs/hardhat-ethers": "^2.2.2",
-    "@nomiclabs/hardhat-etherscan": "^3.0.0",
-    "@typechain/ethers-v5": "^10.1.0",
-    "@typechain/hardhat": "^6.1.2",
+    "@nomicfoundation/hardhat-toolbox-viem": "1.0.0",
+    "@nomicfoundation/hardhat-viem": "1.0.0",
     "dotenv": "^16.0.3",
     "hardhat": "^2.19.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-toastify": "^9.1.1",
-    "typechain": "^8.1.0"
+    "typechain": "^8.1.0",
+    "viem": "1.16.6"
   },
   "devDependencies": {
+    "@nomicfoundation/hardhat-chai-matchers": "^2.0.2",
+    "@nomicfoundation/hardhat-ethers": "^3.0.5",
+    "@nomicfoundation/hardhat-verify": "^1.0.0",
     "@types/mocha": "^10.0.1",
     "@types/node": "^18.15.5",
     "@types/react": "^18.0.26",
@@ -40,7 +40,8 @@
     "solidity-coverage": "^0.8.5",
     "ts-node": "^10.9.1",
     "typescript": "^4.9.3",
-    "vite": "^5.0.6"
+    "vite": "^5.0.6",
+    "wagmi": "^1.4.8"
   },
   "engines": {
     "node": "^20.10.0"

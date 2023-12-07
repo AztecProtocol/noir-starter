@@ -8,6 +8,8 @@ import Component from './components/index';
 import initNoirWasm from '@noir-lang/noir_wasm';
 import initNoirC from '@noir-lang/noirc_abi';
 import initACVM from '@noir-lang/acvm_js';
+import { WagmiConfig } from 'wagmi';
+import { config } from './utils/wagmi';
 
 const InitWasm = ({ children }) => {
   const [init, setInit] = React.useState(false);
@@ -32,9 +34,18 @@ const InitWasm = ({ children }) => {
   return <div>{children}</div>;
 };
 
+export function Providers({ children }: { children: React.ReactNode }) {
+  const [mounted, setMounted] = React.useState(false);
+  React.useEffect(() => setMounted(true), []);
+  return <WagmiConfig config={config}>{mounted && children}</WagmiConfig>;
+}
+
 ReactDOM.createRoot(document.getElementById('root')!).render(
-  <InitWasm>
-    <Component />
-    <ToastContainer />
-  </InitWasm>,
+  <Providers>
+    <InitWasm>
+      <Component />
+      <ToastContainer />
+    </InitWasm>
+    ,
+  </Providers>,
 );
