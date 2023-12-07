@@ -28,10 +28,7 @@ const InitWasm = ({ children }) => {
     })();
   });
 
-  if (!init) {
-    return <div>Loading...</div>;
-  }
-  return <div>{children}</div>;
+  return <div>{init && children}</div>;
 };
 
 export function Providers({ children }: { children: React.ReactNode }) {

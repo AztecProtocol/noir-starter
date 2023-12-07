@@ -106,7 +106,7 @@ function Component() {
   }, [proof]);
 
   useEffect(() => {
-    toast.success('Proof verified on-chain!');
+    if (data) toast.success('Proof verified on-chain!');
   }, [data]);
 
   const initNoir = async () => {
