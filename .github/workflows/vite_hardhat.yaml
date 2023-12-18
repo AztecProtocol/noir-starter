@@ -1,9 +1,8 @@
 name: PR - vite-hardhat
 on:
-  push:
-#   pull_request:
-#     paths:
-#       - 'vite-hardhat/**'
+  pull_request:
+    paths:
+      - 'vite-hardhat/**'
 
 jobs:
   test-vite-hardhat:

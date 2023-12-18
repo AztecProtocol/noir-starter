@@ -1,0 +1,71 @@
+name: Nightly drift test
+
+on:
+  pull_request:
+    paths:
+      - 'vite-hardhat/**'
+
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Get versions to test for drift
+        id: versions_step
+        run: |
+          output=$(node ./.github/scripts/latestStable.js)
+          echo "Output from Node.js script: $output"
+          echo "::set-output name=versionArray::$output"
+
+      - name: Set Up Matrix
+        id: set-matrix
+        run: |
+          VERSIONS='${{ steps.versions_step.outputs.versionArray }}'
+          echo "Versions for Matrix: $VERSIONS"
+          MATRIX=$(echo "$VERSIONS" | jq -c '{versions: .} | .versions | to_entries | map({key: .key, value: (.value | sub("^v"; ""))})')
+          echo "::set-output name=matrix::{\"include\":$MATRIX}"
+
+  test-drift-vite-hardhat:
+    needs: setup
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: vite-hardhat
+    strategy:
+      matrix: ${{fromJson(needs.setup.outputs.matrix)}}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up test environment
+        uses: ./.github/actions/setup
+        with:
+          project: vite-hardhat
+          version: ${{ matrix.value }}
+
+      - name: Install test version
+        run: |
+          yarn add \
+          @noir-lang/noir_js@${{ matrix.value }} \
+          @noir-lang/backend_barretenberg@${{ matrix.value }} \
+          @noir-lang/noir_wasm@${{ matrix.value }} \
+          @noir-lang/types@${{ matrix.value }}
+
+      - name: 'Create env file'
+        run: |
+          touch .env
+          echo SEPOLIA_ALCHEMY_KEY="${{ secrets.SEPOLIA_ALCHEMY_KEY }}" >> .env
+          echo SEPOLIA_DEPLOYER_PRIVATE_KEY="${{ secrets.SEPOLIA_DEPLOYER_PRIVATE_KEY }}" >> .env
+          echo MUMBAI_ALCHEMY_KEY"=${{ secrets.MUMBAI_ALCHEMY_KEY }}" >> .env
+          echo MUMBAI_DEPLOYER_PRIVATE_KEY="${{ secrets.MUMBAI_DEPLOYER_PRIVATE_KEY }}" >> .env
+
+      - name: Generate verifier contract
+        run: |
+          nargo codegen-verifier
+        working-directory: vite-hardhat/circuits
+
+      - name: Run test
+        run: yarn test
+        continue-on-error: ${{ matrix.key == 'prerelease' }}
