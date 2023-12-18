@@ -1,0 +1,39 @@
+name: PR - vite-hardhat
+on:
+  push:
+#   pull_request:
+#     paths:
+#       - 'vite-hardhat/**'
+
+jobs:
+  test-vite-hardhat:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: vite-hardhat
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Enable Corepack before setting up Node
+        run: corepack enable
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20.10.0
+          cache: 'yarn'
+
+      - name: Install
+        run: yarn --immutable
+        shell: bash
+
+      - name: 'Create env file'
+        run: |
+          touch .env
+          echo SEPOLIA_ALCHEMY_KEY="${{ secrets.SEPOLIA_ALCHEMY_KEY }}" >> .env
+          echo SEPOLIA_DEPLOYER_PRIVATE_KEY="${{ secrets.SEPOLIA_DEPLOYER_PRIVATE_KEY }}" >> .env
+          echo MUMBAI_ALCHEMY_KEY"=${{ secrets.MUMBAI_ALCHEMY_KEY }}" >> .env
+          echo MUMBAI_DEPLOYER_PRIVATE_KEY="${{ secrets.MUMBAI_DEPLOYER_PRIVATE_KEY }}" >> .env
+
+      - name: Run test
+        run: yarn test
