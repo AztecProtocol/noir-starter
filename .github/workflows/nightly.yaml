@@ -16,7 +16,7 @@ jobs:
       - name: Get versions to test for drift
         id: versions_step
         run: |
-          output=$(node ./.github/scripts/latestStable.js)
+          output=$(node ./.github/scripts/latest.js)
           echo "Output from Node.js script: $output"
           echo "::set-output name=versionArray::$output"
 
