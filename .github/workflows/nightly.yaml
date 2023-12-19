@@ -1,9 +1,11 @@
 name: Nightly drift test
 
 on:
-  pull_request:
-    paths:
-      - 'vite-hardhat/**'
+  # Giving ourselves a way to trigger this manually
+  workflow_dispatch:
+  schedule:
+    # Run a nightly release at 2 AM UTC
+    - cron: '0 2 * * *'
 
 jobs:
   setup:
@@ -26,7 +28,7 @@ jobs:
           VERSIONS='${{ steps.versions_step.outputs.versionArray }}'
           echo "Versions for Matrix: $VERSIONS"
           MATRIX=$(echo "$VERSIONS" | jq -c '{versions: .} | .versions | to_entries | map({key: .key, value: (.value | sub("^v"; ""))})')
-          echo "::set-output name=matrix::{\"include\":$MATRIX}" 
+          echo "::set-output name=matrix::{\"include\":$MATRIX}"
 
   test-drift-vite-hardhat:
     needs: setup
