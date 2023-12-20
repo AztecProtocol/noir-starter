@@ -11,7 +11,8 @@ jobs:
   setup:
     runs-on: ubuntu-latest
     outputs:
-      matrix: ${{ steps.set-matrix.outputs.matrix }}
+      versions: ${{ steps.set-matrix.outputs.versions }}
+      versions_map: ${{ steps.set-matrix.outputs.versions_map }}
     steps:
       - uses: actions/checkout@v4
 
@@ -20,15 +21,17 @@ jobs:
         run: |
           output=$(node ./.github/scripts/latest.js)
           echo "Output from Node.js script: $output"
-          echo "::set-output name=versionArray::$output"
+          echo "::set-output name=versionsMap::$output"
 
       - name: Set Up Matrix
         id: set-matrix
         run: |
-          VERSIONS='${{ steps.versions_step.outputs.versionArray }}'
-          echo "Versions for Matrix: $VERSIONS"
-          MATRIX=$(echo "$VERSIONS" | jq -c '{versions: .} | .versions | to_entries | map({key: .key, value: (.value | sub("^v"; ""))})')
-          echo "::set-output name=matrix::{\"include\":$MATRIX}"
+          VERSIONS_MAP='${{ steps.versions_step.outputs.versionsMap }}'
+          echo "Versions out of script: $VERSIONS_MAP"
+
+          VERSIONS=$(echo "$VERSIONS_MAP" | jq -c '[.[]]')
+          echo "::set-output name=versions::$VERSIONS"
+          echo "::set-output name=versions_map::$VERSIONS_MAP"
 
   test-drift:
     needs: setup
@@ -38,26 +41,36 @@ jobs:
         working-directory: ${{ matrix.project }}
     strategy:
       matrix:
-        version:
-          - version: ${{fromJson(needs.setup.outputs.matrix).key}}
-          - version_number: ${{fromJson(needs.setup.outputs.matrix).value}}
+        version: ${{ fromJson(needs.setup.outputs.versions) }}
         project: [vite-hardhat, with-foundry]
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up test environment
-        uses: ./.github/actions/setup
-        with:
-          project: vite-hardhat
-          version: ${{ matrix.version.version_number }}
+      - name: Get stability
+        id: get-stability
+        env:
+          VERSIONS_MAP: ${{ needs.setup.outputs.versions_map }}
+        run: |
+          VERSION="${{ matrix.version }}"
+          echo "Version Number: $VERSION"
+
+          STABLE_VERSION=$(echo "$VERSIONS_MAP" | jq -r --arg VERSION "$VERSION" '.stable')
+          if [ "$STABLE_VERSION" == "$VERSION" ]; then
+            IS_STABLE="true"
+          else
+            IS_STABLE="false"
+          fi
+          echo "Is stable: $IS_STABLE"
+          echo "Project: ${{ matrix.project }}"
+          echo "::set-output name=is_stable::$IS_STABLE"
 
       - name: Install test version
         run: |
           yarn add \
-          @noir-lang/noir_js@${{ matrix.version.version_number }} \
-          @noir-lang/backend_barretenberg@${{ matrix.version.version_number }} \
-          @noir-lang/noir_wasm@${{ matrix.version.version_number }} \
-          @noir-lang/types@${{ matrix.version.version_number }}
+          @noir-lang/noir_js@${{ matrix.version }} \
+          @noir-lang/backend_barretenberg@${{ matrix.version }} \
+          @noir-lang/noir_wasm@${{ matrix.version }} \
+          @noir-lang/types@${{ matrix.version }}
 
       - name: 'Create env file'
         run: |
@@ -75,12 +88,12 @@ jobs:
       - name: Run test
         run: yarn test
         id: yarn_test
-        continue-on-error: ${{ matrix.version.version == 'prerelease' }}
+        continue-on-error: ${{ steps.get-stability.outputs.is_stable == 'false' }}
 
       - name: Send GitHub Action trigger data to Slack workflow
         id: slack
         uses: slackapi/slack-github-action@v1.24.0
-        if: ${{ failure() && matrix.version.version == 'prerelease' }}
+        if: ${{ failure() && steps.get-stability.outputs.is_stable == 'false' }}
         with:
           payload: |
             {
