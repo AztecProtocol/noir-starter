@@ -104,7 +104,7 @@ jobs:
         with:
           payload: |
             {
-                "text": "Hey! Just to let you know that once the prerelease becomes stable, you'll need to update the following project: ${{ matrix.project }}. ",
+                "text": "Once the prerelease becomes stable, projects need updating: ${{ matrix.project }}"
             }
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
