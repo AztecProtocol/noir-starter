@@ -46,6 +46,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Set up test environment
+        uses: ./.github/actions/setup
+        with:
+          project: vite-hardhat
+          version: ${{ matrix.version }}
+
       - name: Get stability
         id: get-stability
         env:
