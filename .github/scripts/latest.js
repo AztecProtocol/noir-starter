@@ -20,7 +20,7 @@ async function main() {
   const latestPreRelease = filtered.find(release => release.prerelease).tag_name;
 
   // TODO: add the prerelease to this object!
-  const workflowOutput = JSON.stringify({ stable: latestStable });
+  const workflowOutput = JSON.stringify({ stable: latestStable, prerelease: latestPreRelease });
   console.log(workflowOutput); // DON'T REMOVE, GITHUB WILL CAPTURE THIS OUTPUT
 }
 

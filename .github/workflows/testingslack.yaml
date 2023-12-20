@@ -1,5 +1,0 @@
-name: Testing
-
-on:
-  # Giving ourselves a way to trigger this manually
-  push:

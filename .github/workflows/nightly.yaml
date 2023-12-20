@@ -30,18 +30,18 @@ jobs:
           MATRIX=$(echo "$VERSIONS" | jq -c '{versions: .} | .versions | to_entries | map({key: .key, value: (.value | sub("^v"; ""))})')
           echo "::set-output name=matrix::{\"include\":$MATRIX}"
 
-  test-drift-vite-hardhat:
+  test-drift:
     needs: setup
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: vite-hardhat
+        working-directory: ${{ matrix.project }}
     strategy:
       matrix:
         version:
           - version: ${{fromJson(needs.setup.outputs.matrix.key)}}
           - version_number: ${{fromJson(needs.setup.outputs.matrix.value)}}
-        project: [vite-hardhat]
+        project: [vite-hardhat, with-foundry]
     steps:
       - uses: actions/checkout@v4
 
