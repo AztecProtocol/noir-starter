@@ -37,7 +37,11 @@ jobs:
       run:
         working-directory: vite-hardhat
     strategy:
-      matrix: ${{fromJson(needs.setup.outputs.matrix)}}
+      matrix:
+        version:
+          - version: ${{fromJson(needs.setup.outputs.matrix.key)}}
+          - version_number: ${{fromJson(needs.setup.outputs.matrix.value)}}
+        project: [vite-hardhat]
     steps:
       - uses: actions/checkout@v4
 
@@ -45,15 +49,15 @@ jobs:
         uses: ./.github/actions/setup
         with:
           project: vite-hardhat
-          version: ${{ matrix.value }}
+          version: ${{ matrix.version.version_number }}
 
       - name: Install test version
         run: |
           yarn add \
-          @noir-lang/noir_js@${{ matrix.value }} \
-          @noir-lang/backend_barretenberg@${{ matrix.value }} \
-          @noir-lang/noir_wasm@${{ matrix.value }} \
-          @noir-lang/types@${{ matrix.value }}
+          @noir-lang/noir_js@${{ matrix.version.version_number }} \
+          @noir-lang/backend_barretenberg@${{ matrix.version.version_number }} \
+          @noir-lang/noir_wasm@${{ matrix.version.version_number }} \
+          @noir-lang/types@${{ matrix.version.version_number }}
 
       - name: 'Create env file'
         run: |
@@ -70,4 +74,17 @@ jobs:
 
       - name: Run test
         run: yarn test
-        continue-on-error: ${{ matrix.key == 'prerelease' }}
+        id: yarn_test
+        continue-on-error: ${{ matrix.version.version == 'prerelease' }}
+
+      - name: Send GitHub Action trigger data to Slack workflow
+        id: slack
+        uses: slackapi/slack-github-action@v1.24.0
+        if: ${{ failure() && matrix.version.version == 'prerelease' }}
+        with:
+          payload: |
+            {
+                "text": "Hey! Just to let you know that once the prerelease becomes stable, you'll need to update the following project: ${{ matrix.project }}. ",
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}

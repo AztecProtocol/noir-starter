@@ -3,19 +3,3 @@ name: Testing
 on:
   # Giving ourselves a way to trigger this manually
   push:
-
-jobs:
-  testing:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Send GitHub Action trigger data to Slack workflow
-        id: slack
-        uses: slackapi/slack-github-action@v1.24.0
-        with:
-          # This data can be any valid JSON from a previous step in the GitHub Action
-          payload: |
-            {
-                "text": "Testing - From github PR action"
-            }
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
