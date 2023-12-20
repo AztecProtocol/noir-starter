@@ -39,8 +39,8 @@ jobs:
     strategy:
       matrix:
         version:
-          - version: ${{fromJson(needs.setup.outputs.matrix.key)}}
-          - version_number: ${{fromJson(needs.setup.outputs.matrix.value)}}
+          - version: ${{fromJson(needs.setup.outputs.matrix).key}}
+          - version_number: ${{fromJson(needs.setup.outputs.matrix).value}}
         project: [vite-hardhat, with-foundry]
     steps:
       - uses: actions/checkout@v4
