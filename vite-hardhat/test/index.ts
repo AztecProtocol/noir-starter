@@ -27,7 +27,7 @@ describe('It compiles noir program code, receiving circuit bytes and abi object.
     // @ts-ignore
     const backend = new BarretenbergBackend(compiled.program);
     // @ts-ignore
-    noir = new Noir(compiled, backend);
+    noir = new Noir(compiled.program, backend);
   });
 
   it('Should generate valid proof for correct input', async () => {
