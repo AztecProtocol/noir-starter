@@ -17,7 +17,7 @@ jobs:
       - name: Get latest version
         id: versions_step
         run: |
-          output=$(node ./.github/scripts/latest.js)
+          output=$(node ../.github/scripts/latest.js)
           echo "Output from Node.js script: $output"
 
           STABLE=$(echo $output | jq -r '.stable')
