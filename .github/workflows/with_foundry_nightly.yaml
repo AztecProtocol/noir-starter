@@ -85,6 +85,11 @@ jobs:
           echo LOCALHOST_PRIVATE_KEY="${{ secrets.LOCALHOST_PRIVATE_KEY }}" >> .env
           echo ANVIL_RPC="${{ secrets.ANVIL_RPC }}" >> .env
 
+      - name: Generate verifier contract
+        run: |
+          nargo codegen-verifier
+        working-directory: with-foundry/circuits
+
       - name: Generate proof
         run: |
           nargo prove
