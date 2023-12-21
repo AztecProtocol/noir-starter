@@ -43,22 +43,21 @@ jobs:
       fail-fast: false
       matrix:
         version: ${{ fromJson(needs.with-foundry-setup.outputs.versions) }}
-    # if it errors, we still need to know about it!
-    continue-on-error: true
-    outputs:
-      is_stable: ${{ steps.get-stability.outputs.is_stable }}
     steps:
       - uses: actions/checkout@v4
 
       - name: Set up nargo
+        continue-on-error: true
         uses: ./.github/actions/setup-nargo
         with:
           version: ${{ matrix.version }}
 
       - name: Set up foundry
+        continue-on-error: true
         uses: ./.github/actions/setup-foundry
 
       - name: Get stability
+        continue-on-error: true
         id: get-stability
         env:
           VERSIONS_MAP: ${{ needs.with-foundry-setup.outputs.versions_map }}
@@ -76,6 +75,7 @@ jobs:
           echo "::set-output name=is_stable::$IS_STABLE"
 
       - name: Install test version
+        continue-on-error: true
         run: |
           yarn add \
           @noir-lang/noir_js@${{ matrix.version }} \
@@ -84,35 +84,32 @@ jobs:
           @noir-lang/types@${{ matrix.version }}
 
       - name: 'Create env file'
+        continue-on-error: true
         run: |
           touch .env
           echo LOCALHOST_PRIVATE_KEY="${{ secrets.LOCALHOST_PRIVATE_KEY }}" >> .env
           echo ANVIL_RPC="${{ secrets.ANVIL_RPC }}" >> .env
 
       - name: Generate verifier contract
+        continue-on-error: true
         run: |
           nargo codegen-verifier
         working-directory: with-foundry/circuits
 
       - name: Generate proof
+        continue-on-error: true
         run: |
           nargo prove
         working-directory: with-foundry/circuits
 
       - name: Test with Foundry
+        continue-on-error: true
         run: |
           forge test --optimize --optimizer-runs 5000 --evm-version london
 
-  notify:
-    needs: [with-foundry-test-drift, with-foundry-setup]
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        version: ${{ fromJson(needs.with-foundry-setup.outputs.versions) }}
-    steps:
       - name: Send GitHub Action trigger data to Slack workflow - Stable
         uses: slackapi/slack-github-action@v1.24.0
-        if: ${{ needs.with-foundry-test-drift.outputs.is_stable == 'true' }}
+        if: ${{ failure() && steps.get-stability.outputs.is_stable == 'true' }}
         with:
           payload: |
             {
@@ -123,7 +120,7 @@ jobs:
 
       - name: Send GitHub Action trigger data to Slack workflow - Prerelease
         uses: slackapi/slack-github-action@v1.24.0
-        if: ${{ needs.with-foundry-test-drift.outputs.is_stable == 'false' }}
+        if: ${{ failure() && steps.get-stability.outputs.is_stable == 'false' }}
         with:
           payload: |
             {
