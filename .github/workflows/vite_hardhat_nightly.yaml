@@ -40,7 +40,7 @@ jobs:
     defaults:
       run:
         working-directory: vite-hardhat
-    strategy
+    strategy:
       fail-fast: false
       matrix:
         version: ${{ fromJson(needs.vite-hardhat-setup.outputs.versions) }}
