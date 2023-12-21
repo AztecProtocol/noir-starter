@@ -51,6 +51,9 @@ jobs:
         with:
           version: ${{ matrix.version }}
 
+      - name: Set up foundry
+        uses: ./.github/actions/setup-foundry
+
       - name: Get stability
         id: get-stability
         env:

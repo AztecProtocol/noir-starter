@@ -1,5 +1,5 @@
-name: Install Yarn dependencies
-description: Installs the workspace's yarn dependencies and caches them
+name: Install Nargo
+description: Installs the workspace's nargo
 inputs:
   version:
     description: The version of the project to install dependencies for

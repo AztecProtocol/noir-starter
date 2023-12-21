@@ -14,13 +14,22 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Install Nargo
-        uses: noir-lang/noirup@v0.1.2
-        with:
-          toolchain: 0.11.0
+      - name: Get latest version
+        id: versions_step
+        run: |
+          output=$(node ./.github/scripts/latest.js)
+          echo "Output from Node.js script: $output"
 
-      - name: Install Foundry
-        uses: foundry-rs/foundry-toolchain@v1
+          STABLE=$(echo $output | jq -r '.stable')
+          echo "::set-output name=stable::$STABLE"
+
+      - name: Set up nargo
+        uses: ./.github/actions/setup-nargo
+        with:
+          version: ${{ steps.versions_step.outputs.stable }}
+
+      - name: Set up foundry
+        uses: ./.github/actions/setup-foundry
 
       - name: Generate verifier contract
         run: |
