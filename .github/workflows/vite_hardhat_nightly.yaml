@@ -13,6 +13,7 @@ jobs:
     outputs:
       versions: ${{ steps.set-matrix.outputs.versions }}
       versions_map: ${{ steps.set-matrix.outputs.versions_map }}
+
     steps:
       - uses: actions/checkout@v4
 
@@ -39,7 +40,7 @@ jobs:
     defaults:
       run:
         working-directory: vite-hardhat
-    strategy:
+    strategy
       fail-fast: false
       matrix:
         version: ${{ fromJson(needs.vite-hardhat-setup.outputs.versions) }}
