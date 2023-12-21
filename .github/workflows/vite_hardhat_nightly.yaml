@@ -104,8 +104,11 @@ jobs:
         id: yarn_test
 
   notify:
-    needs: vite-hardhat-test-drift
+    needs: [vite-hardhat-test-drift, vite-hardhat-setup]
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        version: ${{ fromJson(needs.vite-hardhat-setup.outputs.versions) }}
     if: ${{ needs.vite-hardhat-test-drift.result == 'failure' }}
     steps:
       - name: Send GitHub Action trigger data to Slack workflow - Stable

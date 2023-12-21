@@ -104,9 +104,11 @@ jobs:
           forge test --optimize --optimizer-runs 5000 --evm-version london
 
   notify:
-    needs: with-foundry-test-drift
+    needs: [with-foundry-test-drift, with-foundry-setup]
     runs-on: ubuntu-latest
-    if: ${{ needs.with-foundry-test-drift.result == 'failure' }}
+    strategy:
+      matrix:
+        version: ${{ fromJson(needs.with-foundry-setup.outputs.versions) }}
     steps:
       - name: Send GitHub Action trigger data to Slack workflow - Stable
         uses: slackapi/slack-github-action@v1.24.0
