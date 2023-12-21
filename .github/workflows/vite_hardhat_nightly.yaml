@@ -1,4 +1,4 @@
-name: Nightly drift test
+name: Nightly Vite-Hardhat drift test
 
 on:
   # Giving ourselves a way to trigger this manually
