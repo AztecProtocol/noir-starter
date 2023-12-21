@@ -94,7 +94,7 @@ Edit your `.env` file to look like:
 
 ```
 ANVIL_RPC=http://localhost:8545
-PRIVATE_KEY=<the private key you just got from anvil>
+LOCALHOST_PRIVATE_KEY=<the private key you just got from anvil>
 ```
 
 #### (Option 2) Prepare for testnet
@@ -106,7 +106,7 @@ Edit your `.env` file to look like:
 
 ```env
 SEPOLIA_RPC=https://rpc2.sepolia.org
-PRIVATE_KEY=<the private key of the account with your coins>
+LOCALHOST_PRIVATE_KEY=<the private key of the account with your coins>
 ```
 
 #### Run the deploy script

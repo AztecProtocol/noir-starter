@@ -11,7 +11,7 @@ contract VerifyScript is Script {
     function setUp() public {}
 
     function run() public returns (bool) {
-        uint256 deployerPrivateKey = vm.envUint("PRIVATE_KEY");
+        uint256 deployerPrivateKey = vm.envUint("LOCALHOST_PRIVATE_KEY");
         vm.startBroadcast(deployerPrivateKey);
 
         verifier = new UltraVerifier();

@@ -1,4 +1,4 @@
-name: Nightly drift test
+name: Nightly With-Foundry drift test
 
 on:
   # Giving ourselves a way to trigger this manually
@@ -8,7 +8,7 @@ on:
     - cron: '0 2 * * *'
 
 jobs:
-  setup:
+  with-foundry-setup:
     runs-on: ubuntu-latest
     outputs:
       versions: ${{ steps.set-matrix.outputs.versions }}
@@ -33,30 +33,28 @@ jobs:
           echo "::set-output name=versions::$VERSIONS"
           echo "::set-output name=versions_map::$VERSIONS_MAP"
 
-  test-drift:
-    needs: setup
+  with-foundry-test-drift:
+    needs: with-foundry-setup
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ${{ matrix.project }}
+        working-directory: with-foundry
     strategy:
       fail-fast: false
       matrix:
-        version: ${{ fromJson(needs.setup.outputs.versions) }}
-        project: [vite-hardhat, with-foundry]
+        version: ${{ fromJson(needs.with-foundry-setup.outputs.versions) }}
     steps:
       - uses: actions/checkout@v4
 
       - name: Set up test environment
         uses: ./.github/actions/setup
         with:
-          project: vite-hardhat
           version: ${{ matrix.version }}
 
       - name: Get stability
         id: get-stability
         env:
-          VERSIONS_MAP: ${{ needs.setup.outputs.versions_map }}
+          VERSIONS_MAP: ${{ needs.with-foundry-setup.outputs.versions_map }}
         run: |
           VERSION="${{ matrix.version }}"
           echo "Version Number: $VERSION"
@@ -68,7 +66,6 @@ jobs:
             IS_STABLE="false"
           fi
           echo "Is stable: $IS_STABLE"
-          echo "Project: ${{ matrix.project }}"
           echo "::set-output name=is_stable::$IS_STABLE"
 
       - name: Install test version
@@ -82,20 +79,17 @@ jobs:
       - name: 'Create env file'
         run: |
           touch .env
-          echo SEPOLIA_ALCHEMY_KEY="${{ secrets.SEPOLIA_ALCHEMY_KEY }}" >> .env
-          echo SEPOLIA_DEPLOYER_PRIVATE_KEY="${{ secrets.SEPOLIA_DEPLOYER_PRIVATE_KEY }}" >> .env
-          echo MUMBAI_ALCHEMY_KEY"=${{ secrets.MUMBAI_ALCHEMY_KEY }}" >> .env
-          echo MUMBAI_DEPLOYER_PRIVATE_KEY="${{ secrets.MUMBAI_DEPLOYER_PRIVATE_KEY }}" >> .env
+          echo LOCALHOST_PRIVATE_KEY="${{ secrets.LOCALHOST_PRIVATE_KEY }}" >> .env
+          echo ANVIL_RPC="${{ secrets.ANVIL_RPC }}" >> .env
 
-      - name: Generate verifier contract
+      - name: Generate proof
         run: |
-          nargo codegen-verifier
-        working-directory: vite-hardhat/circuits
+          nargo prove
+        working-directory: with-foundry/circuits
 
-      - name: Run test
-        run: yarn test
-        id: yarn_test
-        continue-on-error: ${{ steps.get-stability.outputs.is_stable == 'false' }}
+      - name: Test with Foundry
+        run: |
+          forge test --optimize --optimizer-runs 5000 --evm-version london
 
       - name: Send GitHub Action trigger data to Slack workflow
         id: slack
@@ -104,7 +98,7 @@ jobs:
         with:
           payload: |
             {
-                "text": "Once the prerelease becomes stable, projects need updating: ${{ matrix.project }}"
+                "text": "Once the prerelease becomes stable, projects need updating: with-foundry ${{ matrix.version }}"
             }
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
