@@ -49,19 +49,16 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Set up yarn
-        continue-on-error: true
         uses: ./.github/actions/setup-yarn
         with:
           project: vite-hardhat
 
       - name: Set up nargo
-        continue-on-error: true
         uses: ./.github/actions/setup-nargo
         with:
           version: ${{ matrix.version }}
 
       - name: Get stability
-        continue-on-error: true
         id: get-stability
         env:
           VERSIONS_MAP: ${{ needs.vite-hardhat-setup.outputs.versions_map }}
@@ -79,7 +76,6 @@ jobs:
           echo "::set-output name=is_stable::$IS_STABLE"
 
       - name: Install test version
-        continue-on-error: true
         run: |
           yarn add \
           @noir-lang/noir_js@${{ matrix.version }} \
@@ -88,7 +84,6 @@ jobs:
           @noir-lang/types@${{ matrix.version }}
 
       - name: 'Create env file'
-        continue-on-error: true
         run: |
           touch .env
           echo SEPOLIA_ALCHEMY_KEY="${{ secrets.SEPOLIA_ALCHEMY_KEY }}" >> .env
@@ -97,13 +92,11 @@ jobs:
           echo MUMBAI_DEPLOYER_PRIVATE_KEY="${{ secrets.MUMBAI_DEPLOYER_PRIVATE_KEY }}" >> .env
 
       - name: Generate verifier contract
-        continue-on-error: true
         run: |
           nargo codegen-verifier
         working-directory: vite-hardhat/circuits
 
       - name: Run test
-        continue-on-error: true
         run: yarn test
         id: yarn_test
 
