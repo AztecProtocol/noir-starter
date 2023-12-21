@@ -43,6 +43,10 @@ jobs:
       fail-fast: false
       matrix:
         version: ${{ fromJson(needs.with-foundry-setup.outputs.versions) }}
+    # if it errors, we still need to know about it!
+    continue-on-error: true
+    outputs:
+      is_stable: ${{ steps.get-stability.outputs.is_stable }}
     steps:
       - uses: actions/checkout@v4
 
@@ -99,14 +103,29 @@ jobs:
         run: |
           forge test --optimize --optimizer-runs 5000 --evm-version london
 
-      - name: Send GitHub Action trigger data to Slack workflow
-        id: slack
+  notify:
+    needs: with-foundry-test-drift
+    runs-on: ubuntu-latest
+    if: ${{ needs.with-foundry-test-drift.result == 'failure' }}
+    steps:
+      - name: Send GitHub Action trigger data to Slack workflow - Stable
         uses: slackapi/slack-github-action@v1.24.0
-        if: ${{ failure() && steps.get-stability.outputs.is_stable == 'false' }}
+        if: ${{ needs.with-foundry-test-drift.outputs.is_stable == 'true' }}
         with:
           payload: |
             {
-                "text": "Once the prerelease becomes stable, projects need updating: with-foundry ${{ matrix.version }}"
+                "text": "Oooops, seems like latest stable Noir breaks noir-starter! Projects needing updating: with-foundry ${{ matrix.version }}"
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+      - name: Send GitHub Action trigger data to Slack workflow - Prerelease
+        uses: slackapi/slack-github-action@v1.24.0
+        if: ${{ needs.with-foundry-test-drift.outputs.is_stable == 'false' }}
+        with:
+          payload: |
+            {
+                "text": "Heads up DevRel! Once the prerelease becomes stable, the following project will break: with-foundry ${{ matrix.version }}"
             }
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
