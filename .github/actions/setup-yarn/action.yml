@@ -1,0 +1,22 @@
+name: Install Yarn dependencies
+description: Installs the workspace's yarn dependencies and caches them
+inputs:
+  project:
+    description: The project to install dependencies for
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Enable Corepack before setting up Node
+      run: corepack enable
+      shell: bash
+
+    - uses: actions/setup-node@v4
+      with:
+        node-version-file: '${{ inputs.project }}/package.json'
+        cache: 'yarn'
+
+    - name: Install
+      run: yarn --immutable
+      shell: bash

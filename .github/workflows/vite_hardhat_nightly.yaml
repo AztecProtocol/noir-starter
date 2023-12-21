@@ -46,8 +46,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up test environment
-        uses: ./.github/actions/setup
+      - name: Set up yarn
+        uses: ./.github/actions/setup-yarn
+        with:
+          project: vite-hardhat
+
+      - name: Set up nargo
+        uses: ./.github/actions/setup-nargo
         with:
           version: ${{ matrix.version }}
 
