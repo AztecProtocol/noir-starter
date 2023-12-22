@@ -46,10 +46,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up test environment
-        uses: ./.github/actions/setup
+      - name: Set up nargo
+        uses: ./.github/actions/setup-nargo
         with:
           version: ${{ matrix.version }}
+
+      - name: Set up foundry
+        uses: ./.github/actions/setup-foundry
 
       - name: Get stability
         id: get-stability
@@ -82,6 +85,11 @@ jobs:
           echo LOCALHOST_PRIVATE_KEY="${{ secrets.LOCALHOST_PRIVATE_KEY }}" >> .env
           echo ANVIL_RPC="${{ secrets.ANVIL_RPC }}" >> .env
 
+      - name: Generate verifier contract
+        run: |
+          nargo codegen-verifier
+        working-directory: with-foundry/circuits
+
       - name: Generate proof
         run: |
           nargo prove
@@ -91,14 +99,24 @@ jobs:
         run: |
           forge test --optimize --optimizer-runs 5000 --evm-version london
 
-      - name: Send GitHub Action trigger data to Slack workflow
-        id: slack
+      - name: Send GitHub Action trigger data to Slack workflow - Stable
+        uses: slackapi/slack-github-action@v1.24.0
+        if: ${{ failure() && steps.get-stability.outputs.is_stable == 'true' }}
+        with:
+          payload: |
+            {
+                "text": "Oooops, seems like latest stable Noir breaks noir-starter! Projects needing updating: with-foundry ${{ matrix.version }}"
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+      - name: Send GitHub Action trigger data to Slack workflow - Prerelease
         uses: slackapi/slack-github-action@v1.24.0
         if: ${{ failure() && steps.get-stability.outputs.is_stable == 'false' }}
         with:
           payload: |
             {
-                "text": "Once the prerelease becomes stable, projects need updating: with-foundry ${{ matrix.version }}"
+                "text": "Heads up DevRel! Once the prerelease becomes stable, the following project will break: with-foundry ${{ matrix.version }}"
             }
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}

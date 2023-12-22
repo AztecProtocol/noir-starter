@@ -1,0 +1,8 @@
+name: Install Foundry
+description: Installs the workspace's foundry
+
+runs:
+  using: composite
+  steps:
+    - name: Install Foundry
+      uses: foundry-rs/foundry-toolchain@v1

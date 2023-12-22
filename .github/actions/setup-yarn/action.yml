@@ -4,9 +4,6 @@ inputs:
   project:
     description: The project to install dependencies for
     required: true
-  version:
-    description: The version of the project to install dependencies for
-    required: true
 
 runs:
   using: composite
@@ -22,13 +19,4 @@ runs:
 
     - name: Install
       run: yarn --immutable
-      shell: bash
-
-    - name: Install Nargo
-      uses: noir-lang/noirup@v0.1.2
-      with:
-        toolchain: ${{ inputs.version }}
-
-    - name: Use Nargo
-      run: nargo --version
       shell: bash

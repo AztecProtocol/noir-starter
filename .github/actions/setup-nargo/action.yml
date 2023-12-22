@@ -1,0 +1,18 @@
+name: Install Nargo
+description: Installs the workspace's nargo
+inputs:
+  version:
+    description: The version of the project to install dependencies for
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Install Nargo
+      uses: noir-lang/noirup@v0.1.2
+      with:
+        toolchain: ${{ inputs.version }}
+
+    - name: Use Nargo
+      run: nargo --version
+      shell: bash

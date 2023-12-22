@@ -11,7 +11,7 @@ contract StarterScript is Script {
     function setUp() public {}
 
     function run() public {
-        uint256 deployerPrivateKey = vm.envUint("PRIVATE_KEY");
+        uint256 deployerPrivateKey = vm.envUint("LOCALHOST_PRIVATE_KEY");
         vm.startBroadcast(deployerPrivateKey);
 
         verifier = new UltraVerifier();

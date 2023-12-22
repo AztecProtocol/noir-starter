@@ -8,10 +8,12 @@ on:
     - cron: '0 2 * * *'
 
 jobs:
-  setup:
+  vite-hardhat-setup:
     runs-on: ubuntu-latest
     outputs:
-      matrix: ${{ steps.set-matrix.outputs.matrix }}
+      versions: ${{ steps.set-matrix.outputs.versions }}
+      versions_map: ${{ steps.set-matrix.outputs.versions_map }}
+
     steps:
       - uses: actions/checkout@v4
 
@@ -20,40 +22,66 @@ jobs:
         run: |
           output=$(node ./.github/scripts/latest.js)
           echo "Output from Node.js script: $output"
-          echo "::set-output name=versionArray::$output"
+          echo "::set-output name=versionsMap::$output"
 
       - name: Set Up Matrix
         id: set-matrix
         run: |
-          VERSIONS='${{ steps.versions_step.outputs.versionArray }}'
-          echo "Versions for Matrix: $VERSIONS"
-          MATRIX=$(echo "$VERSIONS" | jq -c '{versions: .} | .versions | to_entries | map({key: .key, value: (.value | sub("^v"; ""))})')
-          echo "::set-output name=matrix::{\"include\":$MATRIX}"
+          VERSIONS_MAP='${{ steps.versions_step.outputs.versionsMap }}'
+          echo "Versions out of script: $VERSIONS_MAP"
 
-  test-drift-vite-hardhat:
-    needs: setup
+          VERSIONS=$(echo "$VERSIONS_MAP" | jq -c '[.[]]')
+          echo "::set-output name=versions::$VERSIONS"
+          echo "::set-output name=versions_map::$VERSIONS_MAP"
+
+  vite-hardhat-test-drift:
+    needs: vite-hardhat-setup
     runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: vite-hardhat
     strategy:
-      matrix: ${{fromJson(needs.setup.outputs.matrix)}}
+      fail-fast: false
+      matrix:
+        version: ${{ fromJson(needs.vite-hardhat-setup.outputs.versions) }}
+    # if it errors, we still need to know about it!
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up test environment
-        uses: ./.github/actions/setup
+      - name: Set up yarn
+        uses: ./.github/actions/setup-yarn
         with:
           project: vite-hardhat
-          version: ${{ matrix.value }}
+
+      - name: Set up nargo
+        uses: ./.github/actions/setup-nargo
+        with:
+          version: ${{ matrix.version }}
+
+      - name: Get stability
+        id: get-stability
+        env:
+          VERSIONS_MAP: ${{ needs.vite-hardhat-setup.outputs.versions_map }}
+        run: |
+          VERSION="${{ matrix.version }}"
+          echo "Version Number: $VERSION"
+
+          STABLE_VERSION=$(echo "$VERSIONS_MAP" | jq -r --arg VERSION "$VERSION" '.stable')
+          if [ "$STABLE_VERSION" == "$VERSION" ]; then
+            IS_STABLE="true"
+          else
+            IS_STABLE="false"
+          fi
+          echo "Is stable: $IS_STABLE"
+          echo "::set-output name=is_stable::$IS_STABLE"
 
       - name: Install test version
         run: |
           yarn add \
-          @noir-lang/noir_js@${{ matrix.value }} \
-          @noir-lang/backend_barretenberg@${{ matrix.value }} \
-          @noir-lang/noir_wasm@${{ matrix.value }} \
-          @noir-lang/types@${{ matrix.value }}
+          @noir-lang/noir_js@${{ matrix.version }} \
+          @noir-lang/backend_barretenberg@${{ matrix.version }} \
+          @noir-lang/noir_wasm@${{ matrix.version }} \
+          @noir-lang/types@${{ matrix.version }}
 
       - name: 'Create env file'
         run: |
@@ -70,4 +98,26 @@ jobs:
 
       - name: Run test
         run: yarn test
-        continue-on-error: ${{ matrix.key == 'prerelease' }}
+        id: yarn_test
+
+      - name: Send GitHub Action trigger data to Slack workflow - Stable
+        uses: slackapi/slack-github-action@v1.24.0
+        if: ${{ failure() && steps.get-stability.outputs.is_stable == 'true' }}
+        with:
+          payload: |
+            {
+                "text": "Oooops, seems like latest stable Noir breaks noir-starter! Projects needing updating: vite-hardhat ${{ matrix.version }}"
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+      - name: Send GitHub Action trigger data to Slack workflow - Prerelease
+        uses: slackapi/slack-github-action@v1.24.0
+        if: ${{ failure() && steps.get-stability.outputs.is_stable == 'false' }}
+        with:
+          payload: |
+            {
+                "text": "Heads up DevRel! Once the prerelease becomes stable, the following project will break: vite-hardhat ${{ matrix.version }}"
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}

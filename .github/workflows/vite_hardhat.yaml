@@ -14,6 +14,25 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Get latest version
+        id: versions_step
+        run: |
+          output=$(node ../.github/scripts/latest.js)
+          echo "Output from Node.js script: $output"
+
+          STABLE=$(echo $output | jq -r '.stable')
+          echo "::set-output name=stable::$STABLE"
+
+      - name: Set up yarn
+        uses: ./.github/actions/setup-yarn
+        with:
+          project: vite-hardhat
+
+      - name: Set up nargo
+        uses: ./.github/actions/setup-nargo
+        with:
+          version: ${{ steps.versions_step.outputs.stable }}
+
       - name: Enable Corepack before setting up Node
         run: corepack enable
 
