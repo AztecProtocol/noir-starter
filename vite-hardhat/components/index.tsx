@@ -13,10 +13,8 @@ import React from 'react';
 import { Noir } from '@noir-lang/noir_js';
 import { BarretenbergBackend, flattenPublicInputs } from '@noir-lang/backend_barretenberg';
 import { CompiledCircuit, ProofData } from '@noir-lang/types';
-import { compile } from '@noir-lang/noir_wasm';
+import { compile, PathToFileSourceMap } from '@noir-lang/noir_wasm';
 
-// @ts-ignore
-import { initializeResolver } from '@noir-lang/source-resolver';
 import { useAccount, useConnect, useContractWrite } from 'wagmi';
 import { contractCallConfig } from '../utils/wagmi.jsx';
 import { bytesToHex } from 'viem';
@@ -25,12 +23,9 @@ async function getCircuit(name: string) {
   const res = await fetch(new URL('../circuits/src/main.nr', import.meta.url));
   const noirSource = await res.text();
 
-  initializeResolver((id: string) => {
-    const source = noirSource;
-    return source;
-  });
-
-  const compiled = compile('main');
+  const sourceMap = new PathToFileSourceMap();
+  sourceMap.add_source_code('main.nr', noirSource);
+  const compiled = compile('main.nr', undefined, undefined, sourceMap);
   return compiled;
 }
 
