@@ -4,12 +4,17 @@ import hre from 'hardhat';
 import { Noir } from '@noir-lang/noir_js';
 import { BarretenbergBackend } from '@noir-lang/backend_barretenberg';
 
-import { CompileResult, CompiledProgram, compile } from '@noir-lang/noir_wasm';
-import path from 'path';
+import { compile, PathToFileSourceMap } from '@noir-lang/noir_wasm';
+import { join } from 'path';
 import { ProofData } from '@noir-lang/types';
+import { readFileSync } from 'fs';
 
 const getCircuit = async (name: string) => {
-  const compiled = await compile(path.resolve('circuits', 'src', `${name}.nr`));
+  const sourcePath = new URL('../circuits/src/main.nr', import.meta.url);
+  const sourceMap = new PathToFileSourceMap();
+
+  sourceMap.add_source_code(sourcePath.pathname, readFileSync(join(sourcePath.pathname), 'utf-8'));
+  const compiled = compile(sourcePath.pathname, undefined, undefined, sourceMap);
   return compiled;
 };
 
