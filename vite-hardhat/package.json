@@ -11,10 +11,10 @@
     "test": "NODE_OPTIONS='--experimental-loader ts-node/esm/transpile-only' hardhat test"
   },
   "dependencies": {
-    "@noir-lang/backend_barretenberg": "0.22.0",
-    "@noir-lang/noir_js": "0.22.0",
-    "@noir-lang/noir_wasm": "0.22.0",
-    "@noir-lang/types": "0.22.0",
+    "@noir-lang/backend_barretenberg": "0.23.0",
+    "@noir-lang/noir_js": "0.23.0",
+    "@noir-lang/noir_wasm": "0.23.0",
+    "@noir-lang/types": "0.23.0",
     "@nomicfoundation/hardhat-network-helpers": "^1.0.0",
     "@nomicfoundation/hardhat-toolbox-viem": "1.0.0",
     "@nomicfoundation/hardhat-viem": "1.0.0",
