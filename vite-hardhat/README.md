@@ -9,7 +9,7 @@ This example uses [Vite](https://vite.dev/) as the frontend framework, and
 
 Want to get started in a pinch? Start your project in a free Github Codespace!
 
-[![Start your project in a free Github Codespace!](https://github.com/codespaces/badge.svg)](https://codespaces.new/noir-lang/noir-starter)
+[![Start your project in a free Github Codespace!](https://github.com/codespaces/badge.svg)](https://codespaces.new/noir-lang/noir-starter/tree/main)
 
 In the meantime, follow these simple steps to work on your own machine:
 
