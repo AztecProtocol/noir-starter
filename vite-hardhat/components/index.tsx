@@ -1,9 +1,6 @@
 import {
   useState,
   useEffect,
-  SetStateAction,
-  ReactEventHandler,
-  FormEvent,
   ChangeEvent,
 } from 'react';
 
@@ -11,22 +8,32 @@ import { toast } from 'react-toastify';
 import React from 'react';
 
 import { Noir } from '@noir-lang/noir_js';
-import { BarretenbergBackend, flattenPublicInputs } from '@noir-lang/backend_barretenberg';
+import { BarretenbergBackend } from '@noir-lang/backend_barretenberg';
 import { CompiledCircuit, ProofData } from '@noir-lang/types';
-import { compile, PathToFileSourceMap } from '@noir-lang/noir_wasm';
+import { compile, createFileManager } from '@noir-lang/noir_wasm';
 
 import { useAccount, useConnect, useContractWrite } from 'wagmi';
 import { contractCallConfig } from '../utils/wagmi.jsx';
 import { bytesToHex } from 'viem';
 
-async function getCircuit(name: string) {
-  const res = await fetch(new URL('../circuits/src/main.nr', import.meta.url));
-  const noirSource = await res.text();
+export async function getFile(file_path: string): Promise<ReadableStream<Uint8Array>> {
+  const file_url = new URL(file_path, import.meta.url);
+  const response = await fetch(file_url);
 
-  const sourceMap = new PathToFileSourceMap();
-  sourceMap.add_source_code('main.nr', noirSource);
-  const compiled = compile('main.nr', undefined, undefined, sourceMap);
-  return compiled;
+  if (!response.ok) throw new Error('Network response was not OK');
+
+  return response.body as ReadableStream<Uint8Array>;
+}
+
+async function getCircuit(name: string) {
+  const fm = createFileManager('/');
+  fm.writeFile('./src/main.nr', await getFile(`../circuits/${name}/src/${name}.nr`));
+  fm.writeFile('./Nargo.toml', await getFile(`../circuits/${name}/Nargo.toml`));
+  const result = await compile(fm);
+  if (!('program' in result)) {
+    throw new Error('Compilation failed');
+  }
+  return result.program as CompiledCircuit;
 }
 
 function Component() {
@@ -86,7 +93,7 @@ function Component() {
 
     if (proof) {
       write?.({
-        args: [bytesToHex(proof.proof), flattenPublicInputs(proof.publicInputs)],
+        args: [bytesToHex(proof.proof), proof.publicInputs],
       });
     }
   };
