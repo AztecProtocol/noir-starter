@@ -4,9 +4,15 @@ This is a reference repo to help you get started with writing zero-knowledge cir
 
 Each project is an example you can use as template. Feel free to mix them in order to find the best combination of technology that suits your needs.
 
-## Templates
+## Getting started
 
-Use templates as a starting point for your project.
+If you have [node](https://nodejs.org/en/download) installed, just open a terminal and run:
+
+```bash
+npx create-noir
+```
+
+### Templates
 
 - Foundry: [`./with-foundry`](./with-foundry)
 - Vite + Hardhat: [`./vite-hardhat`](./vite-hardhat)

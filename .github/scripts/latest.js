@@ -1,5 +1,3 @@
-const { writeFileSync } = require('fs');
-
 const GITHUB_PAGES = 3;
 
 async function main() {
