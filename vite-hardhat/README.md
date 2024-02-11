@@ -17,7 +17,7 @@ In the meantime, follow these simple steps to work on your own machine:
 
 2. Install [Node.js >20.10 (latest LTS)](https://nodejs.org/en) (tested on v18.17.0)
 
-3. Install [noirup](https://noir-lang.org/getting_started/nargo_installation/#option-1-noirup) with
+3. Install [noirup](https://noir-lang.org/docs/getting_started/installation/#installing-noirup) with
 
    ```bash
    curl -L https://raw.githubusercontent.com/noir-lang/noirup/main/install | bash
