@@ -50,7 +50,7 @@ const config: HardhatUserConfig = {
     },
   },
   paths: {
-    sources: './circuits/contract/noirstarter',
+    sources: './circuit',
   },
 };
 

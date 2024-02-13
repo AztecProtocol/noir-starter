@@ -4,17 +4,18 @@
   "type": "module",
   "description": "A template repository to get started with writing zero knowledge programs with Noir.",
   "scripts": {
-    "dev": "hardhat compile && yarn deploy && vite",
+    "prep": "cd circuit && nargo codegen-verifier",
+    "dev": "yarn prep && hardhat compile && yarn deploy && vite",
     "build": "hardhat compile && yarn deploy && vite build",
     "preview": "vite preview",
     "deploy": "hardhat compile && NODE_OPTIONS='--experimental-loader ts-node/esm/transpile-only' hardhat run --network ${NETWORK} scripts/deploy.ts",
     "test": "NODE_OPTIONS='--experimental-loader ts-node/esm/transpile-only' hardhat test"
   },
   "dependencies": {
-    "@noir-lang/backend_barretenberg": "0.23.0",
-    "@noir-lang/noir_js": "0.23.0",
-    "@noir-lang/noir_wasm": "0.23.0",
-    "@noir-lang/types": "0.23.0",
+    "@noir-lang/backend_barretenberg": "^0.23.0",
+    "@noir-lang/noir_js": "^0.23.0",
+    "@noir-lang/noir_wasm": "^0.23.0",
+    "@noir-lang/types": "^0.23.0",
     "@nomicfoundation/hardhat-network-helpers": "^1.0.0",
     "@nomicfoundation/hardhat-toolbox-viem": "1.0.0",
     "@nomicfoundation/hardhat-viem": "1.0.0",
