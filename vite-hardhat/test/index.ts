@@ -9,7 +9,7 @@ import { CompiledCircuit, ProofData } from '@noir-lang/types';
 import { join, resolve } from 'path';
 
 async function getCircuit() {
-  const basePath = resolve(join('./circuits'));
+  const basePath = resolve(join('./circuit'));
   const fm = createFileManager(basePath);
   const result = await compile(fm);
   if (!('program' in result)) {

@@ -14,9 +14,7 @@ Want to get started in a pinch? Start your project in a free Github Codespace!
 In the meantime, follow these simple steps to work on your own machine:
 
 1. Install [yarn](https://yarnpkg.com/) (tested on yarn v1.22.19)
-
 2. Install [Node.js >20.10 (latest LTS)](https://nodejs.org/en) (tested on v18.17.0)
-
 3. Install [noirup](https://noir-lang.org/getting_started/nargo_installation/#option-1-noirup) with
 
    ```bash
@@ -46,13 +44,11 @@ cd circuits
 nargo codegen-verifier
 ```
 
-A file named `plonk_vk.sol` should appear in the `circuits/contracts/with_foundry` folder.
+A file named `plonk_vk.sol` should appear in the `circuit/contracts/noirstarter` folder.
 
 ### Test locally
 
-1. Copy `vite-hardhat/.env.example` to a new file `vite-hardhat/.env`.
-
-2. Start a local development EVM at <http://localhost:8545> with
+1. Start a local development EVM at <http://localhost:8545> with
 
    ```bash
    npx hardhat node
@@ -64,7 +60,7 @@ A file named `plonk_vk.sol` should appear in the `circuits/contracts/with_foundr
    anvil
    ```
 
-3. Run the [example test file](./test/index.test.ts) with
+2. Run the [example test file](./test/index.test.ts) with
 
    ```bash
    yarn test
@@ -91,11 +87,8 @@ The test demonstrates basic usage of Noir in a TypeScript Node.js environment.
 3. Build the project and deploy contracts to the local development chain with
 
    ```bash
-   NETWORK=localhost yarn build
+   yarn build
    ```
-
-   > **Note:** If the deployment fails, try removing `yarn.lock` and reinstalling dependencies with
-   > `yarn`.
 
 4. Once your contracts are deployed and the build is finished, you can preview the built website with
 
@@ -103,17 +96,20 @@ The test demonstrates basic usage of Noir in a TypeScript Node.js environment.
    yarn preview
    ```
 
-### Deploy on networks
+### Deploy on testnets
 
-You can choose any other network in `hardhat.config.ts` and deploy there using this `NETWORK`
-environment variable.
+For convenience, we added two configurations for deployment on various testnets. You can find them in `hardhat.config.cts`.
 
-For example, `NETWORK=mumbai yarn build` or `NETWORK=sepolia yarn build`.
+To deploy on these testnets, copy the `.env.example` and add your own [alchemy](https://www.alchemy.com/) keys for these networks.
 
-Make sure you:
+Then, prepend your commands with your desired network in a `NETWORK` environment variable. For example, to deploy on sepolia:
 
-- Update the deployer private keys in `vite-hardhat/.env`
-- Have funds in the deployer account
-- Add keys for alchemy (to act as a node) in `vite-hardhat/.env`
+```bash
+NETWORK=sepolia yarn build`
+```
 
-Feel free to contribute with other networks in `hardhat.config.ts`
+Feel free to add more networks, just make sure you:
+
+- Add deployer private keys and alchemy API keys in `vite-hardhat/.env`
+- Have funds in these accounts
+- Add a configuration in `hardhat.config.cts`
