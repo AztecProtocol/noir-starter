@@ -3,11 +3,13 @@ import React from 'react';
 
 import { useOnChainVerification } from '../hooks/useOnChainVerification.jsx';
 import { useProofGeneration } from '../hooks/useProofGeneration.jsx';
+import { useOffChainVerification } from '../hooks/useOffChainVerification.jsx';
 
 function Component() {
   const [input, setInput] = useState<{ x: string; y: string } | undefined>();
-  const { proofData } = useProofGeneration(input);
-  // useOnChainVerification(proofData);
+  const { noir, proofData } = useProofGeneration(input);
+  useOffChainVerification(noir, proofData);
+  useOnChainVerification(proofData);
 
   const submit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

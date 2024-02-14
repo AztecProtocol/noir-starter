@@ -39,7 +39,6 @@ export function useOnChainVerification(proofData?: ProofData) {
   }, [isConnected]);
 
   useEffect(() => {
-    console.log(data);
     if (data) {
       toast.update(onChainToast, {
         type: 'success',

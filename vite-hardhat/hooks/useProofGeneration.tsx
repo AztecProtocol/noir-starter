@@ -6,6 +6,7 @@ import { Noir } from '@noir-lang/noir_js';
 
 export function useProofGeneration(inputs?: { [key: string]: string }) {
   const [proofData, setProofData] = useState<ProofData | undefined>();
+  const [noir, setNoir] = useState<Noir | undefined>();
 
   const proofGeneration = async () => {
     if (!inputs) return;
@@ -25,13 +26,8 @@ export function useProofGeneration(inputs?: { [key: string]: string }) {
       error: 'Error generating proof',
     });
 
-    const res = await toast.promise(noir.verifyFinalProof(data), {
-      pending: 'Verifying proof off-chain',
-      success: 'Proof verified off-chain',
-      error: 'Error verifying proof off-chain',
-    });
-
-    console.log(res);
+    setProofData(data);
+    setNoir(noir);
   };
 
   useEffect(() => {
@@ -39,5 +35,5 @@ export function useProofGeneration(inputs?: { [key: string]: string }) {
     proofGeneration();
   }, [inputs]);
 
-  return { proofData };
+  return { noir, proofData };
 }
