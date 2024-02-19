@@ -87,6 +87,10 @@ The test demonstrates basic usage of Noir in a TypeScript Node.js environment.
    yarn preview
    ```
 
+### On-chain verification
+
+The app will verify your proof locally. If you have a wallet, it will prompt you to connect to the relevant network and use it for on-chain verification.
+
 ### Deploy on testnets
 
 For convenience, we added two configurations for deployment on various testnets. You can find them in `hardhat.config.cts`.
