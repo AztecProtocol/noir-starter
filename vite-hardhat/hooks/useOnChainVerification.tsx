@@ -12,8 +12,8 @@ export function useOnChainVerification(proofData?: ProofData) {
 
   const { data, error } = useContractRead({
     ...contractCallConfig,
-    functionName: 'verify',
     args,
+    enabled: !!args,
   });
 
   const [onChainToast, setOnChainToast] = useState<Id>(0);

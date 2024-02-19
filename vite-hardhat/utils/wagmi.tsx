@@ -21,4 +21,5 @@ export const contractCallConfig = {
   address: verifier as `0x${string}`,
   abi,
   chainId: chainId,
+  functionName: 'verify',
 };
