@@ -4,8 +4,8 @@ import react from '@vitejs/plugin-react-swc';
 export default defineConfig({
   optimizeDeps: {
     esbuildOptions: {
-      target: 'esnext'
-    }
+      target: 'esnext',
+    },
   },
   build: {
     target: 'esnext',
