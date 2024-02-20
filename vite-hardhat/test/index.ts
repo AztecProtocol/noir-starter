@@ -4,35 +4,35 @@ import hre from 'hardhat';
 import { Noir } from '@noir-lang/noir_js';
 import { BarretenbergBackend } from '@noir-lang/backend_barretenberg';
 
-import { compile, PathToFileSourceMap } from '@noir-lang/noir_wasm';
-import { join } from 'path';
-import { ProofData } from '@noir-lang/types';
-import { readFileSync } from 'fs';
+import { compile, createFileManager } from '@noir-lang/noir_wasm';
+import { CompiledCircuit, ProofData } from '@noir-lang/types';
+import { join, resolve } from 'path';
 
-const getCircuit = async (name: string) => {
-  const sourcePath = new URL('../circuits/src/main.nr', import.meta.url);
-  const sourceMap = new PathToFileSourceMap();
-
-  sourceMap.add_source_code(sourcePath.pathname, readFileSync(join(sourcePath.pathname), 'utf-8'));
-  const compiled = compile(sourcePath.pathname, undefined, undefined, sourceMap);
-  return compiled;
-};
+async function getCircuit() {
+  const basePath = resolve(join('./circuit'));
+  const fm = createFileManager(basePath);
+  const result = await compile(fm);
+  if (!('program' in result)) {
+    throw new Error('Compilation failed');
+  }
+  return result.program as CompiledCircuit;
+}
 
 describe('It compiles noir program code, receiving circuit bytes and abi object.', () => {
   let noir: Noir;
   let correctProof: ProofData;
 
   before(async () => {
-    const compiled = await getCircuit('main');
+    const compiled = await getCircuit();
     const verifierContract = await hre.viem.deployContract('UltraVerifier');
 
     const verifierAddr = verifierContract.address;
     console.log(`Verifier deployed to ${verifierAddr}`);
 
     // @ts-ignore
-    const backend = new BarretenbergBackend(compiled.program);
+    const backend = new BarretenbergBackend(compiled);
     // @ts-ignore
-    noir = new Noir(compiled.program, backend);
+    noir = new Noir(compiled, backend);
   });
 
   it('Should generate valid proof for correct input', async () => {

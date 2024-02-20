@@ -83,18 +83,8 @@ jobs:
           @noir-lang/noir_wasm@${{ matrix.version }} \
           @noir-lang/types@${{ matrix.version }}
 
-      - name: 'Create env file'
-        run: |
-          touch .env
-          echo SEPOLIA_ALCHEMY_KEY="${{ secrets.SEPOLIA_ALCHEMY_KEY }}" >> .env
-          echo SEPOLIA_DEPLOYER_PRIVATE_KEY="${{ secrets.SEPOLIA_DEPLOYER_PRIVATE_KEY }}" >> .env
-          echo MUMBAI_ALCHEMY_KEY"=${{ secrets.MUMBAI_ALCHEMY_KEY }}" >> .env
-          echo MUMBAI_DEPLOYER_PRIVATE_KEY="${{ secrets.MUMBAI_DEPLOYER_PRIVATE_KEY }}" >> .env
-
       - name: Generate verifier contract
-        run: |
-          nargo codegen-verifier
-        working-directory: vite-hardhat/circuits
+        run: yarn prep
 
       - name: Run test
         run: yarn test
