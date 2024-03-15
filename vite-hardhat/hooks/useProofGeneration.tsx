@@ -20,7 +20,7 @@ export function useProofGeneration(inputs?: { [key: string]: string }) {
       error: 'Error initializing Noir',
     });
 
-    const data = await toast.promise(noir.generateFinalProof(inputs), {
+    const data = await toast.promise(noir.generateProof(inputs), {
       pending: 'Generating proof',
       success: 'Proof generated',
       error: 'Error generating proof',
