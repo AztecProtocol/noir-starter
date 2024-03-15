@@ -12,10 +12,10 @@
   resolved "https://registry.yarnpkg.com/@adraffy/ens-normalize/-/ens-normalize-1.9.4.tgz#aae21cb858bbb0411949d5b7b3051f4209043f62"
   integrity sha512-UK0bHA7hh9cR39V+4gl2/NnBBjoXIxkuWAPCaY4X7fbH4L/azIi7ilWOCjMUYfpJgraLUAqkRi2BqrjME8Rynw==
 
-"@aztec/bb.js@0.19.0":
-  version "0.19.0"
-  resolved "https://registry.yarnpkg.com/@aztec/bb.js/-/bb.js-0.19.0.tgz#1c9c1d386954398e99c024425d9f282955389d59"
-  integrity sha512-I28AdggGl/5FjOEdOCYXviH0TnQUjEl2B95sux1kVJj8MiwD1rmx/tuaQBvUwRKe3hg/4C1KQRYWFn4vwlhg3A==
+"@aztec/bb.js@0.26.3":
+  version "0.26.3"
+  resolved "https://registry.yarnpkg.com/@aztec/bb.js/-/bb.js-0.26.3.tgz#a148c3c8b35d78a92568f2f7ce9c05a8de4ead22"
+  integrity sha512-iZXQyjVVgDYQt77IggxC1MUZDBd68Q9aXepclq1kv4Ube1wllmlZ3+NGKZx/ma8yd24ytYGtIx/7kY8L4SbdkQ==
   dependencies:
     comlink "^4.4.1"
     commander "^10.0.1"
@@ -756,47 +756,48 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
-"@noir-lang/acvm_js@0.39.0":
-  version "0.39.0"
-  resolved "https://registry.yarnpkg.com/@noir-lang/acvm_js/-/acvm_js-0.39.0.tgz#8d05c0fee40b378beeede6f68e6e243e43bd74d2"
-  integrity sha512-Y77qyfamkYSIzzKFkewTwExzTvxYcRd1XBqo950ti4uKMdu18GthkOssqC7CGacwx5PdrdOGFGRJbVtjoXeKIg==
+"@noir-lang/acvm_js@0.41.0":
+  version "0.41.0"
+  resolved "https://registry.yarnpkg.com/@noir-lang/acvm_js/-/acvm_js-0.41.0.tgz#7636ac018e26271c113309cd8883d95aa661ac2a"
+  integrity sha512-/FST2lHKOpe/US6UFtTYSJZFtmvTjTtW7zBkcp1VaEn00SqezJszuwv9oQOfVz7F59LBL3b4+JFi5oIHlzef0g==
 
-"@noir-lang/backend_barretenberg@0.23.0":
-  version "0.23.0"
-  resolved "https://registry.yarnpkg.com/@noir-lang/backend_barretenberg/-/backend_barretenberg-0.23.0.tgz#19a85be2c4f83b87e8b4c03eb4e8f3e108304d51"
-  integrity sha512-amehMEE8kEMEbuxvPT1H9BwVQyEFFip6ajHWhgJjw/PkNB8tBzP+ekVrcEvxVerAKNikfzCEWS/kV7CEWcQNzA==
+"@noir-lang/backend_barretenberg@^0.25.0":
+  version "0.25.0"
+  resolved "https://registry.yarnpkg.com/@noir-lang/backend_barretenberg/-/backend_barretenberg-0.25.0.tgz#4f4abf5bbdcb5d88fa4dbb29f68eddb513a3070c"
+  integrity sha512-Dipgpc1DmxLAtB4CEXwOQw8EA/DLqALD+F3cezwuo4vCiB+pvALaUBTDSco6TP1VINRzelzWvUL5BIEoEAlByQ==
   dependencies:
-    "@aztec/bb.js" "0.19.0"
-    "@noir-lang/types" "0.23.0"
+    "@aztec/bb.js" "0.26.3"
+    "@noir-lang/types" "0.25.0"
     fflate "^0.8.0"
 
-"@noir-lang/noir_js@0.23.0":
-  version "0.23.0"
-  resolved "https://registry.yarnpkg.com/@noir-lang/noir_js/-/noir_js-0.23.0.tgz#fd85e4b3f1434b8ff811ec4ceb19a5814474289f"
-  integrity sha512-eblqgm0PjgptYG+TkK2Dmp/Y2fEhjM5sqMam+QUQHn/2WmC+8/LO2a0FQU0t1432BGCII6/TfojQzgQobuXJAw==
+"@noir-lang/noir_js@^0.25.0":
+  version "0.25.0"
+  resolved "https://registry.yarnpkg.com/@noir-lang/noir_js/-/noir_js-0.25.0.tgz#7ff8f0ffc2d1fe0e180156b2c2131374b0d544be"
+  integrity sha512-hCfTfM6QU7s2ZC8rxf0JEm+7bHIsLnH1FHsw7W2cQB9g69U4HBs0cY7Sc8XUHPpabxQ8VC1kcNTsoQwDvocF0g==
   dependencies:
-    "@noir-lang/acvm_js" "0.39.0"
-    "@noir-lang/noirc_abi" "0.23.0"
-    "@noir-lang/types" "0.23.0"
+    "@noir-lang/acvm_js" "0.41.0"
+    "@noir-lang/noirc_abi" "0.25.0"
+    "@noir-lang/types" "0.25.0"
 
-"@noir-lang/noir_wasm@0.23.0":
-  version "0.23.0"
-  resolved "https://registry.yarnpkg.com/@noir-lang/noir_wasm/-/noir_wasm-0.23.0.tgz#5fe49f31d7fd67963d166439f7402a09668aec95"
-  integrity sha512-HL78frUo60bKrUaxOAJQtyrmBWUyiQbSp4yQkh9A/vFAnEhxehDwd8peCGKMZKX66JpRccClv52zyb5O/ECE4g==
+"@noir-lang/noir_wasm@^0.25.0":
+  version "0.25.0"
+  resolved "https://registry.yarnpkg.com/@noir-lang/noir_wasm/-/noir_wasm-0.25.0.tgz#20641eba0c99583e13cbd77d0a1d82f409edb4b9"
+  integrity sha512-S8x3E9q+UqtvkLO76IDr2f6st8/3VihtHDioR+TwI10SO2LkKssq1QLNLAyrE0P8BFjZNHlcchbSjOylKDQp9A==
   dependencies:
+    "@noir-lang/types" "0.25.0"
     pako "^2.1.0"
 
-"@noir-lang/noirc_abi@0.23.0":
-  version "0.23.0"
-  resolved "https://registry.yarnpkg.com/@noir-lang/noirc_abi/-/noirc_abi-0.23.0.tgz#47dcfd724e205eadc3a6d4ebab9b11355cb0d0cb"
-  integrity sha512-MYBkj6hSpiimlcBmX6n/hY+y2Kk39Qh8qre5c41GZPvmC88f7MqhAdDTSsfrFnNg1pvpY5UX6/G1D8jEkT11qA==
-
-"@noir-lang/types@0.23.0":
-  version "0.23.0"
-  resolved "https://registry.yarnpkg.com/@noir-lang/types/-/types-0.23.0.tgz#a99c7bc6eaffbf9e1209d1cb2ca7ecd0f047f62f"
-  integrity sha512-jgA4thao714WHiXVE3KS7Y2vQnH3gvsVM1cO1kQsihgmqX5VO+Kk6bI3Yck9HUvAqgcjJgSeOeBtbdTYSzjzkw==
+"@noir-lang/noirc_abi@0.25.0":
+  version "0.25.0"
+  resolved "https://registry.yarnpkg.com/@noir-lang/noirc_abi/-/noirc_abi-0.25.0.tgz#098eea2bf65a0a2dc180041330c26a089c39709c"
+  integrity sha512-uoNfRgGP9qAfovZKrtfZIE6cKCH2OiuKrsCRvNvSxx2Nv57sN93YYpKF+g1726Y6d/a5vxbxP6z5+uvoEALkDw==
   dependencies:
-    "@noir-lang/noirc_abi" "0.23.0"
+    "@noir-lang/types" "0.25.0"
+
+"@noir-lang/types@0.25.0", "@noir-lang/types@^0.25.0":
+  version "0.25.0"
+  resolved "https://registry.yarnpkg.com/@noir-lang/types/-/types-0.25.0.tgz#e05843ba2850e222c2c1e7b1ed5634460bfa7c9f"
+  integrity sha512-kt1R0vd/J116Q8dTZt3iIEg4d17wzvXOHmw5HbfYbWnFbepA8AlAneEDpYusmZoTwFcxqPKiZu45aUrezFd+kQ==
 
 "@nomicfoundation/ethereumjs-block@5.0.2":
   version "5.0.2"
