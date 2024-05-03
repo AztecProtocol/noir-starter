@@ -1,19 +1,21 @@
 import { ProofData } from '@noir-lang/types';
-import { useAccount, useConnect, useContractRead } from 'wagmi';
-import { contractCallConfig } from '../utils/wagmi.jsx';
+import { useAccount, useConnect, useReadContract } from 'wagmi';
+import { config, contractCallConfig } from '../utils/wagmi.jsx';
 import { bytesToHex } from 'viem';
 import { useEffect, useState } from 'react';
 import { Id, toast } from 'react-toastify';
 
 export function useOnChainVerification(proofData?: ProofData) {
-  const { connect, connectors } = useConnect();
   const { isConnected } = useAccount();
   const [args, setArgs] = useState<[string, string[]] | undefined>();
 
-  const { data, error } = useContractRead({
+  const { connect } = useConnect();
+  const { data, error } = useReadContract({
     ...contractCallConfig,
     args,
-    enabled: !!args,
+    query: {
+      enabled: !!args,
+    },
   });
 
   const [onChainToast, setOnChainToast] = useState<Id>(0);
@@ -31,7 +33,7 @@ export function useOnChainVerification(proofData?: ProofData) {
 
   useEffect(() => {
     if (!isConnected) {
-      connectors.map(c => c.ready && connect({ connector: c }));
+      connect({ connector: config.connectors[0] });
     }
   }, [isConnected]);
 
