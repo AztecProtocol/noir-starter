@@ -54,5 +54,6 @@ crs
 artifacts
 .yarn/
 
-circuits/target
+circuits/target/
 dist
+circuit/contract/
