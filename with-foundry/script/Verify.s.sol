@@ -17,11 +17,12 @@ contract VerifyScript is Script {
         verifier = new UltraVerifier();
         starter = new Starter(verifier);
 
-        string memory proof = vm.readLine("./circuits/proofs/p.proof");
+        string memory proof = vm.readLine("./circuits/proofs/with_foundry.proof");
         bytes memory proofBytes = vm.parseBytes(proof);
 
-        bytes32[] memory correct = new bytes32[](1);
+        bytes32[] memory correct = new bytes32[](2);
         correct[0] = bytes32(0x0000000000000000000000000000000000000000000000000000000000000003);
+        correct[1] = correct[0];
 
         bool equal = starter.verifyEqual(proofBytes, correct);
         return equal;

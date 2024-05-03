@@ -8,8 +8,8 @@ contract StarterTest is Test {
     Starter public starter;
     UltraVerifier public verifier;
 
-    bytes32[] public dynamicCorrect = new bytes32[](1);
-    bytes32[] public correct = new bytes32[](1);
+    bytes32[] public dynamicCorrect = new bytes32[](2);
+    bytes32[] public correct = new bytes32[](2);
     bytes32[] public wrong = new bytes32[](1);
 
     function setUp() public {
@@ -17,6 +17,7 @@ contract StarterTest is Test {
         starter = new Starter(verifier);
 
         correct[0] = bytes32(0x0000000000000000000000000000000000000000000000000000000000000003);
+        correct[1] = correct[0];
         wrong[0] = bytes32(0x0000000000000000000000000000000000000000000000000000000000000004);
     }
 
@@ -44,6 +45,7 @@ contract StarterTest is Test {
 
         // Set expected dynamic proof outcome
         dynamicCorrect[0] = bytes32(0x0000000000000000000000000000000000000000000000000000000000000005);
+        dynamicCorrect[1] = dynamicCorrect[0];
         bytes memory proofBytes = generateDynamicProof("test1", _fieldNames, _fieldValues);
         starter.verifyEqual(proofBytes, dynamicCorrect);
     }
@@ -59,6 +61,7 @@ contract StarterTest is Test {
 
         // Set expected dynamic proof outcome
         dynamicCorrect[0] = bytes32(0x0000000000000000000000000000000000000000000000000000000000000008);
+        dynamicCorrect[1] = dynamicCorrect[0];
         bytes memory proofBytes = generateDynamicProof("test2", _fieldNames, _fieldValues);
         starter.verifyEqual(proofBytes, dynamicCorrect);
     }
@@ -74,6 +77,7 @@ contract StarterTest is Test {
 
         // Set expected dynamic proof outcome
         dynamicCorrect[0] = bytes32(0x0000000000000000000000000000000000000000000000000000000000000007);
+        dynamicCorrect[1] = dynamicCorrect[0];
         bytes memory proofBytes = generateDynamicProof("test3", _fieldNames, _fieldValues);
         starter.verifyEqual(proofBytes, dynamicCorrect);
     }
