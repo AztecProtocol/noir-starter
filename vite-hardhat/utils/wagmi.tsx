@@ -1,13 +1,13 @@
 import { http, createConfig } from 'wagmi';
-import { localhost, sepolia } from 'wagmi/chains';
+import { localhost, scrollSepolia } from 'wagmi/chains';
 import abi from './verifierAbi.json';
 import { chainId, verifier } from './addresses.json';
 
 export const config = createConfig({
-  chains: [localhost, sepolia],
+  chains: [localhost, scrollSepolia],
   transports: {
     [localhost.id]: http(),
-    [sepolia.id]: http(),
+    [scrollSepolia.id]: http(),
   },
 });
 

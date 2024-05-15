@@ -6,7 +6,7 @@
   "scripts": {
     "prep": "cd circuit && nargo codegen-verifier",
     "dev": "yarn prep && hardhat compile && yarn deploy && vite",
-    "build": "hardhat compile && yarn deploy && vite build",
+    "build": "yarn deploy && vite build",
     "preview": "vite preview",
     "deploy": "hardhat compile && NODE_OPTIONS='--experimental-loader ts-node/esm/transpile-only' hardhat run --network ${NETWORK:-localhost} scripts/deploy.ts",
     "test": "NODE_OPTIONS='--experimental-loader ts-node/esm/transpile-only' hardhat test"
