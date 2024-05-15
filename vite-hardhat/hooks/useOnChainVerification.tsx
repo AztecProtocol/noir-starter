@@ -1,6 +1,6 @@
 import { ProofData } from '@noir-lang/types';
 import { useAccount, useConnect, useContractRead } from 'wagmi';
-import { contractCallConfig } from '../utils/wagmi.jsx';
+import { config, contractCallConfig } from '../utils/wagmi.jsx';
 import { bytesToHex } from 'viem';
 import { useEffect, useState } from 'react';
 import { Id, toast } from 'react-toastify';

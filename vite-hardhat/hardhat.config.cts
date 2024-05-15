@@ -40,10 +40,25 @@ const config: HardhatUserConfig = {
   },
 };
 
-if (process.env.SEPOLIA_ALCHEMY_KEY && config.networks) {
-  config.networks.sepolia = {
-    url: `https://eth-sepolia.g.alchemy.com/v2/${process.env.SEPOLIA_ALCHEMY_KEY}`,
-    accounts: [process.env.SEPOLIA_DEPLOYER_PRIVATE_KEY as string],
+if (process.env.SEPOLIA_SCROLL_ETHERSCAN_KEY && config.networks) {
+  config.networks.scrollSepolia = {
+    url: 'https://sepolia-rpc.scroll.io',
+    accounts: [process.env.SEPOLIA_SCROLL_DEPLOYER_PRIVATE_KEY as string],
+  };
+  config.etherscan = {
+    apiKey: {
+      scrollSepolia: process.env.SEPOLIA_SCROLL_ETHERSCAN_KEY,
+    },
+    customChains: [
+      {
+        network: 'sccrollSepolia',
+        chainId: 534352,
+        urls: {
+          apiURL: 'https://api-sepolia.scrollscan.com/api',
+          browserURL: 'https://sepolia.scrollscan.com/',
+        },
+      },
+    ],
   };
 }
 
