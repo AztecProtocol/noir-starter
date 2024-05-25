@@ -6,11 +6,12 @@ import { ToastContainer } from 'react-toastify';
 import Component from './components/index';
 import initNoirC from '@noir-lang/noirc_abi';
 import initACVM from '@noir-lang/acvm_js';
-import { WagmiConfig } from 'wagmi';
+import { WagmiProvider } from 'wagmi';
 import { config } from './utils/wagmi';
 
 const InitWasm = ({ children }) => {
   const [init, setInit] = React.useState(false);
+  
   useEffect(() => {
     (async () => {
       await Promise.all([
@@ -19,6 +20,7 @@ const InitWasm = ({ children }) => {
           new URL('@noir-lang/noirc_abi/web/noirc_abi_wasm_bg.wasm', import.meta.url).toString(),
         ),
       ]);
+      
       setInit(true);
     })();
   });
@@ -26,10 +28,10 @@ const InitWasm = ({ children }) => {
   return <div>{init && children}</div>;
 };
 
-export function Providers({ children }: { children: React.ReactNode }) {
+export function Providers({ children }: { children: ReactNode }) {
   const [mounted, setMounted] = React.useState(false);
   React.useEffect(() => setMounted(true), []);
-  return <WagmiConfig config={config}>{mounted && children}</WagmiConfig>;
+  return <WagmiProvider config={config}>{mounted && children}</WagmiProvider>;
 }
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
