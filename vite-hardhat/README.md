@@ -100,7 +100,7 @@ To deploy on these testnets, rename `.env.example` to `.env` and add your own [a
 Then, prepend your commands with your desired network in a `NETWORK` environment variable. For example, to deploy on sepolia:
 
 ```bash
-NETWORK=sepolia yarn build`
+NETWORK=sepolia yarn build
 ```
 
 Feel free to add more networks, just make sure you:
