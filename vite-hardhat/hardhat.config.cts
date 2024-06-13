@@ -100,7 +100,6 @@ const config: HardhatUserConfig = {
   networks: {
     localhost: {
       url: 'http://127.0.0.1:8545',
-      accounts: [process.env.LOCALHOST_DEPLOYER_PRIVATE_KEY as string],
     },
     scrollSepolia: {
       url: 'https://sepolia-rpc.scroll.io',

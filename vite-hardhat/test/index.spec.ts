@@ -18,7 +18,7 @@ describe('It compiles noir program code, receiving circuit bytes and abi object.
     exec('bun hh compile');
     exec('bun hh deploy');
 
-    const circuitFile = readFileSync('artifacts/circuit.json', 'utf-8');
+    const circuitFile = readFileSync('./artifacts/circuit.json', 'utf-8');
     const circuit = JSON.parse(circuitFile);
 
     // @ts-ignore
