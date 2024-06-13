@@ -101,14 +101,6 @@ const config: HardhatUserConfig = {
     localhost: {
       url: 'http://127.0.0.1:8545',
     },
-    scrollSepolia: {
-      url: 'https://sepolia-rpc.scroll.io',
-      accounts: [process.env.SEPOLIA_SCROLL_DEPLOYER_PRIVATE_KEY as string],
-    },
-    holesky: {
-      url: 'https://holesky.drpc.org',
-      accounts: [process.env.HOLESKY_DEPLOYER_PRIVATE_KEY as string],
-    },
   },
   paths: {
     root: './',
@@ -116,5 +108,25 @@ const config: HardhatUserConfig = {
     artifacts: './artifacts/hardhat',
   },
 };
+
+if (process.env.SEPOLIA_SCROLL_DEPLOYER_PRIVATE_KEY) {
+  config.networks = {
+    ...config.networks,
+    scrollSepolia: {
+      url: 'https://sepolia-rpc.scroll.io',
+      accounts: [process.env.SEPOLIA_SCROLL_DEPLOYER_PRIVATE_KEY as string],
+    },
+  };
+}
+
+if (process.env.HOLESKY_DEPLOYER_PRIVATE_KEY) {
+  config.networks = {
+    ...config.networks,
+    holesky: {
+      url: 'https://holesky.drpc.org',
+      accounts: [process.env.HOLESKY_DEPLOYER_PRIVATE_KEY as string],
+    },
+  };
+}
 
 export default config;
