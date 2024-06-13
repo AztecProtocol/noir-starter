@@ -13,25 +13,25 @@ Want to get started in a pinch? Start your project in a free Github Codespace!
 
 In the meantime, follow these simple steps to work on your own machine:
 
-1. Install [bun](https://bun.sh/docs/installation):
+1. Install your favorite package manager. We'll use [bun](https://bun.sh/docs/installation) but feel free to use `yarn` or others:
 
-```bash
-curl -fsSL https://bun.sh/install | bash # for macOS, Linux, and WSL
-```
+   ```bash
+   curl -fsSL https://bun.sh/install | bash
+   ```
 
-1. Install dependencies:
+2. Install dependencies:
 
    ```bash
    bun i
    ```
 
-2. Run a local ethereum node:
+3. Run a local ethereum node:
 
    ```bash
    bun node
    ```
 
-3. Run the app:
+4. Run the app:
 
    ```bash
    bun dev
@@ -76,9 +76,5 @@ bun build # add NETWORK=<your network> if you want to
 You can then preview the final page with:
 
 ```bash
-yarn preview
+bun serve
 ```
-
-### On-chain verification
-
-The app will verify your proof locally. If you have a wallet, it will prompt you to connect to the relevant network and use it for on-chain verification.
