@@ -13,94 +13,50 @@ Want to get started in a pinch? Start your project in a free Github Codespace!
 
 In the meantime, follow these simple steps to work on your own machine:
 
-1. Install [yarn](https://yarnpkg.com/) (tested on yarn v1.22.19)
-2. Install [Node.js >20.10 (latest LTS)](https://nodejs.org/en) (tested on v18.17.0)
-3. Install [noirup](https://noir-lang.org/docs/getting_started/installation/#installing-noirup) with
+1. Install [bun](https://bun.sh/docs/installation):
+
+```bash
+curl -fsSL https://bun.sh/install | bash # for macOS, Linux, and WSL
+```
+
+1. Install dependencies:
 
    ```bash
-   curl -L https://raw.githubusercontent.com/noir-lang/noirup/main/install | bash
+   bun i
    ```
 
-4. Install Nargo with
+2. Run a local ethereum node:
 
    ```bash
-   noirup
+   bun node
    ```
 
-5. Install dependencies with
+3. Run the app:
 
    ```bash
-   yarn
-   ```
-
-6. Generate the verifier contract
-
-   ```bash
-   yarn prep
+   bun dev
    ```
 
 ### Test locally
 
-1. Start a local development EVM at <http://localhost:8545> with
+You can run the [example test file](./test/index.test.ts) with
 
-   ```bash
-   npx hardhat node
-   ```
+```bash
+bun test
+```
 
-   or if foundry is preferred, with
+This test starts a local ethereum node and shows the basic usage of Noir in a TypeScript Node.js environment.
 
-   ```bash
-   anvil
-   ```
+### Testnets
 
-2. Run the [example test file](./test/index.test.ts) with
-
-   ```bash
-   yarn test
-   ```
-
-The test demonstrates basic usage of Noir in a TypeScript Node.js environment.
-
-### Deploy locally
-
-1. Start a local development EVM at <http://localhost:8545> with
-
-   ```bash
-   npx hardhat node
-   ```
-
-   or if foundry is preferred, with
-
-   ```bash
-   anvil
-   ```
-
-2. Build the project and deploy contracts to the local development chain with
-
-   ```bash
-   yarn build
-   ```
-
-3. Once your contracts are deployed and the build is finished, you can preview the built website with
-
-   ```bash
-   yarn preview
-   ```
-
-### On-chain verification
-
-The app will verify your proof locally. If you have a wallet, it will prompt you to connect to the relevant network and use it for on-chain verification.
-
-### Deploy on testnets
-
-For convenience, we added two configurations for deployment on various testnets. You can find them in `hardhat.config.cts`.
+The default scripting targets a local environment run with `hardhat`. For convenience, we added some configurations for deployment on various testnets. You can find them in `hardhat.config.cts`.
 
 To deploy on these testnets, rename `.env.example` to `.env` and add your own [alchemy](https://www.alchemy.com/) keys for these networks.
 
 Then, prepend your commands with your desired network in a `NETWORK` environment variable. For example, to deploy on sepolia:
 
 ```bash
-NETWORK=sepolia yarn build`
+NETWORK=sepolia bun dev
 ```
 
 Feel free to add more networks, just make sure you:
@@ -108,3 +64,21 @@ Feel free to add more networks, just make sure you:
 - Add deployer private keys and alchemy API keys in `.env`
 - Have funds in these accounts
 - Add a configuration in `hardhat.config.cts`
+
+### Deployment
+
+As you may have guessed, this example runs completely on the client side as a static website. To build it, run:
+
+```bash
+bun build # add NETWORK=<your network> if you want to
+```
+
+You can then preview the final page with:
+
+```bash
+yarn preview
+```
+
+### On-chain verification
+
+The app will verify your proof locally. If you have a wallet, it will prompt you to connect to the relevant network and use it for on-chain verification.

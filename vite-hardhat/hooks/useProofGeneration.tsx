@@ -1,6 +1,6 @@
 import { toast } from 'react-toastify';
 import { useEffect, useState } from 'react';
-import { getCircuit } from '../utils/compile.js';
+import { getCircuit } from '../circuit/compile.js';
 import { BarretenbergBackend, ProofData } from '@noir-lang/backend_barretenberg';
 import { Noir } from '@noir-lang/noir_js';
 

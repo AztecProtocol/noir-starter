@@ -6,8 +6,11 @@ import { ToastContainer } from 'react-toastify';
 import Component from './components/index';
 import initNoirC from '@noir-lang/noirc_abi';
 import initACVM from '@noir-lang/acvm_js';
-import { WagmiConfig } from 'wagmi';
 import { config } from './utils/wagmi';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { WagmiProvider } from 'wagmi';
+
+const queryClient = new QueryClient();
 
 const InitWasm = ({ children }) => {
   const [init, setInit] = React.useState(false);
@@ -29,7 +32,11 @@ const InitWasm = ({ children }) => {
 export function Providers({ children }: { children: React.ReactNode }) {
   const [mounted, setMounted] = React.useState(false);
   React.useEffect(() => setMounted(true), []);
-  return <WagmiConfig config={config}>{mounted && children}</WagmiConfig>;
+  return (
+    <WagmiProvider config={config}>
+      <QueryClientProvider client={queryClient}>{mounted && children}</QueryClientProvider>
+    </WagmiProvider>
+  );
 }
 
 ReactDOM.createRoot(document.getElementById('root')!).render(

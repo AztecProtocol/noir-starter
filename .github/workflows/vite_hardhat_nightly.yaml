@@ -48,10 +48,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up yarn
-        uses: ./.github/actions/setup-yarn
-        with:
-          project: vite-hardhat
+      - name: Set up bun
+        uses: oven-sh/setup-bun@v1
 
       - name: Set up nargo
         uses: ./.github/actions/setup-nargo
@@ -77,18 +75,17 @@ jobs:
 
       - name: Install test version
         run: |
-          yarn add \
+          bun i \
           @noir-lang/noir_js@${{ matrix.version }} \
           @noir-lang/backend_barretenberg@${{ matrix.version }} \
           @noir-lang/noir_wasm@${{ matrix.version }} \
           @noir-lang/types@${{ matrix.version }}
 
-      - name: Generate verifier contract
-        run: yarn prep
+      - name: Compile and generate verifier contract
+        run: bun prep
 
       - name: Run test
-        run: yarn test
-        id: yarn_test
+        run: bun test
 
       - name: Send GitHub Action trigger data to Slack workflow - Stable
         uses: slackapi/slack-github-action@v1.24.0

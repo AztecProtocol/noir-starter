@@ -23,30 +23,19 @@ jobs:
           STABLE=$(echo $output | jq -r '.stable')
           echo "::set-output name=stable::$STABLE"
 
-      - name: Set up yarn
-        uses: ./.github/actions/setup-yarn
-        with:
-          project: vite-hardhat
+      - name: Set up bun
+        uses: oven-sh/setup-bun@v1
 
       - name: Set up nargo
         uses: ./.github/actions/setup-nargo
         with:
           version: ${{ steps.versions_step.outputs.stable }}
 
-      - name: Enable Corepack before setting up Node
-        run: corepack enable
+      - name: Install dependencies
+        run: bun install
 
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20.10.0
-          cache: 'yarn'
+      - name: Compile and generate contract
+        run: bun prep
 
-      - name: Install
-        run: yarn --immutable
-        shell: bash
-
-      - name: Generate verifier contract
-        run: yarn prep
-
-      - name: Run test
-        run: yarn test
+      - name: Run tests
+        run: bun test

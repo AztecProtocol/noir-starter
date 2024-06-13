@@ -1,19 +1,22 @@
 import { ProofData } from '@noir-lang/types';
-import { useAccount, useConnect, useContractRead } from 'wagmi';
-import { config, contractCallConfig } from '../utils/wagmi.jsx';
+import { useAccount, useConnect, useDisconnect, useReadContract } from 'wagmi';
+import { contractCallConfig } from '../utils/wagmi.jsx';
 import { bytesToHex } from 'viem';
 import { useEffect, useState } from 'react';
 import { Id, toast } from 'react-toastify';
 
 export function useOnChainVerification(proofData?: ProofData) {
   const { connect, connectors } = useConnect();
+  const { disconnect } = useDisconnect();
   const { isConnected } = useAccount();
   const [args, setArgs] = useState<[string, string[]] | undefined>();
 
-  const { data, error } = useContractRead({
+  const { data, error } = useReadContract({
     ...contractCallConfig,
     args,
-    enabled: !!args,
+    query: {
+      enabled: !!args,
+    },
   });
 
   const [onChainToast, setOnChainToast] = useState<Id>(0);
@@ -27,13 +30,7 @@ export function useOnChainVerification(proofData?: ProofData) {
 
     if (!onChainToast)
       setOnChainToast(toast.loading('Verifying proof on-chain', { autoClose: 10000 }));
-  }, [proofData]);
-
-  useEffect(() => {
-    if (!isConnected) {
-      connectors.map(c => c.ready && connect({ connector: c }));
-    }
-  }, [isConnected]);
+  }, [isConnected, proofData]);
 
   useEffect(() => {
     if (data) {
@@ -51,4 +48,23 @@ export function useOnChainVerification(proofData?: ProofData) {
       console.error(error);
     }
   }, [data, error]);
+
+  if (!isConnected) {
+    return (
+      <div style={{ padding: '20px 0' }}>
+        <button
+          key={connectors[0].uid}
+          onClick={() => connect({ connector: connectors[0], chainId: contractCallConfig.chainId })}
+        >
+          Connect wallet
+        </button>
+      </div>
+    );
+  } else {
+    return (
+      <div style={{ padding: '20px 0' }}>
+        <button onClick={() => disconnect()}>Disconnect</button>
+      </div>
+    );
+  }
 }
