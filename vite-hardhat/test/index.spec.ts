@@ -4,9 +4,9 @@ import { Noir } from '@noir-lang/noir_js';
 import { BarretenbergBackend } from '@noir-lang/backend_barretenberg';
 
 import { ProofData } from '@noir-lang/types';
-import circuit from '../artifacts/circuit.json' assert { type: 'json' };
 import { exec } from 'shelljs';
 import { ChildProcess } from 'child_process';
+import { readFileSync } from 'fs';
 
 describe('It compiles noir program code, receiving circuit bytes and abi object.', () => {
   let node: ChildProcess;
@@ -14,9 +14,12 @@ describe('It compiles noir program code, receiving circuit bytes and abi object.
   let correctProof: ProofData;
 
   beforeAll(async () => {
-    node = exec('bun hh node', { async: true });
+    node = exec('npx hardhat node', { async: true });
     exec('bun hh compile');
     exec('bun hh deploy');
+
+    const circuitFile = readFileSync('artifacts/circuit.json', 'utf-8');
+    const circuit = JSON.parse(circuitFile);
 
     // @ts-ignore
     const backend = new BarretenbergBackend(circuit);
