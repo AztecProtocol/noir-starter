@@ -81,9 +81,6 @@ jobs:
           @noir-lang/noir_wasm@${{ matrix.version }} \
           @noir-lang/types@${{ matrix.version }}
 
-      - name: Compile and generate verifier contract
-        run: bun prep
-
       - name: Run test
         run: bun test
 

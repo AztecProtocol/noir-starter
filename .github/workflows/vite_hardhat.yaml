@@ -34,8 +34,5 @@ jobs:
       - name: Install dependencies
         run: bun install
 
-      - name: Compile and generate contract
-        run: bun prep
-
       - name: Run tests
         run: bun test
