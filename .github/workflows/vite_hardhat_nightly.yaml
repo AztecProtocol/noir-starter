@@ -6,6 +6,9 @@ on:
   schedule:
     # Run a nightly release at 2 AM UTC
     - cron: '0 2 * * *'
+  pull_request:
+    paths:
+      - 'vite-hardhat/**'
 
 jobs:
   vite-hardhat-setup:
@@ -51,11 +54,6 @@ jobs:
       - name: Set up bun
         uses: oven-sh/setup-bun@v1
 
-      - name: Set up nargo
-        uses: ./.github/actions/setup-nargo
-        with:
-          version: ${{ matrix.version }}
-
       - name: Get stability
         id: get-stability
         env:
@@ -73,6 +71,9 @@ jobs:
           echo "Is stable: $IS_STABLE"
           echo "::set-output name=is_stable::$IS_STABLE"
 
+      - name: Install dependencies
+        run: bun install
+
       - name: Install test version
         run: |
           bun i \
@@ -81,7 +82,7 @@ jobs:
           @noir-lang/noir_wasm@${{ matrix.version }} \
           @noir-lang/types@${{ matrix.version }}
 
-      - name: Run test
+      - name: Run tests
         run: bun test
 
       - name: Send GitHub Action trigger data to Slack workflow - Stable

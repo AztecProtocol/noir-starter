@@ -1,11 +1,13 @@
 import { expect } from 'chai';
-
-import { Noir } from '@noir-lang/noir_js';
 import { BarretenbergBackend } from '@noir-lang/backend_barretenberg';
+import { Noir } from '@noir-lang/noir_js';
 
 import { ProofData } from '@noir-lang/types';
 import { readFileSync } from 'fs';
 import { resolve } from 'path';
+import shelljs from 'shelljs';
+
+shelljs.exec('npx hardhat compile');
 
 describe('It compiles noir program code, receiving circuit bytes and abi object.', () => {
   let noir: Noir;

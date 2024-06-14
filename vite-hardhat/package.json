@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "type": "module",
   "description": "A template repository to get started with writing zero knowledge programs with Noir.",
-  "bin": {
+  "scripts": {
     "test": "test/test.sh"
   },
   "dependencies": {

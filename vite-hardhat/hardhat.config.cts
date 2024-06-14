@@ -102,7 +102,7 @@ task('dev', 'Starts the vite server')
   });
 
 task('build', 'Builds the frontend project').setAction(async (_, hre) => {
-  await hre.run('compile');
+  await hre.run('prep');
   exec('vite build');
 });
 
