@@ -22,22 +22,30 @@ In the meantime, follow these simple steps to work on your own machine:
 2. Install dependencies:
 
    ```bash
-   bun i
+   bun i # "npm i" or "yarn"
    ```
 
-3. Run a local ethereum node:
+3. Run the app with a development node
 
    ```bash
-   bun node
+   bunx hardhat dev node # "npx hardhat dev node" or "yarn hardhat dev node
    ```
 
-4. Run the app:
+### Local development
 
-   ```bash
-   bun dev
-   ```
+You can run a separate node from the dev environment:
 
-### Test locally
+```bash
+bunx hardhat node
+```
+
+and run the dev environment separately:
+
+```bash
+bunx hardhat dev
+```
+
+### Testing
 
 You can run the [example test file](./test/index.test.ts) with
 
@@ -45,36 +53,43 @@ You can run the [example test file](./test/index.test.ts) with
 bun test
 ```
 
-This test starts a local ethereum node and shows the basic usage of Noir in a TypeScript Node.js environment.
+This test shows the basic usage of Noir in a TypeScript Node.js environment.
 
 ### Testnets
 
-The default scripting targets a local environment run with `hardhat`. For convenience, we added some configurations for deployment on various testnets. You can find them in `hardhat.config.cts`.
-
-To deploy on these testnets, rename `.env.example` to `.env` and add your own [alchemy](https://www.alchemy.com/) keys for these networks.
-
-Then, prepend your commands with your desired network in a `NETWORK` environment variable. For example, to deploy on sepolia:
+The default scripting targets a local environment run with `hardhat`. For convenience, we added some configurations for deployment on various testnets. You can see the existing list by running:
 
 ```bash
-NETWORK=sepolia bun dev
+bunx hardhat vars setup
+```
+
+If you want to deploy on any of them, just pass in a private key, for example for the holesky network:
+
+```bash
+bunx hardhat vars set holesky <your_testnet_private_key> 
+```
+
+You can then deploy on that network by passing the `--network` flag:
+
+```bash
+bunx hardhat dev --network holesky
 ```
 
 Feel free to add more networks, just make sure you:
 
-- Add deployer private keys and alchemy API keys in `.env`
-- Have funds in these accounts
-- Add a configuration in `hardhat.config.cts`
+- Have (testnet) funds in these accounts
+- Add their configuration in the `networks` property in `hardhat.config.cts`
 
 ### Deployment
 
 As you may have guessed, this example runs completely on the client side as a static website. To build it, run:
 
 ```bash
-bun build # add NETWORK=<your network> if you want to
+bunx hardhat build # add --network <your network> if you want to
 ```
 
 You can then preview the final page with:
 
 ```bash
-bun serve
+bunx hardhat serve
 ```

@@ -1,6 +1,6 @@
 import { http, createConfig } from 'wagmi';
 import { scrollSepolia, holesky, hardhat } from 'wagmi/chains';
-import { chainId, verifier } from '../artifacts/deployment.json';
+import { chainId, address, abi } from '../artifacts/deployment.json';
 
 import { injected } from 'wagmi/connectors';
 
@@ -15,8 +15,8 @@ export const config = createConfig({
 });
 
 export const contractCallConfig = {
-  address: verifier.address as `0x${string}`,
-  abi: verifier.abi,
-  chainId: chainId,
+  address: address as `0x${string}`,
+  abi,
+  chainId,
   functionName: 'verify',
 };

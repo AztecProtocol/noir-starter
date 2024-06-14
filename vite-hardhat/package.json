@@ -4,12 +4,7 @@
   "type": "module",
   "description": "A template repository to get started with writing zero knowledge programs with Noir.",
   "scripts": {
-    "node": "bunx hardhat node",
-    "prep": "bun hh compile && bun hh deploy",
-    "dev": "bun run prep && vite",
-    "build": "bun run prep && vite build",
-    "serve": "vite preview",
-    "hh": "./hardhat.sh --network ${NETWORK:-localhost}"
+    "test": "NODE_OPTIONS='--experimental-loader ts-node/esm/transpile-only' hardhat test"
   },
   "dependencies": {
     "@noir-lang/backend_barretenberg": "^0.30.0",
