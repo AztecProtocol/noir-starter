@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "type": "module",
   "description": "A template repository to get started with writing zero knowledge programs with Noir.",
-  "scripts": {
-    "test": "NODE_OPTIONS='--experimental-loader ts-node/esm/transpile-only' hardhat test"
+  "bin": {
+    "test": "test/test.sh"
   },
   "dependencies": {
     "@noir-lang/backend_barretenberg": "^0.30.0",
