@@ -25,7 +25,7 @@ In the meantime, follow these simple steps to work on your own machine:
    bun i # "npm i" or "yarn"
    ```
 
-3. Run the app with a development node
+3. Run the app with a development Ethereum node
 
    ```bash
    bunx hardhat dev node # "npx hardhat dev node" or "yarn hardhat dev node
@@ -33,7 +33,7 @@ In the meantime, follow these simple steps to work on your own machine:
 
 ### Local development
 
-You can run a separate node from the dev environment:
+You can run a separate Ethereum node from the dev environment:
 
 ```bash
 bunx hardhat node
