@@ -39,6 +39,7 @@
     "@types/react": "^18.0.26",
     "@types/shelljs": "^0.8.7",
     "@vitejs/plugin-react-swc": "^3.5.0",
+    "@wagmi/cli": "^2.1.10",
     "chai": "^4.2.0",
     "hardhat-gas-reporter": "^1.0.9",
     "solidity-coverage": "^0.8.5",

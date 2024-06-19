@@ -1,18 +1,19 @@
 import { ProofData } from '@noir-lang/types';
-import { useAccount, useConnect, useDisconnect, useReadContract } from 'wagmi';
-import { contractCallConfig } from '../utils/wagmi.jsx';
+import { useAccount, useConnect, useDisconnect, useSwitchChain } from 'wagmi';
 import { bytesToHex } from 'viem';
 import { useEffect, useState } from 'react';
 import { Id, toast } from 'react-toastify';
+import { ultraVerifierAddress, useReadUltraVerifierVerify } from '../artifacts/generated.js';
+import deployment from '../artifacts/deployment.json';
 
 export function useOnChainVerification(proofData?: ProofData) {
   const { connect, connectors } = useConnect();
   const { disconnect } = useDisconnect();
   const { isConnected } = useAccount();
-  const [args, setArgs] = useState<[string, string[]] | undefined>();
+  const [args, setArgs] = useState<[`0x${string}`, `0x${string}`[]] | undefined>();
 
-  const { data, error } = useReadContract({
-    ...contractCallConfig,
+  const { chains, switchChain } = useSwitchChain();
+  const { data, error } = useReadUltraVerifierVerify({
     args,
     query: {
       enabled: !!args,
@@ -22,11 +23,12 @@ export function useOnChainVerification(proofData?: ProofData) {
   const [onChainToast, setOnChainToast] = useState<Id>(0);
 
   useEffect(() => {
+    switchChain({ chainId: chains[0].id });
     if (!proofData || !isConnected) {
       return;
     }
 
-    setArgs([bytesToHex(proofData.proof), proofData.publicInputs]);
+    setArgs([bytesToHex(proofData.proof), proofData.publicInputs as `0x${string}`[]]);
 
     if (!onChainToast)
       setOnChainToast(toast.loading('Verifying proof on-chain', { autoClose: 10000 }));
@@ -54,7 +56,9 @@ export function useOnChainVerification(proofData?: ProofData) {
       <div style={{ padding: '20px 0' }}>
         <button
           key={connectors[0].uid}
-          onClick={() => connect({ connector: connectors[0], chainId: contractCallConfig.chainId })}
+          onClick={() =>
+            connect({ connector: connectors[0], chainId: deployment.networkConfig.id })
+          }
         >
           Connect wallet
         </button>

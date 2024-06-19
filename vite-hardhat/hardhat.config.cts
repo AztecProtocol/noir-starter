@@ -14,6 +14,7 @@ import { Barretenberg, RawBuffer, Crs } from '@aztec/bb.js';
 import { createFileManager, compile } from '@noir-lang/noir_wasm';
 import { CompiledCircuit } from '@noir-lang/types';
 import { exec } from 'shelljs';
+import { Chain } from 'viem';
 
 subtask(TASK_COMPILE_SOLIDITY).setAction(async (_, { config }, runSuper) => {
   const superRes = await runSuper();
@@ -70,44 +71,65 @@ task('compile', 'Compile and generate circuits and contracts').setAction(
   },
 );
 
-task('deploy', 'Deploys the verifier contract').setAction(async (taskArguments, hre) => {
-  const publicClient = await hre.viem.getPublicClient();
+task('deploy', 'Deploys the verifier contract')
+  .addOptionalParam('attach', 'Attach to an existing address', '', types.string)
+  .setAction(async ({ attach }, hre) => {
+    let verifier;
+    if (attach) {
+      verifier = await hre.viem.getContractAt('UltraVerifier', attach);
+    } else {
+      verifier = await hre.viem.deployContract('UltraVerifier');
+    }
 
-  // Deploy the verifier contract
-  const verifier = await hre.viem.deployContract('UltraVerifier');
+    const networkConfig = (await import(`viem/chains`))[hre.network.name] as Chain;
+    console.log(networkConfig);
+    const config = {
+      name: hre.network.name,
+      address: verifier.address,
+      networkConfig: {
+        ...networkConfig,
+        id: hre.network.config.chainId || networkConfig.id,
+      },
+    };
 
-  // Create a config object
-  const config = {
-    chainId: publicClient.chain.id,
-    address: verifier.address,
-    abi: verifier.abi,
-  };
-
-  // Print the config
-  console.log('Deployed at', config.address);
-  writeFileSync('artifacts/deployment.json', JSON.stringify(config), { flag: 'w' });
-});
-
-task('prep', 'Compiles and deploys the verifier contract').setAction(async (_, hre) => {
-  await hre.run('compile');
-  await hre.run('deploy');
-});
-
-task('dev', 'Starts the vite server')
-  .addOptionalPositionalParam('node', 'Also start a development node', '', types.string)
-  .setAction(async ({ node }, hre) => {
-    if (node) hre.run('node');
-    await hre.run('prep');
-    exec('vite');
+    console.log(
+      `Attached to address ${verifier.address} at network ${hre.network.name} with chainId ${config.networkConfig.id}...`,
+    );
+    writeFileSync('artifacts/deployment.json', JSON.stringify(config), { flag: 'w' });
   });
 
-task('build', 'Builds the frontend project').setAction(async (_, hre) => {
-  await hre.run('prep');
-  exec('vite build');
+subtask('generateHooks', 'Generates hooks for the verifier contract').setAction(async (_, hre) => {
+  exec('wagmi generate');
 });
 
+subtask('prep', 'Compiles and deploys the verifier contract')
+  .addParam('attach', 'Attach to an already deployed contract', '', types.string)
+  .setAction(async ({ attach }, hre) => {
+    console.log('Preparing...');
+    console.log('Compiling circuits and generating contracts...');
+
+    await hre.run('compile');
+    await hre.run('deploy', { attach });
+
+    console.log('Generating hooks...');
+    await hre.run('generateHooks');
+  });
+
+task('dev', 'Deploys and starts in a development environment')
+  .addOptionalParam('attach', 'Attach to an existing address', '', types.string)
+  .setAction(async ({ attach }, hre) => {
+    await hre.run('prep', { attach });
+    exec('vite dev');
+  });
+
+task('build', 'Builds the frontend project')
+  .addOptionalParam('attach', 'Attach to an existing address', '', types.string)
+  .setAction(async ({ attach }, hre) => {
+    await hre.run('prep', { attach });
+    exec('vite build');
+  });
+
 task('serve', 'Serves the frontend project').setAction(async (_, hre) => {
-  await hre.run('build');
   exec('vite preview');
 });
 
@@ -122,14 +144,22 @@ const config: HardhatUserConfig = {
   networks: {
     localhost: {
       url: 'http://127.0.0.1:8545',
+      chainId: 31337,
+      accounts: vars.has('localhost')
+        ? [vars.get('localhost')]
+        : ['0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80'],
     },
     scrollSepolia: {
       url: 'https://sepolia-rpc.scroll.io',
       accounts: vars.has('scroll_sepolia') ? [vars.get('scroll_sepolia')] : [],
     },
     holesky: {
-      url: 'https://sepolia-rpc.scroll.io',
+      url: 'https://holesky.drpc.org',
       accounts: vars.has('holesky') ? [vars.get('holesky')] : [],
+    },
+    bsc: {
+      url: 'https://bsc-dataseed.bnbchain.org',
+      accounts: vars.has('bsc') ? [vars.get('bsc')] : [],
     },
   },
   paths: {
