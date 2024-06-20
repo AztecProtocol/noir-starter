@@ -161,6 +161,10 @@ const config: HardhatUserConfig = {
       url: 'https://bsc-dataseed.bnbchain.org',
       accounts: vars.has('bsc') ? [vars.get('bsc')] : [],
     },
+    blast: {
+      url: 'https://rpc.envelop.is/blast',
+      accounts: vars.has('blast') ? [vars.get('blast')] : [],
+    },
   },
   paths: {
     root: './',
