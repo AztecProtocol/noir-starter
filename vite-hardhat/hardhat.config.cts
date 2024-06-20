@@ -151,19 +151,11 @@ const config: HardhatUserConfig = {
     },
     scrollSepolia: {
       url: 'https://sepolia-rpc.scroll.io',
-      accounts: vars.has('scroll_sepolia') ? [vars.get('scroll_sepolia')] : [],
+      accounts: vars.has('scrollSepolia') ? [vars.get('scrollSepolia')] : [],
     },
     holesky: {
       url: 'https://holesky.drpc.org',
       accounts: vars.has('holesky') ? [vars.get('holesky')] : [],
-    },
-    bsc: {
-      url: 'https://bsc-dataseed.bnbchain.org',
-      accounts: vars.has('bsc') ? [vars.get('bsc')] : [],
-    },
-    blast: {
-      url: 'https://rpc.envelop.is/blast',
-      accounts: vars.has('blast') ? [vars.get('blast')] : [],
     },
   },
   paths: {

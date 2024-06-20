@@ -47,7 +47,7 @@ export function useOnChainVerification(proofData?: ProofData) {
         render: 'Error verifying proof on-chain!',
         isLoading: false,
       });
-      console.error(error);
+      console.error(error.message);
     }
   }, [data, error]);
 
