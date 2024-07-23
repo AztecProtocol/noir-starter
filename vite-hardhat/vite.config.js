@@ -11,4 +11,7 @@ export default defineConfig({
     target: 'esnext',
   },
   plugins: [react()],
+  server: {
+    port: 1337,
+  },
 });

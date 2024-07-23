@@ -1,38 +1,24 @@
 import { expect } from 'chai';
-import hre from 'hardhat';
-
-import { Noir } from '@noir-lang/noir_js';
 import { BarretenbergBackend } from '@noir-lang/backend_barretenberg';
+import { Noir } from '@noir-lang/noir_js';
 
-import { compile, createFileManager } from '@noir-lang/noir_wasm';
-import { CompiledCircuit, ProofData } from '@noir-lang/types';
-import { join, resolve } from 'path';
+import { ProofData } from '@noir-lang/types';
+import { readFileSync } from 'fs';
+import { resolve } from 'path';
+import shelljs from 'shelljs';
 
-async function getCircuit() {
-  const basePath = resolve(join('./circuit'));
-  const fm = createFileManager(basePath);
-  const result = await compile(fm);
-  if (!('program' in result)) {
-    throw new Error('Compilation failed');
-  }
-  return result.program as CompiledCircuit;
-}
+shelljs.exec('npx hardhat compile');
 
 describe('It compiles noir program code, receiving circuit bytes and abi object.', () => {
   let noir: Noir;
   let correctProof: ProofData;
 
-  before(async () => {
-    const compiled = await getCircuit();
-    const verifierContract = await hre.viem.deployContract('UltraVerifier');
+  beforeEach(async () => {
+    const circuitFile = readFileSync(resolve('artifacts/circuit.json'), 'utf-8');
+    const circuit = JSON.parse(circuitFile);
 
-    const verifierAddr = verifierContract.address;
-    console.log(`Verifier deployed to ${verifierAddr}`);
-
-    // @ts-ignore
-    const backend = new BarretenbergBackend(compiled);
-    // @ts-ignore
-    noir = new Noir(compiled, backend);
+    const backend = new BarretenbergBackend(circuit);
+    noir = new Noir(circuit, backend);
   });
 
   it('Should generate valid proof for correct input', async () => {
@@ -52,7 +38,7 @@ describe('It compiles noir program code, receiving circuit bytes and abi object.
       const input = { x: 1, y: 1 };
       const incorrectProof = await noir.generateProof(input);
     } catch (err) {
-      // TODO(Ze): Not sure how detailed we want this test to be
+      // TODO(Ze): Not sure how detailed we want this it to be
       expect(err instanceof Error).to.be.true;
       const error = err as Error;
       expect(error.message).to.contain('Cannot satisfy constraint');

@@ -6,6 +6,9 @@ on:
   schedule:
     # Run a nightly release at 2 AM UTC
     - cron: '0 2 * * *'
+  pull_request:
+    paths:
+      - 'vite-hardhat/**'
 
 jobs:
   vite-hardhat-setup:
@@ -48,15 +51,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up yarn
-        uses: ./.github/actions/setup-yarn
-        with:
-          project: vite-hardhat
-
-      - name: Set up nargo
-        uses: ./.github/actions/setup-nargo
-        with:
-          version: ${{ matrix.version }}
+      - name: Set up bun
+        uses: oven-sh/setup-bun@v1
 
       - name: Get stability
         id: get-stability
@@ -75,20 +71,19 @@ jobs:
           echo "Is stable: $IS_STABLE"
           echo "::set-output name=is_stable::$IS_STABLE"
 
+      - name: Install dependencies
+        run: bun install
+
       - name: Install test version
         run: |
-          yarn add \
+          bun i \
           @noir-lang/noir_js@${{ matrix.version }} \
           @noir-lang/backend_barretenberg@${{ matrix.version }} \
           @noir-lang/noir_wasm@${{ matrix.version }} \
           @noir-lang/types@${{ matrix.version }}
 
-      - name: Generate verifier contract
-        run: yarn prep
-
-      - name: Run test
-        run: yarn test
-        id: yarn_test
+      - name: Run tests
+        run: bun test
 
       - name: Send GitHub Action trigger data to Slack workflow - Stable
         uses: slackapi/slack-github-action@v1.24.0
