@@ -7,10 +7,10 @@
     "test": "test/test.sh"
   },
   "dependencies": {
-    "@noir-lang/backend_barretenberg": "^0.30.0",
-    "@noir-lang/noir_js": "^0.30.0",
-    "@noir-lang/noir_wasm": "^0.30.0",
-    "@noir-lang/types": "^0.30.0",
+    "@noir-lang/backend_barretenberg": "^0.31.0",
+    "@noir-lang/noir_js": "^0.31.0",
+    "@noir-lang/noir_wasm": "^0.31.0",
+    "@noir-lang/types": "^0.31.0",
     "@nomicfoundation/hardhat-ignition": "^0.15.5",
     "@nomicfoundation/hardhat-ignition-viem": "^0.15.5",
     "@tanstack/query-sync-storage-persister": "5.0.5",

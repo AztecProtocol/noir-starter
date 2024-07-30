@@ -6,11 +6,15 @@ import { toast } from 'react-toastify';
 import { BarretenbergBackend } from '@noir-lang/backend_barretenberg';
 import { Noir } from '@noir-lang/noir_js';
 
-export function useOffChainVerification(noir?: Noir, proofData?: ProofData) {
+export function useOffChainVerification(
+  backend: BarretenbergBackend,
+  noir?: Noir,
+  proofData?: ProofData,
+) {
   useEffect(() => {
     if (!proofData || !noir) return;
 
-    toast.promise(noir.verifyProof(proofData), {
+    toast.promise(backend.verifyProof(proofData), {
       pending: 'Verifying proof off-chain',
       success: 'Proof verified off-chain',
       error: 'Error verifying proof off-chain',
