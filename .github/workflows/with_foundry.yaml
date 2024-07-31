@@ -34,7 +34,7 @@ jobs:
       - name: Install bb
         run: |
           curl -L https://raw.githubusercontent.com/AztecProtocol/aztec-packages/master/barretenberg/cpp/installation/install | bash
-          source ~/.bashrc
+          source /home/runner/.bashrc
           bbup
 
       - name: Generate verifier contract
