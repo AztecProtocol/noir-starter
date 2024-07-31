@@ -33,9 +33,7 @@ jobs:
 
       - name: Install bb
         run: |
-          curl -L
-          https://raw.githubusercontent.com/AztecProtocol/aztec-packages/master/barretenberg/cpp/installation/install
-          | bash
+          curl -L https://raw.githubusercontent.com/AztecProtocol/aztec-packages/master/barretenberg/cpp/installation/install | bash
           source ~/.bashrc
           bbup
 
