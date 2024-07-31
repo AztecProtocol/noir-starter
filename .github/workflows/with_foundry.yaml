@@ -45,7 +45,7 @@ jobs:
 
       - name: Generate verifier contract
         run: |
-          source /home/runnner/.bashrc
+          source /home/runner/.bashrc
           nargo compile && bb write_vk -b ./target/with_foundry.json && bb contract
         working-directory: with-foundry/circuits
 
