@@ -40,6 +40,7 @@ jobs:
         run: |
           source /home/runner/.bashrc
           cat /home/runner/.bashrc
+          ls -a /home/runner/.bb
           bb --version  # or any other bbup command you want to run
         shell: bash
 
