@@ -35,7 +35,14 @@ jobs:
         run: |
           curl -L https://raw.githubusercontent.com/AztecProtocol/aztec-packages/master/barretenberg/cpp/installation/install | bash
           export PATH=$PATH:~/.bb/bb
+          source /home/runner/.bashrc
           bbup
+
+      - name: Debug
+        run: |
+          echo $PATH
+          which bbup
+          ls -l /path/to/bbup/directory
 
       - name: Generate verifier contract
         run: |
