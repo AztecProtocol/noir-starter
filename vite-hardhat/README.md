@@ -13,7 +13,8 @@ Want to get started in a pinch? Start your project in a free Github Codespace!
 
 ## Locally
 
-1. Install your favorite package manager. We'll use [bun](https://bun.sh/docs/installation) but feel free to use `yarn` or others:
+1. Install your favorite package manager. We'll use [bun](https://bun.sh/docs/installation) but feel
+   free to use `yarn` or others:
 
    ```bash
    curl -fsSL https://bun.sh/install | bash
@@ -25,13 +26,7 @@ Want to get started in a pinch? Start your project in a free Github Codespace!
    bun i # "npm i" or "yarn"
    ```
 
-3. Run a development Ethereum node
-
-   ```bash
-   bunx hardhat node # "npx hardhat dev node" or "yarn hardhat dev node"
-   ```
-
-4. Run the app
+3. Run the app
 
 You can run a separate Ethereum node from the dev environment:
 
@@ -55,21 +50,23 @@ bun test
 
 This test shows the basic usage of Noir in a TypeScript Node.js environment.
 
-> [!NOTE]
-> The test is a script, not an executable (we're running `bun test` or `yarn test` instead of `bunx` or `npx`). This is because the test runs its own network and executables.
+> [!NOTE] The test is a script, not an executable (we're running `bun test` or `yarn test` instead
+> of `bunx` or `npx`). This is because the test runs its own network and executables.
 
 ### Deploying on other networks
 
-The default scripting targets a local environment. For convenience, we added some configurations for deployment on various other networks. You can see the existing list by running:
+The default scripting targets a local environment. For convenience, we added some configurations for
+deployment on various other networks. You can see the existing list by running:
 
 ```bash
 bunx hardhat vars setup
 ```
 
-If you want to deploy on any of them, just pass in a private key, for example for the holesky network:
+If you want to deploy on any of them, just pass in a private key, for example for the holesky
+network:
 
 ```bash
-bunx hardhat vars set holesky <your_testnet_private_key> 
+bunx hardhat vars set holesky <your_testnet_private_key>
 ```
 
 You can then run all the commands using that network by passing the `--network` flag. For example:
@@ -80,7 +77,8 @@ bunx hardhat deploy --network holesky # deploys on holesky
 bunx hardhat build --network holesky # builds the frontend with the holesky target
 ```
 
-Feel free to add more networks, as long as they're supported by `wagmi` ([list here](https://wagmi.sh/react/api/chains#available-chains)). Just make sure you:
+Feel free to add more networks, as long as they're supported by `wagmi`
+([list here](https://wagmi.sh/react/api/chains#available-chains)). Just make sure you:
 
 - Have funds in these accounts
 - Add their configuration in the `networks` property in `hardhat.config.cts`
@@ -88,7 +86,8 @@ Feel free to add more networks, as long as they're supported by `wagmi` ([list h
 
 #### Attaching to an existing contract
 
-You probably don't want to redeploy everytime you build your project. To attach the build to an already deployed contract, pass the `--attach` flag:
+You probably don't want to redeploy everytime you build your project. To attach the build to an
+already deployed contract, pass the `--attach` flag:
 
 ```bash
 bunx hardhat deploy --network mainnet # deploys on ethereum mainnet $$$$$!

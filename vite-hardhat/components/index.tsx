@@ -7,8 +7,8 @@ import { useOffChainVerification } from '../hooks/useOffChainVerification.jsx';
 
 function Component() {
   const [input, setInput] = useState<{ x: string; y: string } | undefined>();
-  const { noir, proofData } = useProofGeneration(input);
-  useOffChainVerification(noir, proofData);
+  const { noir, proofData, backend } = useProofGeneration(input);
+  useOffChainVerification(backend!, noir, proofData);
   const verifyButton = useOnChainVerification(proofData);
 
   const submit = (e: React.FormEvent<HTMLFormElement>) => {
