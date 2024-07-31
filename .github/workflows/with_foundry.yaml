@@ -40,7 +40,7 @@ jobs:
         run: |
           source /home/runner/.bashrc
           ls -a /home/runner/.bb
-          export PATH=$PATH:~/.bb
+          export PATH=$PATH:/home/runner/.bb
           echo $PATH
           bbup
           ls -a /home/runner/.bb
