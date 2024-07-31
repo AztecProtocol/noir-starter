@@ -41,6 +41,7 @@ jobs:
           export PATH=$PATH:/home/runner/.bb
           bbup -v 0.41.0
           bb --version  # or any other bbup command you want to run
+          which bb
         shell: bash
 
       - name: Generate verifier contract
