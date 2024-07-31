@@ -36,7 +36,7 @@ jobs:
           curl -L https://raw.githubusercontent.com/AztecProtocol/aztec-packages/master/barretenberg/cpp/installation/install | bash
         shell: bash
 
-      - name: Source bashrc and use bbup
+      - name: Use bbup
         run: |
           export PATH=$PATH:/home/runner/.bb
           bbup -v 0.41.0
