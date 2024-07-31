@@ -121,28 +121,13 @@ contract StarterTest is Test {
     }
 
     // Utility function, because the proof file includes the public inputs at the beginning
-    function sliceAfter64Bytes(bytes memory _bytes) internal pure returns (bytes memory) {
-        require(_bytes.length > 64, "Input must be longer than 64 bytes");
-        
-        uint256 remainingLength = _bytes.length - 64;
-        bytes memory result = new bytes(remainingLength);
-        
-        assembly {
-            // Copy remaining bytes
-            let resultPtr := add(result, 32) // skipping the length field
-            let sourcePtr := add(_bytes, 96) // 32 (length field) + 64 (bytes to skip)
-            for { let i := 0 } lt(i, remainingLength) { i := add(i, 32) } {
-                mstore(add(resultPtr, i), mload(add(sourcePtr, i)))
-            }
-            
-            // Handle the last chunk if remaining length is not a multiple of 32
-            let lastChunk := and(remainingLength, 0x1f) // remainingLength % 32
-            if gt(lastChunk, 0) {
-                let mask := not(sub(exp(256, sub(32, lastChunk)), 1))
-                mstore(add(resultPtr, remainingLength), and(mload(add(sourcePtr, remainingLength)), mask))
-            }
+    function sliceAfter64Bytes(bytes memory data) internal pure returns (bytes memory) {
+        uint256 length = data.length - 64;
+        bytes memory result = new bytes(data.length - 64);
+        for (uint i = 0; i < length; i++) {
+            result[i] = data[i + 64];
         }
-        
         return result;
     }
+   
 }
