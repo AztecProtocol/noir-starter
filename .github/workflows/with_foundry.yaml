@@ -53,6 +53,7 @@ jobs:
       - name: Generate proof
         run: |
           export PATH=$PATH:/home/runner/.bb
+          nargo exectue witness
           bb prove -b ./target/with_foundry.json -w ./target/witness.gz -o ./target/with_foundry.proof
         working-directory: with-foundry/circuits
 
