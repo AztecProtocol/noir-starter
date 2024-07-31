@@ -42,7 +42,7 @@ curl -L https://foundry.paradigm.xyz | bash
    then
 
    ```bash
-   bbup -v 0.46.1 # compatible with nargo 0.31.0
+   bbup -v 0.41.0 # compatible with nargo 0.31.0
    ```
 
 ## Generate verifier contract and proof
