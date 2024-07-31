@@ -39,7 +39,7 @@ jobs:
       - name: Source bashrc and use bbup
         run: |
           source ~/.bashrc
-          bbup --version  # or any other bbup command you want to run
+          bb --version  # or any other bbup command you want to run
         shell: bash
 
       - name: Debug
