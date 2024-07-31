@@ -52,12 +52,12 @@ jobs:
 
       - name: Generate proof
         run: |
-          source /home/runner/.bashrc
+          export PATH=$PATH:/home/runner/.bb
           nargo execute witness
           bb prove -b ./target/with_foundry.json -w ./target/witness.gz -o ./target/with_foundry.proof
         working-directory: with-foundry/circuits
 
       - name: Test with Foundry
         run: |
-          source /home/runner/.bashrc
+          export PATH=$PATH:/home/runner/.bb
           forge test --optimize --optimizer-runs 5000 --evm-version london
