@@ -31,14 +31,27 @@ jobs:
       - name: Set up foundry
         uses: ./.github/actions/setup-foundry
 
+      - name: Install bb
+        run: |
+          curl -L https://raw.githubusercontent.com/AztecProtocol/aztec-packages/master/barretenberg/cpp/installation/install | bash
+          echo "PATH=$PATH:/home/runner/.bb" >> $GITHUB_ENV
+        shell: bash
+
+      - name: Use bbup
+        run: |
+          bbup -v 0.41.0
+          bb --version  # or any other bbup command you want to run
+        shell: bash
+
       - name: Generate verifier contract
         run: |
-          nargo codegen-verifier
+          nargo compile && bb write_vk -b ./target/with_foundry.json && bb contract
         working-directory: with-foundry/circuits
 
       - name: Generate proof
         run: |
-          nargo prove
+          nargo execute witness
+          bb prove -b ./target/with_foundry.json -w ./target/witness.gz -o ./target/with_foundry.proof
         working-directory: with-foundry/circuits
 
       - name: Test with Foundry
