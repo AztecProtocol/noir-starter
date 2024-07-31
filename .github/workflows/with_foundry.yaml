@@ -40,19 +40,12 @@ jobs:
         run: |
           source /home/runner/.bashrc
           ls -a /home/runner/.bb
+          export PATH=$PATH:~/.bb
+          echo $PATH
           bbup
           ls -a /home/runner/.bb
           bb --version  # or any other bbup command you want to run
         shell: bash
-
-      - name: Debug
-        run: |
-          echo $PATH
-          which bbup
-          ls -l ~/.bb
-          export PATH=$PATH:~/.bb/bb
-          source /home/runner/.bashrc
-          bbup
 
       - name: Generate verifier contract
         run: |
