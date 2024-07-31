@@ -38,12 +38,8 @@ jobs:
 
       - name: Source bashrc and use bbup
         run: |
-          source /home/runner/.bashrc
-          ls -a /home/runner/.bb
           export PATH=$PATH:/home/runner/.bb
-          echo $PATH
-          bbup
-          ls -a /home/runner/.bb
+          bbup -v 0.41.0
           bb --version  # or any other bbup command you want to run
         shell: bash
 
