@@ -22,18 +22,17 @@ contract StarterTest is Test {
         wrong[0] = bytes32(0x0000000000000000000000000000000000000000000000000000000000000004);
     }
 
-    function testVerifyProof() public {
-        string memory proof = vm.readLine("./circuits/target/with_foundry.proof");
-        console.log("proof: ", proof);
-        bytes memory proofBytes = vm.parseBytes(proof);
-        starter.verifyEqual(proofBytes, correct);
+    function testVerifyProof() public view {
+        bytes memory proof_w_inputs = vm.readFileBinary("./circuits/target/with_foundry.proof");
+        bytes memory last = sliceAfter64Bytes(proof_w_inputs);
+        starter.verifyEqual(last, correct);
     }
 
     function test_wrongProof() public {
         vm.expectRevert();
-        string memory proof = vm.readLine("./circuits/target/with_foundry.proof");
-        bytes memory proofBytes = vm.parseBytes(proof);
-        starter.verifyEqual(proofBytes, wrong);
+        bytes memory proof_w_inputs = vm.readFileBinary("./circuits/target/with_foundry.proof");
+        bytes memory proof = sliceAfter64Bytes(proof_w_inputs);
+        starter.verifyEqual(proof, wrong);
     }
 
     function test_dynamicProof() public {
@@ -49,46 +48,49 @@ contract StarterTest is Test {
         dynamicCorrect[0] = bytes32(0x0000000000000000000000000000000000000000000000000000000000000005);
         dynamicCorrect[1] = dynamicCorrect[0];
         bytes memory proofBytes = generateDynamicProof("test1", _fieldNames, _fieldValues);
-        starter.verifyEqual(proofBytes, dynamicCorrect);
+        bytes memory proof = sliceAfter64Bytes(proofBytes);
+        starter.verifyEqual(proof, dynamicCorrect);
     }
 
-    // function test_dynamicProofSecondTest() public {
-    //     string[] memory _fieldNames = new string[](2);
-    //     string[] memory _fieldValues = new string[](2);
+    function test_dynamicProofSecondTest() public {
+        string[] memory _fieldNames = new string[](2);
+        string[] memory _fieldValues = new string[](2);
 
-    //     _fieldNames[0] = "x";
-    //     _fieldNames[1] = "y";
-    //     _fieldValues[0] = "8";
-    //     _fieldValues[1] = "8";
+        _fieldNames[0] = "x";
+        _fieldNames[1] = "y";
+        _fieldValues[0] = "8";
+        _fieldValues[1] = "8";
 
-    //     // Set expected dynamic proof outcome
-    //     dynamicCorrect[0] = bytes32(0x0000000000000000000000000000000000000000000000000000000000000008);
-    //     dynamicCorrect[1] = dynamicCorrect[0];
-    //     bytes memory proofBytes = generateDynamicProof("test2", _fieldNames, _fieldValues);
-    //     starter.verifyEqual(proofBytes, dynamicCorrect);
-    // }
+        // Set expected dynamic proof outcome
+        dynamicCorrect[0] = bytes32(0x0000000000000000000000000000000000000000000000000000000000000008);
+        dynamicCorrect[1] = dynamicCorrect[0];
+        bytes memory proofBytes = generateDynamicProof("test2", _fieldNames, _fieldValues);
+        bytes memory proof = sliceAfter64Bytes(proofBytes);
+        starter.verifyEqual(proof, dynamicCorrect);
+    }
 
-    // function test_dynamicProofThirdTest() public {
-    //     string[] memory _fieldNames = new string[](2);
-    //     string[] memory _fieldValues = new string[](2);
+    function test_dynamicProofThirdTest() public {
+        string[] memory _fieldNames = new string[](2);
+        string[] memory _fieldValues = new string[](2);
 
-    //     _fieldNames[0] = "x";
-    //     _fieldNames[1] = "y";
-    //     _fieldValues[0] = "7";
-    //     _fieldValues[1] = "7";
+        _fieldNames[0] = "x";
+        _fieldNames[1] = "y";
+        _fieldValues[0] = "7";
+        _fieldValues[1] = "7";
 
-    //     // Set expected dynamic proof outcome
-    //     dynamicCorrect[0] = bytes32(0x0000000000000000000000000000000000000000000000000000000000000007);
-    //     dynamicCorrect[1] = dynamicCorrect[0];
-    //     bytes memory proofBytes = generateDynamicProof("test3", _fieldNames, _fieldValues);
-    //     starter.verifyEqual(proofBytes, dynamicCorrect);
-    // }
+        // Set expected dynamic proof outcome
+        dynamicCorrect[0] = bytes32(0x0000000000000000000000000000000000000000000000000000000000000007);
+        dynamicCorrect[1] = dynamicCorrect[0];
+        bytes memory proofBytes = generateDynamicProof("test3", _fieldNames, _fieldValues);
+        bytes memory proof = sliceAfter64Bytes(proofBytes);
+        starter.verifyEqual(proof, dynamicCorrect);
+    }
 
-    // /// @dev This function generates dynamic proofs using 2 scripts in the /script directory
-    // ///
-    // /// @param _testName a random string to identify the test by, this is used to create a unique folder name in the /tmp directory
-    // /// @param _fields The field names within the Prover.toml file
-    // /// @param _fieldValues The field values associated with fields names within the Prover.toml file
+    /// @dev This function generates dynamic proofs using 2 scripts in the /script directory
+    ///
+    /// @param _testName a random string to identify the test by, this is used to create a unique folder name in the /tmp directory
+    /// @param _fields The field names within the Prover.toml file
+    /// @param _fieldValues The field values associated with fields names within the Prover.toml file
     function generateDynamicProof(string memory _testName, string[] memory _fields, string[] memory _fieldValues)
         public
         returns (bytes memory)
@@ -114,7 +116,33 @@ contract StarterTest is Test {
         ffi_command[1] = _testName;
         bytes memory commandResponse = vm.ffi(ffi_command);
         console.log(string(commandResponse));
-        string memory _newProof = vm.readLine(string.concat("/tmp/", _testName, "/target/with_foundry.proof"));
-        return vm.parseBytes(_newProof);
+        bytes memory _newProof = vm.readFileBinary(string.concat("/tmp/", _testName, "/target/with_foundry.proof"));
+        return _newProof;
+    }
+
+    // Utility function, because the proof file includes the public inputs at the beginning
+    function sliceAfter64Bytes(bytes memory _bytes) internal pure returns (bytes memory) {
+        require(_bytes.length > 64, "Input must be longer than 64 bytes");
+        
+        uint256 remainingLength = _bytes.length - 64;
+        bytes memory result = new bytes(remainingLength);
+        
+        assembly {
+            // Copy remaining bytes
+            let resultPtr := add(result, 32) // skipping the length field
+            let sourcePtr := add(_bytes, 96) // 32 (length field) + 64 (bytes to skip)
+            for { let i := 0 } lt(i, remainingLength) { i := add(i, 32) } {
+                mstore(add(resultPtr, i), mload(add(sourcePtr, i)))
+            }
+            
+            // Handle the last chunk if remaining length is not a multiple of 32
+            let lastChunk := and(remainingLength, 0x1f) // remainingLength % 32
+            if gt(lastChunk, 0) {
+                let mask := not(sub(exp(256, sub(32, lastChunk)), 1))
+                mstore(add(resultPtr, remainingLength), and(mload(add(sourcePtr, remainingLength)), mask))
+            }
+        }
+        
+        return result;
     }
 }
