@@ -46,12 +46,13 @@ jobs:
 
       - name: Generate verifier contract
         run: |
-          source /home/runner/.bashrc
+          export PATH=$PATH:/home/runner/.bb
           nargo compile && bb write_vk -b ./target/with_foundry.json && bb contract
         working-directory: with-foundry/circuits
 
       - name: Generate proof
         run: |
+          export PATH=$PATH:/home/runner/.bb
           bb prove -b ./target/with_foundry.json -w ./target/witness.gz -o ./target/with_foundry.proof
         working-directory: with-foundry/circuits
 
