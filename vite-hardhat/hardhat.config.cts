@@ -42,7 +42,7 @@ export async function generateArtifacts(path = './circuit', crsPath = './crs') {
   const circuit = await compileCircuit(path);
   const decompressed = gunzipSync(Buffer.from(circuit.bytecode, 'base64'));
   const api = await Barretenberg.new({ threads: 8 });
-  const [exact, total, subgroup] = await api.acirGetCircuitSizes(decompressed);
+  const [exact, total, subgroup] = await api.acirGetCircuitSizes(decompressed, false);
   const subgroupSize = Math.pow(2, Math.ceil(Math.log2(total)));
 
   const crs = await Crs.new(subgroupSize + 1, crsPath);
