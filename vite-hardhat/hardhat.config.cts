@@ -61,15 +61,15 @@ export async function generateArtifacts(path = './circuit', crsPath = './crs') {
   return { circuit, contract };
 }
 
-task('compile', 'Compile and generate circuits and contracts').setAction(
-  async (_, __, runSuper) => {
-    const { circuit, contract } = await generateArtifacts();
-    mkdirSync('artifacts', { recursive: true });
-    writeFileSync('artifacts/circuit.json', JSON.stringify(circuit), { flag: 'w' });
-    writeFileSync('artifacts/contract.sol', contract, { flag: 'w' });
-    await runSuper();
-  },
-);
+// task('compile', 'Compile and generate circuits and contracts').setAction(
+//   async (_, __, runSuper) => {
+//     const { circuit, contract } = await generateArtifacts();
+//     mkdirSync('artifacts', { recursive: true });
+//     writeFileSync('artifacts/circuit.json', JSON.stringify(circuit), { flag: 'w' });
+//     writeFileSync('artifacts/contract.sol', contract, { flag: 'w' });
+//     await runSuper();
+//   },
+// );
 
 task('deploy', 'Deploys the verifier contract')
   .addOptionalParam('attach', 'Attach to an existing address', '', types.string)
