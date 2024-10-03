@@ -1,0 +1,36 @@
+name: Nightly Noirenberg drift test
+
+on:
+  # Giving ourselves a way to trigger this manually
+  workflow_dispatch:
+  schedule:
+    # Run a nightly release at 2 AM UTC
+    - cron: '0 2 * * *'
+  pull_request:
+
+jobs:
+  test-noirenberg-setup:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run noirenberg install script
+        run: |
+          curl -L noiren.be | bash
+
+      - name: Get latest stable version of Noir
+        id: get-stable
+        run: |
+          VERSIONS_MAP=$(node ./.github/scripts/latest.js)
+          echo "Versions out of script: $VERSIONS_MAP"
+
+          STABLE=$(echo "$VERSIONS_MAP" | jq -c '.[]')
+          echo "::set-output name=stable::$STABLE"
+
+      - name: Install noir and barretenberg versions
+        run: |
+          noirenberg -v ${{ steps.get-stable.outputs.stable }}
+
+      - name: Check noir and barretenberg versions
+        run: |
+          echo "Noir version: $(noir --version)"
+          echo "Barretenberg version: $(bb --version)"
