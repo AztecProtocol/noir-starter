@@ -38,7 +38,7 @@ jobs:
           [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 
           echo "$PATH"
-          ls /usr/local/bin
+          cat /home/runner/.bashrc
           noirenberg
           which noirenberg
 
