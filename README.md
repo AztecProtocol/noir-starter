@@ -1,18 +1,24 @@
-# Noir Starters
+![noirenberg](./.github/noirenberg.webp)
 
-This is a reference repo to help you get started with writing zero-knowledge circuits with [Noir](https://noir-lang.org/).
+# Noirenberg
+
+Noirenberg is a CLI tool that helps you get started with Noir and Barretenberg. It provides a simple interface to install Noir and Barretenberg, and to create new Noir projects.
 
 Each project is an example you can use as template. Feel free to mix them in order to find the best combination of technology that suits your needs.
 
 ## Getting started
 
-If you have [node](https://nodejs.org/en/download) installed, just open a terminal and run:
+Run:
 
 ```bash
-npx create-noir
+curl -L noiren.be | bash
 ```
 
+This will install Noirenberg globally on your system. You can now use the `noirenberg` command to install Noir and Barretenberg.
+
 ### Templates
+
+Run `noirenberg new` to create a new Noir project. You can choose between two templates:
 
 - Foundry: [`./with-foundry`](./with-foundry)
 - Vite + Hardhat: [`./vite-hardhat`](./vite-hardhat)
