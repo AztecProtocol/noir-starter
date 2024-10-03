@@ -13,22 +13,31 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
+      # - name: Set up bun
+      #   uses: oven-sh/setup-bun@v1
+
+      # - name: Get latest stable version of Noir
+      #   id: get-stable
+      #   run: |
+      #     VERSIONS_MAP=$(node ./.github/scripts/latest.js)
+      #     echo "Versions out of script: $VERSIONS_MAP"
+
+      #     STABLE=$(echo "$VERSIONS_MAP" | jq -c '.[]')
+      #     echo "::set-output name=stable::$STABLE"
+
+      - name: Set up path
+        run: |
+          echo "${HOME}/.nargo/bin" >> $GITHUB_PATH
+          echo "${HOME}/.bb/bin" >> $GITHUB_PATH
+
       - name: Run noirenberg install script
         run: |
           curl -L noiren.be | bash
-
-      - name: Get latest stable version of Noir
-        id: get-stable
-        run: |
-          VERSIONS_MAP=$(node ./.github/scripts/latest.js)
-          echo "Versions out of script: $VERSIONS_MAP"
-
-          STABLE=$(echo "$VERSIONS_MAP" | jq -c '.[]')
-          echo "::set-output name=stable::$STABLE"
-
-      - name: Install noir and barretenberg versions
-        run: |
-          noirenberg -v ${{ steps.get-stable.outputs.stable }}
+          export NVM_DIR="$HOME/.nvm"
+          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+          noirenberg
+          which noirenberg
 
       - name: Check noir and barretenberg versions
         run: |

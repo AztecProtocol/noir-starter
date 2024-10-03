@@ -1,0 +1,10 @@
+.vscode
+.DS_Store
+
+node_modules
+bun.lockb
+
+.github
+.devcontainer
+npx.ts
+bin/*.ts

@@ -6,13 +6,11 @@ export function sourceShellConfig() {
   const shell = execSync('echo $SHELL', { encoding: 'utf-8' }).trim();
 
   if (shell.includes('bash')) {
-    execSync('source ~/.bashrc', { stdio: 'inherit' });
+    process.env.PATH = execSync('echo $PATH', { encoding: 'utf-8' }).trim();
   } else if (shell.includes('zsh')) {
-    execSync(`zsh -c "source ~/.zshrc"`, { stdio: 'inherit' });
+    process.env.PATH = execSync('zsh -c "echo $PATH"', { encoding: 'utf-8' }).trim();
   } else if (shell.includes('fish')) {
-    execSync(`fish -c "source ~/.config/fish/config.fish"`, { stdio: 'inherit' });
-  } else {
-    throw new Error('Unsupported shell environment');
+    process.env.PATH = execSync('fish -c "echo $PATH"', { encoding: 'utf-8' }).trim();
   }
 }
 

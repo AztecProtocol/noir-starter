@@ -1,6 +1,6 @@
 {
   "name": "noirenberg",
-  "version": "0.1.1",
+  "version": "0.1.5",
   "type": "module",
   "description": "This repo contains starter projects using Noir and Barretenberg, together with a CLI tool to help you get started.",
   "bin": "npx.js",
