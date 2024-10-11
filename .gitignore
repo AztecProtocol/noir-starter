@@ -6,5 +6,3 @@ package-lock.json
 
 # To use with nektos/act
 .github/event.json
-npx.js
-bin/*.js
