@@ -15,7 +15,7 @@ describe('It compiles noir program code, receiving circuit bytes and abi object.
   let correctProof: ProofData;
 
   beforeEach(async () => {
-    const circuitFile = readFileSync(resolve('artifacts/circuit.json'), 'utf-8');
+    const circuitFile = readFileSync(resolve('circuit/target/noirstarter.json'), 'utf-8');
     const circuit = JSON.parse(circuitFile);
 
     backend = new UltraHonkBackend(circuit);

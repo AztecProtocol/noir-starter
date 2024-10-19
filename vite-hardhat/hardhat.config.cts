@@ -8,9 +8,9 @@ import { subtask, vars } from 'hardhat/config';
 import { TASK_COMPILE_SOLIDITY } from 'hardhat/builtin-tasks/task-names';
 import { join, resolve } from 'path';
 import { writeFile } from 'fs/promises';
-import { mkdirSync, writeFileSync } from 'fs';
-import { gunzipSync } from 'zlib';
-import { Barretenberg, RawBuffer, Crs } from '@aztec/bb.js';
+import { mkdirSync, readFileSync, writeFileSync } from 'fs';
+import { decompressSync } from 'fflate';
+import { UltraHonkBackend, RawBuffer, Crs } from '@aztec/bb.js';
 import { createFileManager, compile } from '@noir-lang/noir_wasm';
 import { CompiledCircuit } from '@noir-lang/types';
 import { exec } from 'shelljs';
@@ -28,45 +28,32 @@ subtask(TASK_COMPILE_SOLIDITY).setAction(async (_, { config }, runSuper) => {
   return superRes;
 });
 
-export async function compileCircuit(path = './circuit') {
-  const basePath = resolve(join(path));
-  const fm = createFileManager(basePath);
-  const result = await compile(fm);
-  if (!('program' in result)) {
-    throw new Error('Compilation failed');
-  }
-  return result.program as CompiledCircuit;
-}
+// export async function compileCircuit(path = './circuit') {
+//   const basePath = resolve(join(path));
+//   const fm = createFileManager(basePath);
+//   const result = await compile(fm);
+//   if (!('program' in result)) {
+//     throw new Error('Compilation failed');
+//   }
+//   return result as CompiledCircuit;
+// }
 
 export async function generateArtifacts(path = './circuit', crsPath = './crs') {
-  const circuit = await compileCircuit(path);
-  const decompressed = gunzipSync(Buffer.from(circuit.bytecode, 'base64'));
-  const api = await Barretenberg.new({ threads: 8 });
-  const [exact, total, subgroup] = await api.acirGetCircuitSizes(decompressed, false);
-  const subgroupSize = Math.pow(2, Math.ceil(Math.log2(total)));
+  // const circuit = await compileCircuit(path);
 
-  const crs = await Crs.new(subgroupSize + 1, crsPath);
-  await api.commonInitSlabAllocator(subgroupSize);
-  await api.srsInitSrs(
-    new RawBuffer(crs.getG1Data()),
-    crs.numPoints,
-    new RawBuffer(crs.getG2Data()),
-  );
-
-  const acirComposer = await api.acirNewAcirComposer(subgroupSize);
-  await api.acirInitProvingKey(acirComposer, decompressed);
-  await api.acirInitVerificationKey(acirComposer);
-
-  const contract = await api.acirGetSolidityVerifier(acirComposer);
-  return { circuit, contract };
+  const circuitFile = readFileSync(resolve('artifacts/circuit.json'), 'utf-8');
+  const circuit = JSON.parse(circuitFile);
+  const backend = new UltraHonkBackend(circuit);
+  // const contract = await backend.acirGetSolidityVerifier(acirComposer);
+  return { circuit };
 }
 
 task('compile', 'Compile and generate circuits and contracts').setAction(
   async (_, __, runSuper) => {
-    const { circuit, contract } = await generateArtifacts();
+    const { circuit } = await generateArtifacts();
     mkdirSync('artifacts', { recursive: true });
     writeFileSync('artifacts/circuit.json', JSON.stringify(circuit), { flag: 'w' });
-    writeFileSync('artifacts/contract.sol', contract, { flag: 'w' });
+    // writeFileSync('artifacts/contract.sol', contract, { flag: 'w' });
     await runSuper();
   },
 );
