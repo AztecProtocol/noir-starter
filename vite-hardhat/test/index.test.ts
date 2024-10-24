@@ -1,8 +1,9 @@
 import { expect } from 'chai';
-import { BarretenbergBackend } from '@noir-lang/backend_barretenberg';
+// import { BarretenbergBackend } from '@noir-lang/backend_barretenberg';
+import { UltraHonkBackend } from '@aztec/bb.js';
 import { Noir } from '@noir-lang/noir_js';
 
-import { ProofData } from '@noir-lang/types';
+import { CompiledCircuit, ProofData } from '@noir-lang/types';
 import { readFileSync } from 'fs';
 import { resolve } from 'path';
 import shelljs from 'shelljs';
@@ -11,14 +12,14 @@ shelljs.exec('npx hardhat compile');
 
 describe('It compiles noir program code, receiving circuit bytes and abi object.', () => {
   let noir: Noir;
-  let backend: BarretenbergBackend;
+  let backend: UltraHonkBackend;
   let correctProof: ProofData;
 
   beforeEach(async () => {
     const circuitFile = readFileSync(resolve('artifacts/circuit.json'), 'utf-8');
-    const circuit = JSON.parse(circuitFile);
+    const circuit = JSON.parse(circuitFile) as CompiledCircuit;
 
-    backend = new BarretenbergBackend(circuit);
+    backend = new UltraHonkBackend(circuit.bytecode);
     noir = new Noir(circuit);
   });
 
