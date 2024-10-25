@@ -4,10 +4,11 @@
   "type": "module",
   "description": "A template repository to get started with writing zero knowledge programs with Noir.",
   "scripts": {
-    "test": "test/test.sh"
+    "deploy": "bunx hardhat deploy",
+    "dev": "vite dev"
   },
   "dependencies": {
-    "@aztec/bb.js": "0.60.0",
+    "@noir-lang/backend_barretenberg": "0.36.0",
     "@noir-lang/noir_js": "0.36.0",
     "@noir-lang/noir_wasm": "0.36.0",
     "@noir-lang/types": "0.36.0",
@@ -19,6 +20,7 @@
     "commander": "^12.1.0",
     "dotenv": "^16.0.3",
     "hardhat": "^2.19.2",
+    "hardhat-plugin-noir": "^0.1.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-toastify": "^9.1.1",
@@ -51,6 +53,6 @@
     "vite": "^5.0.6"
   },
   "engines": {
-    "node": "^20.10.0"
+    "node": ">=18.19.0"
   }
 }

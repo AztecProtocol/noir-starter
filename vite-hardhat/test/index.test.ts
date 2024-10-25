@@ -1,51 +1,54 @@
-import { expect } from 'chai';
-// import { BarretenbergBackend } from '@noir-lang/backend_barretenberg';
-import { UltraHonkBackend } from '@aztec/bb.js';
+import { expect, beforeAll, describe, test } from 'bun:test';
 import { Noir } from '@noir-lang/noir_js';
-
-import { CompiledCircuit, ProofData } from '@noir-lang/types';
-import { readFileSync } from 'fs';
-import { resolve } from 'path';
-import shelljs from 'shelljs';
-
-shelljs.exec('npx hardhat compile');
+import { ProofData } from '@noir-lang/types';
+import hre from 'hardhat';
+import { BarretenbergBackend } from '@noir-lang/backend_barretenberg';
+import { bytesToHex } from 'viem';
+import { execSync } from 'child_process';
 
 describe('It compiles noir program code, receiving circuit bytes and abi object.', () => {
-  let noir: Noir;
-  let backend: UltraHonkBackend;
   let correctProof: ProofData;
+  let noir: Noir;
+  let backend: BarretenbergBackend;
+  hre.run('node');
 
-  beforeEach(async () => {
-    const circuitFile = readFileSync(resolve('artifacts/circuit.json'), 'utf-8');
-    const circuit = JSON.parse(circuitFile) as CompiledCircuit;
-
-    backend = new UltraHonkBackend(circuit.bytecode);
-    noir = new Noir(circuit);
+  beforeAll(async () => {
+    ({ noir, backend } = await hre.noir.getCircuit('noirstarter'));
+    execSync('npx hardhat compile');
   });
 
-  it('Should generate valid proof for correct input', async () => {
+  test('Should generate valid proof for correct input', async () => {
     const input = { x: 1, y: 2 };
     // Generate proof
     const { witness } = await noir.execute(input);
     correctProof = await backend.generateProof(witness);
-    expect(correctProof.proof instanceof Uint8Array).to.be.true;
+    expect(correctProof.proof instanceof Uint8Array).toBeTrue;
   });
 
-  it('Should verify valid proof for correct input', async () => {
+  test('Should verify valid proof for correct input', async () => {
     const verification = await backend.verifyProof(correctProof);
-    expect(verification).to.be.true;
+    expect(verification).toBeTrue;
   });
 
-  it('Should fail to generate valid proof for incorrect input', async () => {
+  test('Should verify valid proof for correct input on a smart contract', async () => {
+    const verifier = await hre.viem.deployContract('UltraVerifier');
+    const res = await verifier.read.verify([
+      bytesToHex(correctProof.proof),
+      correctProof.publicInputs as `0x${string}`[],
+    ]);
+    expect(res).toBeTrue;
+  });
+
+  test('Should fail to generate valid proof for incorrect input', async () => {
     try {
       const input = { x: 1, y: 1 };
       const { witness } = await noir.execute(input);
       const incorrectProof = await backend.generateProof(witness);
     } catch (err) {
       // TODO(Ze): Not sure how detailed we want this it to be
-      expect(err instanceof Error).to.be.true;
+      expect(err instanceof Error).toBeTrue;
       const error = err as Error;
-      expect(error.message).to.contain('Cannot satisfy constraint');
+      expect(error.message).toContain('Cannot satisfy constraint');
     }
   });
 });

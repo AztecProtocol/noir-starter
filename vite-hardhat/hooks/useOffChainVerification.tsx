@@ -3,15 +3,10 @@
 import { ProofData } from '@noir-lang/types';
 import { useEffect } from 'react';
 import { toast } from 'react-toastify';
-// import { BarretenbergBackend } from '@noir-lang/backend_barretenberg';
-import { UltraHonkBackend } from '@aztec/bb.js';
+import { BarretenbergBackend } from '@noir-lang/backend_barretenberg';
 import { Noir } from '@noir-lang/noir_js';
 
-export function useOffChainVerification(
-  backend: UltraHonkBackend,
-  noir?: Noir,
-  proofData?: ProofData,
-) {
+export function useOffChainVerification(backend: BarretenbergBackend, noir?: Noir, proofData?: ProofData) {
   useEffect(() => {
     if (!proofData || !noir) return;
 
