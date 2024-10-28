@@ -29,8 +29,5 @@ jobs:
       - name: Install dependencies
         run: bun install
 
-      - name: Compile
-        run: bunx hardhat compile
-
       - name: Run tests
         run: bun test

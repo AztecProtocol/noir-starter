@@ -55,8 +55,7 @@ const config: HardhatUserConfig = {
     version: '0.36.0',
   },
   paths: {
-    noir: 'circuit',
-    sources: 'circuit/target',
+    root: 'packages',
   },
 };
 

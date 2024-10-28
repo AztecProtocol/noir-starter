@@ -82,9 +82,6 @@ jobs:
           @noir-lang/noir_wasm@${{ matrix.version }} \
           @noir-lang/types@${{ matrix.version }}
 
-      - name: Compile
-        run: bunx hardhat compile
-
       - name: Run tests
         run: bun test
 

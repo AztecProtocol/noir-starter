@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import React from 'react';
 
-import { useOnChainVerification } from '../hooks/useOnChainVerification.jsx';
-import { useProofGeneration } from '../hooks/useProofGeneration.jsx';
-import { useOffChainVerification } from '../hooks/useOffChainVerification.jsx';
+import { useOnChainVerification } from '../hooks/useOnChainVerification.js';
+import { useProofGeneration } from '../hooks/useProofGeneration.js';
+import { useOffChainVerification } from '../hooks/useOffChainVerification.js';
 
 function Component() {
   const [input, setInput] = useState<{ x: string; y: string } | undefined>();

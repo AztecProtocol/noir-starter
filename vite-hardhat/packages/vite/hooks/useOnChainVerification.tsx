@@ -1,10 +1,11 @@
+import React from 'react';
 import { ProofData } from '@noir-lang/types';
 import { useAccount, useConnect, useDisconnect, useSwitchChain } from 'wagmi';
 import { bytesToHex } from 'viem';
 import { useEffect, useState } from 'react';
 import { Id, toast } from 'react-toastify';
 import { useReadUltraVerifierVerify } from '../artifacts/generated.js';
-import deployment from '../deployment.json';
+import deployment from '../../../deployment.json';
 
 export function useOnChainVerification(proofData?: ProofData) {
   const { connect, connectors } = useConnect();

@@ -1,5 +1,5 @@
 {
-  "name": "noirenberg",
+  "name": "noir-starter",
   "version": "0.1.1",
   "type": "module",
   "description": "This repo contains starter projects using Noir and Barretenberg, together with a CLI tool to help you get started.",
