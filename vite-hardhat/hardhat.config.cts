@@ -56,6 +56,7 @@ const config: HardhatUserConfig = {
   },
   paths: {
     root: 'packages',
+    tests: 'tests',
   },
 };
 
