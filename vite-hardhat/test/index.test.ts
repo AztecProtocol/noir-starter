@@ -1,24 +1,25 @@
 import { expect } from 'chai';
-import { BarretenbergBackend } from '@noir-lang/backend_barretenberg';
 import { Noir } from '@noir-lang/noir_js';
+import { UltraPlonkBackend } from '@aztec/bb.js';
 
 import { ProofData } from '@noir-lang/types';
 import { readFileSync } from 'fs';
 import { resolve } from 'path';
 import shelljs from 'shelljs';
 
+
 shelljs.exec('npx hardhat compile');
 
 describe('It compiles noir program code, receiving circuit bytes and abi object.', () => {
   let noir: Noir;
-  let backend: BarretenbergBackend;
+  let backend: UltraPlonkBackend;
   let correctProof: ProofData;
 
   beforeEach(async () => {
     const circuitFile = readFileSync(resolve('artifacts/circuit.json'), 'utf-8');
     const circuit = JSON.parse(circuitFile);
 
-    backend = new BarretenbergBackend(circuit);
+    backend = new UltraPlonkBackend(circuit.bytecode);
     noir = new Noir(circuit);
   });
 
