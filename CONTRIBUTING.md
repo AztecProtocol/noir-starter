@@ -18,4 +18,4 @@ If you want to contribute with unique ideas, check out Awesome Noir to see what'
 - A Svelte example
 - A server-side-rendered Go or Python app
 
-Basically anything that combines different technologies would be adding a lot to the ecosystem. If you'd like to discuss further, please message @signorecello or @critesjosh!
+Basically anything that combines different technologies would be adding a lot to the ecosystem. If you'd like to discuss further, please message [@signorecello](https://github.com/signorecello) or [@critesjosh](https://github.com/critesjosh)!
