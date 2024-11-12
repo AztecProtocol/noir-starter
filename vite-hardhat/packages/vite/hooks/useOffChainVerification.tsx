@@ -14,7 +14,7 @@ export function useOffChainVerification(
   useEffect(() => {
     if (!proofData || !noir) return;
 
-    toast.promise(backend.verifyProof(proofData.proof), {
+    toast.promise(backend.verifyProof(proofData), {
       pending: 'Verifying proof off-chain',
       success: 'Proof verified off-chain',
       error: 'Error verifying proof off-chain',
