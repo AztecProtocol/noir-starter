@@ -1,8 +1,9 @@
 import { toast } from 'react-toastify';
 import { useEffect, useState } from 'react';
-import { getCircuit } from '../circuit/compile.js';
-import { UltraPlonkBackend, ProofData } from '@aztec/bb.js';
+import { getCircuit } from '../../noir/compile.js';
+import { UltraPlonkBackend } from '@aztec/bb.js';
 import { Noir } from '@noir-lang/noir_js';
+import { ProofData } from '@noir-lang/types';
 
 export function useProofGeneration(inputs?: { [key: string]: string }) {
   const [proofData, setProofData] = useState<ProofData | undefined>();

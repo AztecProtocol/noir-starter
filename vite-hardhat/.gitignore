@@ -56,3 +56,4 @@ artifacts
 
 circuit/target/
 dist
+deployment.json
