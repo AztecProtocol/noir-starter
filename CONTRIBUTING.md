@@ -5,7 +5,7 @@ When contributing to this repository, please first discuss the change you wish t
 ## Contributing to an existing example project
 
 If you would like to contribute to an existing example project, please open an issue and tag one of the original
-authors or maintainers (@critesjosh, @signorecello) with your suggestion.
+authors or maintainers ([@critesjosh](https://github.com/critesjosh), [@signorecello](https://github.com/signorecello)) with your suggestion.
 
 ## Adding a new example project
 
@@ -18,4 +18,4 @@ If you want to contribute with unique ideas, check out Awesome Noir to see what'
 - A Svelte example
 - A server-side-rendered Go or Python app
 
-Basically anything that combines different technologies would be adding a lot to the ecosystem. If you'd like to discuss further, please message @signorecello or @critesjosh!
+Basically anything that combines different technologies would be adding a lot to the ecosystem. If you'd like to discuss further, please message [@signorecello](https://github.com/signorecello) or [@critesjosh](https://github.com/critesjosh)!

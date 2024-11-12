@@ -8,13 +8,20 @@
   "scripts": {
     "deploy": "bunx hardhat compile && bunx hardhat deploy",
     "dev": "bun --filter vite dev",
-    "test:hardhat": "bunx hardhat test"
+    "test:hardhat": "bunx hardhat test",
+    "node": "bunx hardhat node"
   },
   "type": "module",
   "devDependencies": {
     "hardhat-plugin-noir": "0.1.3",
     "@types/bun": "^1.1.12",
-    "hardhat": "^2.19.2",
+    "hardhat": "^2.19.2"
+  },
+  "dependencies": {
+    "@aztec/bb.js": "^0.62.0",
+    "@noir-lang/noir_js": "0.36.0",
+    "@noir-lang/noir_wasm": "0.36.0",
+    "@noir-lang/types": "0.36.0",
     "@nomicfoundation/hardhat-ignition": "^0.15.5",
     "@nomicfoundation/hardhat-ignition-viem": "^0.15.5",
     "commander": "^12.1.0",
