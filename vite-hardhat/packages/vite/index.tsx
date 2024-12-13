@@ -3,38 +3,34 @@ import ReactDOM from 'react-dom/client';
 import './App.css';
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify';
-import Component from './components/index';
+import Component from './components/index.jsx';
 import initNoirC from '@noir-lang/noirc_abi';
 import initACVM from '@noir-lang/acvm_js';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { WagmiProvider, createConfig, http } from 'wagmi';
 import { defineChain, createClient } from 'viem';
 import { injected } from 'wagmi/connectors';
-import { networkConfig } from "./artifacts/deployment.json"
-
+import { networkConfig } from '../../deployment.json';
 
 const queryClient = new QueryClient();
 
 const { id, name, nativeCurrency, rpcUrls } = networkConfig;
 const chain = defineChain({
-    id,
-    name,
-    nativeCurrency,
-    rpcUrls
-})
+  id,
+  name,
+  nativeCurrency,
+  rpcUrls,
+});
 
 const config = createConfig({
-  connectors: [
-    injected()
-  ],
+  connectors: [injected()],
   chains: [chain],
-  client({ chain}) {
-    return createClient({ chain, transport: http() })
-  }
-})
+  client({ chain }) {
+    return createClient({ chain, transport: http() });
+  },
+});
 
-
-const InitWasm = ({ children }) => {
+const InitWasm = ({ children }: any) => {
   const [init, setInit] = React.useState(false);
   useEffect(() => {
     (async () => {

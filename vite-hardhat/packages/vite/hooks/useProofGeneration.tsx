@@ -1,18 +1,21 @@
 import { toast } from 'react-toastify';
 import { useEffect, useState } from 'react';
-import { getCircuit } from '../circuit/compile.js';
-import { BarretenbergBackend, ProofData } from '@noir-lang/backend_barretenberg';
+import { getCircuit } from '../../noir/compile.js';
+import { UltraPlonkBackend } from '@aztec/bb.js';
 import { Noir } from '@noir-lang/noir_js';
+import { ProofData } from '@noir-lang/types';
 
 export function useProofGeneration(inputs?: { [key: string]: string }) {
   const [proofData, setProofData] = useState<ProofData | undefined>();
-  const [backend, setBackend] = useState<BarretenbergBackend>();
+  const [backend, setBackend] = useState<UltraPlonkBackend>();
   const [noir, setNoir] = useState<Noir | undefined>();
 
   const proofGeneration = async () => {
     if (!inputs) return;
     const circuit = await getCircuit();
-    const backend = new BarretenbergBackend(circuit, { threads: navigator.hardwareConcurrency });
+    const backend = new UltraPlonkBackend(circuit.bytecode, {
+      threads: navigator.hardwareConcurrency,
+    });
     const noir = new Noir(circuit);
 
     await toast.promise(noir.init, {
