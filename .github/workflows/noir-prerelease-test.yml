@@ -1,0 +1,28 @@
+name: Test Noir Pre-releases
+
+on:
+  schedule:
+    - cron: '0 0 * * *'  # Runs every day at midnight
+  workflow_dispatch:      # Allows manual triggering
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          
+      - name: Install dependencies
+        run: npm install
+        
+      - name: Run setup script
+        run: |
+          chmod +x ./tools/ci/setup.sh
+          ./tools/ci/setup.sh
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
