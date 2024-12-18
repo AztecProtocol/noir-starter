@@ -1,34 +1,15 @@
 import '@nomicfoundation/hardhat-toolbox-viem';
 import '@nomicfoundation/hardhat-viem';
 import '@nomicfoundation/hardhat-chai-matchers';
-import 'hardhat-plugin-noir';
+import 'hardhat-noirenberg';
 
-import hre, { vars, HardhatUserConfig, task } from 'hardhat/config';
 import { writeFileSync } from 'fs';
 import { Chain } from 'viem';
-
-task('deploy', 'Deploys the verifier contract').setAction(async ({ attach }, hre) => {
-  const verifier = await hre.viem.deployContract('UltraVerifier');
-
-  const networkConfig = (await import(`viem/chains`))[hre.network.name] as Chain;
-  const config = {
-    name: hre.network.name,
-    address: verifier.address,
-    networkConfig: {
-      ...networkConfig,
-      id: hre.network.config.chainId,
-    },
-  };
-
-  console.log(
-    `Attached to address ${verifier.address} at network ${hre.network.name} with chainId ${networkConfig.id}...`,
-  );
-  writeFileSync('deployment.json', JSON.stringify(config), { flag: 'w' });
-});
+import { HardhatUserConfig, task, vars } from 'hardhat/config';
 
 const config: HardhatUserConfig = {
   solidity: {
-    version: '0.8.21',
+    version: '0.8.28',
     settings: {
       optimizer: { enabled: true, runs: 5000 },
     },
@@ -51,13 +32,29 @@ const config: HardhatUserConfig = {
       accounts: vars.has('holesky') ? [vars.get('holesky')] : [],
     },
   },
-  noir: {
-    version: '0.36.0',
-  },
   paths: {
     root: 'packages',
     tests: 'tests',
   },
 };
+
+task('deploy', 'Deploys the verifier contract').setAction(async (taskArgs, hre) => {
+  const verifier = await hre.viem.deployContract('HonkVerifier');
+
+  const networkConfig = (await import(`viem/chains`))[hre.network.name] as Chain;
+  const config = {
+    name: hre.network.name,
+    address: verifier.address,
+    networkConfig: {
+      ...networkConfig,
+      id: hre.network.config.chainId,
+    },
+  };
+
+  console.log(
+    `Attached to address ${verifier.address} at network ${hre.network.name} with chainId ${networkConfig.id}...`,
+  );
+  writeFileSync('deployment.json', JSON.stringify(config), { flag: 'w' });
+});
 
 export default config;

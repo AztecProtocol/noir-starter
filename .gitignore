@@ -6,3 +6,4 @@ package-lock.json
 
 # To use with nektos/act
 .github/event.json
+bun.lockb
