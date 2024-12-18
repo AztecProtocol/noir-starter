@@ -23,7 +23,7 @@ Want to get started in a pinch? Start your project in a free Github Codespace!
 2. Install dependencies:
 
    ```bash
-   bun i # "npm i" or "yarn"
+   bun i
    ```
 
 3. Run a node

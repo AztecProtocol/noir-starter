@@ -35,7 +35,7 @@
     "@types/shelljs": "^0.8.7",
     "hardhat-gas-reporter": "^1.0.9",
     "solidity-coverage": "^0.8.5",
-    "hardhat-noirenberg": "^0.1.4"
+    "hardhat-noirenberg": "^0.1.5"
   },
   "peerDependencies": {
     "typescript": "^5.0.0"
