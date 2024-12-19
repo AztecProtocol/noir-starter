@@ -57,7 +57,7 @@ This test shows the basic usage of Noir in a TypeScript Node.js environment. It 
 If you want to test only `UltraHonk`, you can run:
 
 ```bash
-bun run test UltraHonk
+bun run test:uh
 ```
 
 ### Deploying on other networks
