@@ -83,7 +83,7 @@ jobs:
         run: bunx hardhat compile
 
       - name: Run tests
-        run: bun test
+        run: bun run test
 
       - name: Send GitHub Action trigger data to Slack workflow - Stable
         uses: slackapi/slack-github-action@v1.24.0
