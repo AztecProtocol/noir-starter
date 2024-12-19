@@ -4,7 +4,7 @@ import { useAccount, useConnect, useDisconnect, useSwitchChain } from 'wagmi';
 import { bytesToHex } from 'viem';
 import { useEffect, useState } from 'react';
 import { Id, toast } from 'react-toastify';
-import { useReadHonkVerifierVerify } from '../artifacts/generated.js';
+import { useReadUltraVerifierVerify } from '../artifacts/generated.js';
 import deployment from '../../../deployment.json';
 
 export function useOnChainVerification(proofData?: ProofData) {
@@ -14,7 +14,7 @@ export function useOnChainVerification(proofData?: ProofData) {
   const [args, setArgs] = useState<[`0x${string}`, `0x${string}`[]] | undefined>();
 
   const { chains, switchChain } = useSwitchChain();
-  const { data, error } = useReadHonkVerifierVerify({
+  const { data, error } = useReadUltraVerifierVerify({
     args,
     query: {
       enabled: !!args,

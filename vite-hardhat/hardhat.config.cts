@@ -5,7 +5,10 @@ import 'hardhat-noirenberg';
 
 import { writeFileSync } from 'fs';
 import { Chain } from 'viem';
-import { HardhatUserConfig, task, vars } from 'hardhat/config';
+import { task, vars } from 'hardhat/config';
+import { HardhatUserConfig } from 'hardhat/types/config';
+import fs from 'fs';
+import { resolve } from 'path';
 
 const config: HardhatUserConfig = {
   solidity: {
@@ -38,23 +41,36 @@ const config: HardhatUserConfig = {
   },
 };
 
-task('deploy', 'Deploys the verifier contract').setAction(async (taskArgs, hre) => {
-  const verifier = await hre.viem.deployContract('HonkVerifier');
+task('deploy', 'Deploys a verifier contract')
+  .addOptionalPositionalParam('provingSystem')
+  .setAction(async (taskArgs, hre) => {
+    const contractsDir = resolve('packages', 'contracts');
+    if (fs.existsSync(contractsDir)) fs.rmdirSync(contractsDir, { recursive: true });
 
-  const networkConfig = (await import(`viem/chains`))[hre.network.name] as Chain;
-  const config = {
-    name: hre.network.name,
-    address: verifier.address,
-    networkConfig: {
-      ...networkConfig,
-      id: hre.network.config.chainId,
-    },
-  };
+    hre.config.noirenberg = { provingSystem: taskArgs.provingSystem || 'UltraPlonk' };
+    await hre.run('compile');
 
-  console.log(
-    `Attached to address ${verifier.address} at network ${hre.network.name} with chainId ${networkConfig.id}...`,
-  );
-  writeFileSync('deployment.json', JSON.stringify(config), { flag: 'w' });
-});
+    let verifier;
+    if (taskArgs.provingSystem === 'UltraHonk') {
+      verifier = await hre.viem.deployContract('HonkVerifier');
+    } else {
+      verifier = await hre.viem.deployContract('UltraVerifier');
+    }
+
+    const networkConfig = (await import(`viem/chains`))[hre.network.name] as Chain;
+    const config = {
+      name: hre.network.name,
+      address: verifier.address,
+      networkConfig: {
+        ...networkConfig,
+        id: hre.network.config.chainId,
+      },
+    };
+
+    console.log(
+      `Attached to address ${verifier.address} at network ${hre.network.name} with chainId ${networkConfig.id}...`,
+    );
+    writeFileSync('deployment.json', JSON.stringify(config), { flag: 'w' });
+  });
 
 export default config;

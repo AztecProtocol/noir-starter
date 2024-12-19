@@ -6,9 +6,11 @@
     "packages/*"
   ],
   "scripts": {
-    "deploy": "bunx hardhat compile && bunx hardhat deploy",
+    "deploy": "bunx hardhat deploy",
     "dev": "bun --filter vite dev",
-    "test:hardhat": "bunx hardhat test",
+    "test:up": "bun test ./tests/up.test.ts",
+    "test:uh": "bun test ./tests/uh.test.ts",
+    "test": "bun test:up && bun test:uh",
     "node": "bunx hardhat node"
   },
   "type": "module",
@@ -35,9 +37,7 @@
     "@types/shelljs": "^0.8.7",
     "hardhat-gas-reporter": "^1.0.9",
     "solidity-coverage": "^0.8.5",
-    "hardhat-noirenberg": "^0.1.5"
-  },
-  "peerDependencies": {
-    "typescript": "^5.0.0"
+    "hardhat-noirenberg": "0.2.0",
+    "typescript": "^5.6.3"
   }
 }

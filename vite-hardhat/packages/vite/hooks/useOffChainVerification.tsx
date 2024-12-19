@@ -3,11 +3,11 @@
 import { ProofData } from '@noir-lang/types';
 import { useEffect } from 'react';
 import { toast } from 'react-toastify';
-import { UltraHonkBackend } from '@aztec/bb.js';
+import { UltraPlonkBackend } from '@aztec/bb.js';
 import { Noir } from '@noir-lang/noir_js';
 
 export function useOffChainVerification(
-  backend: UltraHonkBackend,
+  backend: UltraPlonkBackend,
   noir?: Noir,
   proofData?: ProofData,
 ) {

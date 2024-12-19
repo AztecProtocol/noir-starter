@@ -32,7 +32,7 @@ Want to get started in a pinch? Start your project in a free Github Codespace!
    bunx hardhat node
    ```
 
-4. Deploy the verifier contract
+4. Deploy the verifier contract (UltraPlonk)
 
    ```bash
    bun run deploy
