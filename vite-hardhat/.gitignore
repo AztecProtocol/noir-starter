@@ -54,6 +54,8 @@ crs
 artifacts
 .yarn/
 
-circuit/target/
+noir/target/
+contracts
 dist
 deployment.json
+bun.lockb

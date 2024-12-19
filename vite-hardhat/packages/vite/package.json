@@ -7,11 +7,6 @@
     "wagmi": "wagmi generate"
   },
   "dependencies": {
-    "@noir-lang/backend_barretenberg": "0.36.0",
-    "@noir-lang/noir_js": "0.36.0",
-    "@noir-lang/noir_wasm": "0.36.0",
-    "@noir-lang/types": "0.36.0",
-    "@aztec/bb.js": "^0.62.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-toastify": "^9.1.1",
@@ -34,8 +29,5 @@
     "typechain": "^8.1.0",
     "typescript": "^4.9.3",
     "vite": "^5.0.6"
-  },
-  "engines": {
-    "node": ">=18.19.0"
   }
 }

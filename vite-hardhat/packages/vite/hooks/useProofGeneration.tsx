@@ -24,7 +24,11 @@ export function useProofGeneration(inputs?: { [key: string]: string }) {
       error: 'Error initializing Noir',
     });
 
-    const { witness } = await noir.execute(inputs);
+    const { witness } = await toast.promise(noir.execute(inputs), {
+      pending: 'Generating witness...',
+      success: 'Witness generated!',
+      error: 'Error generating witness',
+    });
 
     const data = await toast.promise(backend.generateProof(witness), {
       pending: 'Generating proof',

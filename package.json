@@ -1,6 +1,6 @@
 {
-  "name": "noir-starter",
-  "version": "0.1.1",
+  "name": "create-noir",
+  "version": "0.1.3",
   "type": "module",
   "description": "This is a reference repo to help you get started with writing zero-knowledge circuits with [Noir](https://noir-lang.org/).",
   "bin": "npx.js",

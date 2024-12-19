@@ -6,22 +6,23 @@
     "packages/*"
   ],
   "scripts": {
-    "deploy": "bunx hardhat compile && bunx hardhat deploy",
+    "deploy": "bunx hardhat deploy",
     "dev": "bun --filter vite dev",
-    "test:hardhat": "bunx hardhat test",
+    "test:up": "bun test ./tests/up.test.ts",
+    "test:uh": "bun test ./tests/uh.test.ts",
+    "test": "bun test:up && bun test:uh",
     "node": "bunx hardhat node"
   },
   "type": "module",
   "devDependencies": {
-    "hardhat-plugin-noir": "0.1.3",
     "@types/bun": "^1.1.12",
     "hardhat": "^2.19.2"
   },
   "dependencies": {
-    "@aztec/bb.js": "^0.62.0",
-    "@noir-lang/noir_js": "0.36.0",
-    "@noir-lang/noir_wasm": "0.36.0",
-    "@noir-lang/types": "0.36.0",
+    "@noir-lang/noir_js": "1.0.0-beta.0",
+    "@noir-lang/noir_wasm": "1.0.0-beta.0",
+    "@noir-lang/types": "1.0.0-beta.0",
+    "@aztec/bb.js": "0.63.1",
     "@nomicfoundation/hardhat-ignition": "^0.15.5",
     "@nomicfoundation/hardhat-ignition-viem": "^0.15.5",
     "commander": "^12.1.0",
@@ -35,9 +36,8 @@
     "@types/mocha": "^10.0.1",
     "@types/shelljs": "^0.8.7",
     "hardhat-gas-reporter": "^1.0.9",
-    "solidity-coverage": "^0.8.5"
-  },
-  "peerDependencies": {
-    "typescript": "^5.0.0"
+    "solidity-coverage": "^0.8.5",
+    "hardhat-noirenberg": "0.2.0",
+    "typescript": "^5.6.3"
   }
 }
