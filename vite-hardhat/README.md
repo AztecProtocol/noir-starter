@@ -49,10 +49,16 @@ Want to get started in a pinch? Start your project in a free Github Codespace!
 You can run the [example test file](./test/index.test.ts) with
 
 ```bash
-bun test
+bun run test
 ```
 
 This test shows the basic usage of Noir in a TypeScript Node.js environment. It also starts its own network and deploys the verifier contract.
+
+If you want to test only `UltraHonk`, you can run:
+
+```bash
+bun run test UltraHonk
+```
 
 ### Deploying on other networks
 
