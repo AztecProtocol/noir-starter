@@ -12,7 +12,7 @@ contract NoirExampleTest is Test {
     function testGenerateProof() public {
         noirHelper.withInput("x", 1).withInput("y", [2, 4]);
 
-        (bytes32[] memory publicInputs, bytes memory proof) = noirHelper.generateProof(1);
+        (bytes32[] memory publicInputs, bytes memory proof) = noirHelper.generateProof(2);
     }
 }
 
@@ -59,16 +59,16 @@ contract StarterTest is Test {
         // _fieldValues[1] = "5";
 
         // // Set expected dynamic proof outcome
-        // dynamicCorrect[0] = bytes32(0x0000000000000000000000000000000000000000000000000000000000000005);
-        // dynamicCorrect[1] = dynamicCorrect[0];
+        dynamicCorrect[0] = bytes32(0x0000000000000000000000000000000000000000000000000000000000000005);
+        dynamicCorrect[1] = dynamicCorrect[0];
         // bytes memory proofBytes = generateDynamicProof("test1", _fieldNames, _fieldValues);
         // bytes memory proof = sliceAfter64Bytes(proofBytes);
 
-        noirHelper.withInput("x", 1).withInput("y", 4);
+        noirHelper.withInput("x", 1).withInput("y", 5);
 
-        (bytes32[] memory publicInputs, bytes memory proof) = noirHelper.generateProof(1);
+        (bytes32[] memory publicInputs, bytes memory proof) = noirHelper.generateProof(2);
 
-        starter.verifyEqual(proof, dynamicCorrect);
+        starter.verifyEqual(proof, publicInputs);
     }
 
     function test_dynamicProofSecondTest() public {
