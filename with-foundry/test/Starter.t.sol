@@ -1,19 +1,33 @@
 pragma solidity ^0.8.17;
 
-import "forge-std/Test.sol";
 import "../contract/Starter.sol";
 import "../circuits/target/contract.sol";
 import "forge-std/console.sol";
 
+import "forge-std/Test.sol";
+import {NoirHelper} from "foundry-noir-helper/NoirHelper.sol";
+
+contract NoirExampleTest is Test {
+
+    function testGenerateProof() public {
+        noirHelper.withInput("x", 1).withInput("y", [2, 4]);
+
+        (bytes32[] memory publicInputs, bytes memory proof) = noirHelper.generateProof(1);
+    }
+}
+
 contract StarterTest is Test {
     Starter public starter;
     UltraVerifier public verifier;
+    NoirHelper public noirHelper;
+
 
     bytes32[] public dynamicCorrect = new bytes32[](2);
     bytes32[] public correct = new bytes32[](2);
     bytes32[] public wrong = new bytes32[](1);
 
     function setUp() public {
+        noirHelper = new NoirHelper();
         verifier = new UltraVerifier();
         starter = new Starter(verifier);
 
@@ -36,19 +50,24 @@ contract StarterTest is Test {
     }
 
     function test_dynamicProof() public {
-        string[] memory _fieldNames = new string[](2);
-        string[] memory _fieldValues = new string[](2);
+        // string[] memory _fieldNames = new string[](2);
+        // string[] memory _fieldValues = new string[](2);
 
-        _fieldNames[0] = "x";
-        _fieldNames[1] = "y";
-        _fieldValues[0] = "5";
-        _fieldValues[1] = "5";
+        // _fieldNames[0] = "x";
+        // _fieldNames[1] = "y";
+        // _fieldValues[0] = "5";
+        // _fieldValues[1] = "5";
 
-        // Set expected dynamic proof outcome
-        dynamicCorrect[0] = bytes32(0x0000000000000000000000000000000000000000000000000000000000000005);
-        dynamicCorrect[1] = dynamicCorrect[0];
-        bytes memory proofBytes = generateDynamicProof("test1", _fieldNames, _fieldValues);
-        bytes memory proof = sliceAfter64Bytes(proofBytes);
+        // // Set expected dynamic proof outcome
+        // dynamicCorrect[0] = bytes32(0x0000000000000000000000000000000000000000000000000000000000000005);
+        // dynamicCorrect[1] = dynamicCorrect[0];
+        // bytes memory proofBytes = generateDynamicProof("test1", _fieldNames, _fieldValues);
+        // bytes memory proof = sliceAfter64Bytes(proofBytes);
+
+        noirHelper.withInput("x", 1).withInput("y", 4);
+
+        (bytes32[] memory publicInputs, bytes memory proof) = noirHelper.generateProof(1);
+
         starter.verifyEqual(proof, dynamicCorrect);
     }
 
