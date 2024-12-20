@@ -84,7 +84,7 @@ deep" error on the solc compiler**. Then it will run the test, expecting it to p
 inputs, and fail with wrong inputs:
 
 ```bash
-forge test --optimize --optimizer-runs 5000 --evm-version london
+forge test --optimize --optimizer-runs 5000 --evm-version cancun
 ```
 
 #### Testing On-chain
