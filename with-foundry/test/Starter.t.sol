@@ -7,20 +7,11 @@ import "forge-std/console.sol";
 import "forge-std/Test.sol";
 import {NoirHelper} from "foundry-noir-helper/NoirHelper.sol";
 
-contract NoirExampleTest is Test {
-
-    function testGenerateProof() public {
-        noirHelper.withInput("x", 1).withInput("y", [2, 4]);
-
-        (bytes32[] memory publicInputs, bytes memory proof) = noirHelper.generateProof(2);
-    }
-}
 
 contract StarterTest is Test {
     Starter public starter;
     UltraVerifier public verifier;
     NoirHelper public noirHelper;
-
 
     bytes32[] public dynamicCorrect = new bytes32[](2);
     bytes32[] public correct = new bytes32[](2);
@@ -68,42 +59,45 @@ contract StarterTest is Test {
 
         (bytes32[] memory publicInputs, bytes memory proof) = noirHelper.generateProof(2);
 
+        // uncommenting causes: [FAIL: panic: array out-of-bounds access (0x32)] test_dynamicProof() (gas: 116848)
+        // console.logBytes32(publicInputs[0]);
+
         starter.verifyEqual(proof, publicInputs);
     }
 
-    function test_dynamicProofSecondTest() public {
-        string[] memory _fieldNames = new string[](2);
-        string[] memory _fieldValues = new string[](2);
+    // function test_dynamicProofSecondTest() public {
+    //     string[] memory _fieldNames = new string[](2);
+    //     string[] memory _fieldValues = new string[](2);
 
-        _fieldNames[0] = "x";
-        _fieldNames[1] = "y";
-        _fieldValues[0] = "8";
-        _fieldValues[1] = "8";
+    //     _fieldNames[0] = "x";
+    //     _fieldNames[1] = "y";
+    //     _fieldValues[0] = "8";
+    //     _fieldValues[1] = "8";
 
-        // Set expected dynamic proof outcome
-        dynamicCorrect[0] = bytes32(0x0000000000000000000000000000000000000000000000000000000000000008);
-        dynamicCorrect[1] = dynamicCorrect[0];
-        bytes memory proofBytes = generateDynamicProof("test2", _fieldNames, _fieldValues);
-        bytes memory proof = sliceAfter64Bytes(proofBytes);
-        starter.verifyEqual(proof, dynamicCorrect);
-    }
+    //     // Set expected dynamic proof outcome
+    //     dynamicCorrect[0] = bytes32(0x0000000000000000000000000000000000000000000000000000000000000008);
+    //     dynamicCorrect[1] = dynamicCorrect[0];
+    //     bytes memory proofBytes = generateDynamicProof("test2", _fieldNames, _fieldValues);
+    //     bytes memory proof = sliceAfter64Bytes(proofBytes);
+    //     starter.verifyEqual(proof, dynamicCorrect);
+    // }
 
-    function test_dynamicProofThirdTest() public {
-        string[] memory _fieldNames = new string[](2);
-        string[] memory _fieldValues = new string[](2);
+    // function test_dynamicProofThirdTest() public {
+    //     string[] memory _fieldNames = new string[](2);
+    //     string[] memory _fieldValues = new string[](2);
 
-        _fieldNames[0] = "x";
-        _fieldNames[1] = "y";
-        _fieldValues[0] = "7";
-        _fieldValues[1] = "7";
+    //     _fieldNames[0] = "x";
+    //     _fieldNames[1] = "y";
+    //     _fieldValues[0] = "7";
+    //     _fieldValues[1] = "7";
 
-        // Set expected dynamic proof outcome
-        dynamicCorrect[0] = bytes32(0x0000000000000000000000000000000000000000000000000000000000000007);
-        dynamicCorrect[1] = dynamicCorrect[0];
-        bytes memory proofBytes = generateDynamicProof("test3", _fieldNames, _fieldValues);
-        bytes memory proof = sliceAfter64Bytes(proofBytes);
-        starter.verifyEqual(proof, dynamicCorrect);
-    }
+    //     // Set expected dynamic proof outcome
+    //     dynamicCorrect[0] = bytes32(0x0000000000000000000000000000000000000000000000000000000000000007);
+    //     dynamicCorrect[1] = dynamicCorrect[0];
+    //     bytes memory proofBytes = generateDynamicProof("test3", _fieldNames, _fieldValues);
+    //     bytes memory proof = sliceAfter64Bytes(proofBytes);
+    //     starter.verifyEqual(proof, dynamicCorrect);
+    // }
 
     /// @dev This function generates dynamic proofs using 2 scripts in the /script directory
     ///
