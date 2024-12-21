@@ -31,10 +31,12 @@ Install [noirup](https://noir-lang.org/docs/getting_started/installation/#instal
 curl -L https://foundry.paradigm.xyz | bash
 ```
 
-4. Install `bbup`, the tool for managing Barretenberg versions, by following the instructions
+4. Install foundry dependencies by running `forge install`.
+
+5. Install `bbup`, the tool for managing Barretenberg versions, by following the instructions
    [here](https://github.com/AztecProtocol/aztec-packages/blob/master/barretenberg/bbup/README.md#installation).
 
-5. Then run `bbup`.
+6. Then run `bbup`.
 
 ## Generate verifier contract and proof
 
