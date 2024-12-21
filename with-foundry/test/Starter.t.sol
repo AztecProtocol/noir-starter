@@ -19,20 +19,24 @@ contract StarterTest is Test {
         starter = new Starter(verifier);
     }
 
-    function test_verifyProof() public {
+    function verifyProof() public {
         noirHelper.withInput("x", 1).withInput("y", 1).withInput("return", 1);
-
         (bytes32[] memory publicInputs, bytes memory proof) = noirHelper.generateProofAndClean(2);
-
         starter.verifyEqual(proof, publicInputs);
     }
 
-    function test_wrongProof() public {
+    function wrongProof() public {
         noirHelper.clean();
         noirHelper.withInput("x", 1).withInput("y", 5).withInput("return", 5);
         (bytes32[] memory publicInputs, bytes memory proof) = noirHelper.generateProofAndClean(2);
         vm.expectRevert();
         starter.verifyEqual(proof, publicInputs);
+    }
+
+    function test_all() public {
+        // Run tests in wrapper to make them run sequentially
+        verifyProof();
+        wrongProof();
     }
 
 }
