@@ -45,7 +45,6 @@ jobs:
           echo "PATH=$PATH:/home/runner/.bb" >> $GITHUB_ENV
           echo "PATH=$PATH:/home/runner/.bb" >> ~/.bashrc
           source ~/.bashrc
-          source
         shell: bash
 
       - name: Use bbup
