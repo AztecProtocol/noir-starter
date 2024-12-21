@@ -47,10 +47,6 @@ jobs:
           bbup -v 0.63.1
         shell: bash
 
-      - name: Install forge dependencies
-        run: forge install 0xnonso/foundry-noir-helper --no-commit
-        working-directory: with-foundry
-
       - name: Generate verifier contract
         run: |
           nargo compile && bb write_vk -b ./target/with_foundry.json && bb contract
