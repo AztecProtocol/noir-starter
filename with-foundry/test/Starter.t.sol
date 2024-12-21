@@ -34,7 +34,8 @@ contract StarterTest is Test {
     }
 
     function test_all() public {
-        // Run tests in wrapper to make them run sequentially
+        // forge runs tests in parallel which messes with the read/writes to the proof file
+        // Run tests in wrapper to force them run sequentially
         verifyProof();
         wrongProof();
     }

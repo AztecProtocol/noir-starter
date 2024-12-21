@@ -31,19 +31,10 @@ Install [noirup](https://noir-lang.org/docs/getting_started/installation/#instal
 curl -L https://foundry.paradigm.xyz | bash
 ```
 
-4. Install the correct version of the
-   [Barretenberg](https://github.com/AztecProtocol/aztec-packages/tree/master/barretenberg/cpp/src/barretenberg/bb#version-compatibility-with-noir)
-   proving backend for Noir (bb).
+4. Install `bbup`, the tool for managing Barretenberg versions, by following the instructions
+   [here](https://github.com/AztecProtocol/aztec-packages/blob/master/barretenberg/bbup/README.md#installation).
 
-   ```bash
-   curl -L https://raw.githubusercontent.com/AztecProtocol/aztec-packages/master/barretenberg/cpp/installation/install | bash
-   ```
-
-   then
-
-   ```bash
-   bbup -v 0.41.0 # compatible with nargo 0.31.0
-   ```
+5. Then run `bbup`.
 
 ## Generate verifier contract and proof
 
@@ -59,18 +50,6 @@ bb contract
 ```
 
 A file named `contract.sol` should appear in the `circuits/target` folder.
-
-#### Proof
-
-You also need a proof, as this template currently doesn't employ `ffi` to call `nargo execute` (to
-generate the witness) and `bb prove` by itself. For this, ensure your prover parameters are correct
-in `Prover.toml` and run:
-
-```bash
-bb prove -b ./target/with_foundry.json -w ./target/witness.gz -o ./target/with_foundry.proof
-```
-
-A file named `with_foundry.proof` should appear in the `./circuits/target` folder.
 
 ### Test with Foundry
 
