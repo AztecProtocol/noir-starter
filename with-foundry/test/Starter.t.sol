@@ -19,25 +19,25 @@ contract StarterTest is Test {
         starter = new Starter(verifier);
     }
 
-    function verifyProof() public {
+    function test_verifyProof() public {
         noirHelper.withInput("x", 1).withInput("y", 1).withInput("return", 1);
-        (bytes32[] memory publicInputs, bytes memory proof) = noirHelper.generateProofAndClean(2);
+        (bytes32[] memory publicInputs, bytes memory proof) = noirHelper.generateProof("test_verifyProof", 2);
         starter.verifyEqual(proof, publicInputs);
     }
 
-    function wrongProof() public {
+    function test_wrongProof() public {
         noirHelper.clean();
         noirHelper.withInput("x", 1).withInput("y", 5).withInput("return", 5);
-        (bytes32[] memory publicInputs, bytes memory proof) = noirHelper.generateProofAndClean(2);
+        (bytes32[] memory publicInputs, bytes memory proof) = noirHelper.generateProof("test_wrongProof", 2);
         vm.expectRevert();
         starter.verifyEqual(proof, publicInputs);
     }
 
-    function test_all() public {
-        // forge runs tests in parallel which messes with the read/writes to the proof file
-        // Run tests in wrapper to force them run sequentially
-        verifyProof();
-        wrongProof();
-    }
+    // function test_all() public {
+    //     // forge runs tests in parallel which messes with the read/writes to the proof file
+    //     // Run tests in wrapper to force them run sequentially
+    //     verifyProof();
+    //     wrongProof();
+    // }
 
 }
