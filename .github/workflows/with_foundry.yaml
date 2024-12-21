@@ -43,13 +43,11 @@ jobs:
         run: |
           curl -L https://raw.githubusercontent.com/AztecProtocol/aztec-packages/master/barretenberg/cpp/installation/install | bash
           echo "PATH=$PATH:/home/runner/.bb" >> $GITHUB_ENV
-          echo "PATH=$PATH:/home/runner/.bb" >> ~/.bashrc
-          source ~/.bashrc
         shell: bash
 
       - name: Use bbup
         run: |
-          bbup
+          bbup -v 0.63.1
         shell: bash
 
       - name: Generate verifier contract
