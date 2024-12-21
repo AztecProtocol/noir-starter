@@ -48,7 +48,6 @@ jobs:
       - name: Use bbup
         run: |
           bbup
-          bb --version  # or any other bbup command you want to run
         shell: bash
 
       - name: Generate verifier contract
