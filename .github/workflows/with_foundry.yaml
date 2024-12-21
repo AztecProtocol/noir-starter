@@ -43,7 +43,9 @@ jobs:
         run: |
           curl -L https://raw.githubusercontent.com/AztecProtocol/aztec-packages/master/barretenberg/cpp/installation/install | bash
           echo "PATH=$PATH:/home/runner/.bb" >> $GITHUB_ENV
-          source /home/runner/.bashrc
+          echo "PATH=$PATH:/home/runner/.bb" >> ~/.bashrc
+          source ~/.bashrc
+          source
         shell: bash
 
       - name: Use bbup
