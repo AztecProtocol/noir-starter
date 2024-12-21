@@ -1,0 +1,3 @@
+[submodule "with-foundry/lib/foundry-noir-helper"]
+	path = with-foundry/lib/foundry-noir-helper
+	url = https://github.com/0xnonso/foundry-noir-helper
