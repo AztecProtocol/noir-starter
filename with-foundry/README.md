@@ -31,7 +31,7 @@ Install [noirup](https://noir-lang.org/docs/getting_started/installation/#instal
 curl -L https://foundry.paradigm.xyz | bash
 ```
 
-4. Install foundry dependencies by running `forge install`.
+4. Install foundry dependencies by running `forge install 0xnonso/foundry-noir-helper --no-commit`.
 
 5. Install `bbup`, the tool for managing Barretenberg versions, by following the instructions
    [here](https://github.com/AztecProtocol/aztec-packages/blob/master/barretenberg/bbup/README.md#installation).
