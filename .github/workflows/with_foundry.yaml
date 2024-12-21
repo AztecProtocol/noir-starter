@@ -36,9 +36,6 @@ jobs:
       - name: Set up foundry
         uses: ./.github/actions/setup-foundry
 
-      - name: Install forge dependencies
-        run: forge install
-
       - name: Install bb
         run: |
           curl -L https://raw.githubusercontent.com/AztecProtocol/aztec-packages/master/barretenberg/cpp/installation/install | bash
@@ -49,6 +46,10 @@ jobs:
         run: |
           bbup -v 0.63.1
         shell: bash
+
+      - name: Install forge dependencies
+        run: forge install
+        working-directory: with-foundry
 
       - name: Generate verifier contract
         run: |
