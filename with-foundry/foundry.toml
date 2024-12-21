@@ -5,4 +5,9 @@ libs = ["lib"]
 fs_permissions = [{ access = "read-write", path = "./"},{ access = "read-write", path = "/tmp/"}]
 ffi = true
 
+[profile.remappings]
+# ds-test = "lib/forge-std/lib/ds-test/src/"
+forge-std = "lib/foundry-noir-helper/lib/forge-std/src/"
+# foundry-noir-helper = "lib/foundry-noir-helper/src/"
+
 # See more config options https://github.com/foundry-rs/foundry/tree/master/config
