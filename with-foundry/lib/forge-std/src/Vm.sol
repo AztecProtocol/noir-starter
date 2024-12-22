@@ -139,7 +139,7 @@ interface VmSafe {
     // Writes line to file, creating a file if it does not exist.
     // `path` is relative to the project root.
     function writeLine(string calldata path, string calldata data) external;
-    // Closes file for reading, resetting the offset and allowing to read it from beginning with readLine.
+    // Closes file for reading, resetting the offset and allowing to read it from the beginning with readLine.
     // `path` is relative to the project root.
     function closeFile(string calldata path) external;
     // Removes a file from the filesystem.
@@ -199,9 +199,9 @@ interface VmSafe {
     function recordLogs() external;
     // Gets all the recorded logs
     function getRecordedLogs() external returns (Log[] memory logs);
-    // Derive a private key from a provided mnenomic string (or mnenomic file path) at the derivation path m/44'/60'/0'/0/{index}
+    // Derive a private key from a provided mnemonic string (or mnemonic file path) at the derivation path m/44'/60'/0'/0/{index}
     function deriveKey(string calldata mnemonic, uint32 index) external pure returns (uint256 privateKey);
-    // Derive a private key from a provided mnenomic string (or mnenomic file path) at {derivationPath}{index}
+    // Derive a private key from a provided mnemonic string (or mnemonic file path) at {derivationPath}{index}
     function deriveKey(string calldata mnemonic, string calldata derivationPath, uint32 index)
         external
         pure
@@ -380,14 +380,14 @@ interface Vm is VmSafe {
     // Prepare an expected log with all four checks enabled.
     // Call this function, then emit an event, then call a function. Internally after the call, we check if
     // logs were emitted in the expected order with the expected topics and data.
-    // Second form also checks supplied address against emitting contract.
+    // Second form also checks the supplied address against the emitting contract.
     function expectEmit() external;
     function expectEmit(address emitter) external;
 
     // Prepare an expected log with (bool checkTopic1, bool checkTopic2, bool checkTopic3, bool checkData).
     // Call this function, then emit an event, then call a function. Internally after the call, we check if
     // logs were emitted in the expected order with the expected topics and data (as specified by the booleans).
-    // Second form also checks supplied address against emitting contract.
+    // Second form also checks the supplied address against the emitting contract.
     function expectEmit(bool checkTopic1, bool checkTopic2, bool checkTopic3, bool checkData) external;
     function expectEmit(bool checkTopic1, bool checkTopic2, bool checkTopic3, bool checkData, address emitter)
         external;
@@ -446,12 +446,12 @@ interface Vm is VmSafe {
     function createFork(string calldata urlOrAlias, uint256 blockNumber) external returns (uint256 forkId);
     // Creates a new fork with the given endpoint and the _latest_ block and returns the identifier of the fork
     function createFork(string calldata urlOrAlias) external returns (uint256 forkId);
-    // Creates a new fork with the given endpoint and at the block the given transaction was mined in, replays all transaction mined in the block before the transaction,
+    // Creates a new fork with the given endpoint and at the block the given transaction was mined in, replays all transactions mined in the block before the transaction,
     // and returns the identifier of the fork
     function createFork(string calldata urlOrAlias, bytes32 txHash) external returns (uint256 forkId);
     // Creates _and_ also selects a new fork with the given endpoint and block and returns the identifier of the fork
     function createSelectFork(string calldata urlOrAlias, uint256 blockNumber) external returns (uint256 forkId);
-    // Creates _and_ also selects new fork with the given endpoint and at the block the given transaction was mined in, replays all transaction mined in the block before
+    // Creates _and_ also selects new fork with the given endpoint and at the block the given transaction was mined in, replays all transactions mined in the block before
     // the transaction, returns the identifier of the fork
     function createSelectFork(string calldata urlOrAlias, bytes32 txHash) external returns (uint256 forkId);
     // Creates _and_ also selects a new fork with the given endpoint and the latest block and returns the identifier of the fork
@@ -464,11 +464,11 @@ interface Vm is VmSafe {
     // This is similar to `roll` but for the currently active fork
     function rollFork(uint256 blockNumber) external;
     // Updates the currently active fork to given transaction
-    // this will `rollFork` with the number of the block the transaction was mined in and replays all transaction mined before it in the block
+    // this will `rollFork` with the number of the block the transaction was mined in and replays all transactions mined before it in the block
     function rollFork(bytes32 txHash) external;
     // Updates the given fork to given block number
     function rollFork(uint256 forkId, uint256 blockNumber) external;
-    // Updates the given fork to block number of the given transaction and replays all transaction mined before it in the block
+    // Updates the given fork to block number of the given transaction and replays all transactions mined before it in the block
     function rollFork(uint256 forkId, bytes32 txHash) external;
     // Marks that the account(s) should use persistent storage across fork swaps in a multifork setup
     // Meaning, changes made to the state of this account will be kept when switching forks
