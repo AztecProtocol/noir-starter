@@ -91,7 +91,7 @@ jobs:
         with:
           payload: |
             {
-                "text": "Oooops, seems like latest stable Noir breaks noir-starter! Projects needing updating: vite-hardhat ${{ matrix.version }}"
+                "text": "Oooops, seems like the latest stable Noir breaks noir-starter! Projects needing updating: vite-hardhat ${{ matrix.version }}"
             }
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
