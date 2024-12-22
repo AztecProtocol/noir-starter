@@ -32,7 +32,7 @@ async function main() {
    * The problem with the prerelease is that if the test runs for both the stable and the prerelease,
    * and the prerelease has a breaking change, then the stable will fail.
    *
-   * If we update the the starter to match the prerelease, then the stable will fail.
+   * If we update the starter to match the prerelease, then the stable will fail.
    *
    * This means that if there is a breaking change in a prerelease, we will ALWAYS get a warning 😄, which defeats the purpose.
    *
