@@ -6,6 +6,7 @@ import {Vm} from "./Vm.sol";
 library StdStyle {
     Vm private constant vm = Vm(address(uint160(uint256(keccak256("hevm cheat code")))));
 
+    // ANSI escape codes for styles
     string constant RED = "\u001b[91m";
     string constant GREEN = "\u001b[92m";
     string constant YELLOW = "\u001b[93m";
@@ -19,315 +20,78 @@ library StdStyle {
     string constant INVERSE = "\u001b[7m";
     string constant RESET = "\u001b[0m";
 
-    function styleConcat(string memory style, string memory self) private pure returns (string memory) {
-        return string(abi.encodePacked(style, self, RESET));
+    // Universal style application
+    function style(string memory styleCode, string memory text) private pure returns (string memory) {
+        return string(abi.encodePacked(styleCode, text, RESET));
     }
 
-    function red(string memory self) internal pure returns (string memory) {
-        return styleConcat(RED, self);
+    // Overloaded style functions for different types
+    function style(string memory styleCode, uint256 value) internal pure returns (string memory) {
+        return style(styleCode, vm.toString(value));
     }
 
-    function red(uint256 self) internal pure returns (string memory) {
-        return red(vm.toString(self));
+    function style(string memory styleCode, int256 value) internal pure returns (string memory) {
+        return style(styleCode, vm.toString(value));
     }
 
-    function red(int256 self) internal pure returns (string memory) {
-        return red(vm.toString(self));
+    function style(string memory styleCode, address value) internal pure returns (string memory) {
+        return style(styleCode, vm.toString(value));
     }
 
-    function red(address self) internal pure returns (string memory) {
-        return red(vm.toString(self));
+    function style(string memory styleCode, bool value) internal pure returns (string memory) {
+        return style(styleCode, vm.toString(value));
     }
 
-    function red(bool self) internal pure returns (string memory) {
-        return red(vm.toString(self));
+    function style(string memory styleCode, bytes memory value) internal pure returns (string memory) {
+        return style(styleCode, vm.toString(value));
     }
 
-    function redBytes(bytes memory self) internal pure returns (string memory) {
-        return red(vm.toString(self));
+    function style(string memory styleCode, bytes32 value) internal pure returns (string memory) {
+        return style(styleCode, vm.toString(value));
     }
 
-    function redBytes32(bytes32 self) internal pure returns (string memory) {
-        return red(vm.toString(self));
+    // Predefined styles
+    function red(string memory text) internal pure returns (string memory) {
+        return style(RED, text);
     }
 
-    function green(string memory self) internal pure returns (string memory) {
-        return styleConcat(GREEN, self);
+    function green(string memory text) internal pure returns (string memory) {
+        return style(GREEN, text);
     }
 
-    function green(uint256 self) internal pure returns (string memory) {
-        return green(vm.toString(self));
+    function yellow(string memory text) internal pure returns (string memory) {
+        return style(YELLOW, text);
     }
 
-    function green(int256 self) internal pure returns (string memory) {
-        return green(vm.toString(self));
+    function blue(string memory text) internal pure returns (string memory) {
+        return style(BLUE, text);
     }
 
-    function green(address self) internal pure returns (string memory) {
-        return green(vm.toString(self));
+    function magenta(string memory text) internal pure returns (string memory) {
+        return style(MAGENTA, text);
     }
 
-    function green(bool self) internal pure returns (string memory) {
-        return green(vm.toString(self));
+    function cyan(string memory text) internal pure returns (string memory) {
+        return style(CYAN, text);
     }
 
-    function greenBytes(bytes memory self) internal pure returns (string memory) {
-        return green(vm.toString(self));
+    function bold(string memory text) internal pure returns (string memory) {
+        return style(BOLD, text);
     }
 
-    function greenBytes32(bytes32 self) internal pure returns (string memory) {
-        return green(vm.toString(self));
+    function dim(string memory text) internal pure returns (string memory) {
+        return style(DIM, text);
     }
 
-    function yellow(string memory self) internal pure returns (string memory) {
-        return styleConcat(YELLOW, self);
+    function italic(string memory text) internal pure returns (string memory) {
+        return style(ITALIC, text);
     }
 
-    function yellow(uint256 self) internal pure returns (string memory) {
-        return yellow(vm.toString(self));
+    function underline(string memory text) internal pure returns (string memory) {
+        return style(UNDERLINE, text);
     }
 
-    function yellow(int256 self) internal pure returns (string memory) {
-        return yellow(vm.toString(self));
-    }
-
-    function yellow(address self) internal pure returns (string memory) {
-        return yellow(vm.toString(self));
-    }
-
-    function yellow(bool self) internal pure returns (string memory) {
-        return yellow(vm.toString(self));
-    }
-
-    function yellowBytes(bytes memory self) internal pure returns (string memory) {
-        return yellow(vm.toString(self));
-    }
-
-    function yellowBytes32(bytes32 self) internal pure returns (string memory) {
-        return yellow(vm.toString(self));
-    }
-
-    function blue(string memory self) internal pure returns (string memory) {
-        return styleConcat(BLUE, self);
-    }
-
-    function blue(uint256 self) internal pure returns (string memory) {
-        return blue(vm.toString(self));
-    }
-
-    function blue(int256 self) internal pure returns (string memory) {
-        return blue(vm.toString(self));
-    }
-
-    function blue(address self) internal pure returns (string memory) {
-        return blue(vm.toString(self));
-    }
-
-    function blue(bool self) internal pure returns (string memory) {
-        return blue(vm.toString(self));
-    }
-
-    function blueBytes(bytes memory self) internal pure returns (string memory) {
-        return blue(vm.toString(self));
-    }
-
-    function blueBytes32(bytes32 self) internal pure returns (string memory) {
-        return blue(vm.toString(self));
-    }
-
-    function magenta(string memory self) internal pure returns (string memory) {
-        return styleConcat(MAGENTA, self);
-    }
-
-    function magenta(uint256 self) internal pure returns (string memory) {
-        return magenta(vm.toString(self));
-    }
-
-    function magenta(int256 self) internal pure returns (string memory) {
-        return magenta(vm.toString(self));
-    }
-
-    function magenta(address self) internal pure returns (string memory) {
-        return magenta(vm.toString(self));
-    }
-
-    function magenta(bool self) internal pure returns (string memory) {
-        return magenta(vm.toString(self));
-    }
-
-    function magentaBytes(bytes memory self) internal pure returns (string memory) {
-        return magenta(vm.toString(self));
-    }
-
-    function magentaBytes32(bytes32 self) internal pure returns (string memory) {
-        return magenta(vm.toString(self));
-    }
-
-    function cyan(string memory self) internal pure returns (string memory) {
-        return styleConcat(CYAN, self);
-    }
-
-    function cyan(uint256 self) internal pure returns (string memory) {
-        return cyan(vm.toString(self));
-    }
-
-    function cyan(int256 self) internal pure returns (string memory) {
-        return cyan(vm.toString(self));
-    }
-
-    function cyan(address self) internal pure returns (string memory) {
-        return cyan(vm.toString(self));
-    }
-
-    function cyan(bool self) internal pure returns (string memory) {
-        return cyan(vm.toString(self));
-    }
-
-    function cyanBytes(bytes memory self) internal pure returns (string memory) {
-        return cyan(vm.toString(self));
-    }
-
-    function cyanBytes32(bytes32 self) internal pure returns (string memory) {
-        return cyan(vm.toString(self));
-    }
-
-    function bold(string memory self) internal pure returns (string memory) {
-        return styleConcat(BOLD, self);
-    }
-
-    function bold(uint256 self) internal pure returns (string memory) {
-        return bold(vm.toString(self));
-    }
-
-    function bold(int256 self) internal pure returns (string memory) {
-        return bold(vm.toString(self));
-    }
-
-    function bold(address self) internal pure returns (string memory) {
-        return bold(vm.toString(self));
-    }
-
-    function bold(bool self) internal pure returns (string memory) {
-        return bold(vm.toString(self));
-    }
-
-    function boldBytes(bytes memory self) internal pure returns (string memory) {
-        return bold(vm.toString(self));
-    }
-
-    function boldBytes32(bytes32 self) internal pure returns (string memory) {
-        return bold(vm.toString(self));
-    }
-
-    function dim(string memory self) internal pure returns (string memory) {
-        return styleConcat(DIM, self);
-    }
-
-    function dim(uint256 self) internal pure returns (string memory) {
-        return dim(vm.toString(self));
-    }
-
-    function dim(int256 self) internal pure returns (string memory) {
-        return dim(vm.toString(self));
-    }
-
-    function dim(address self) internal pure returns (string memory) {
-        return dim(vm.toString(self));
-    }
-
-    function dim(bool self) internal pure returns (string memory) {
-        return dim(vm.toString(self));
-    }
-
-    function dimBytes(bytes memory self) internal pure returns (string memory) {
-        return dim(vm.toString(self));
-    }
-
-    function dimBytes32(bytes32 self) internal pure returns (string memory) {
-        return dim(vm.toString(self));
-    }
-
-    function italic(string memory self) internal pure returns (string memory) {
-        return styleConcat(ITALIC, self);
-    }
-
-    function italic(uint256 self) internal pure returns (string memory) {
-        return italic(vm.toString(self));
-    }
-
-    function italic(int256 self) internal pure returns (string memory) {
-        return italic(vm.toString(self));
-    }
-
-    function italic(address self) internal pure returns (string memory) {
-        return italic(vm.toString(self));
-    }
-
-    function italic(bool self) internal pure returns (string memory) {
-        return italic(vm.toString(self));
-    }
-
-    function italicBytes(bytes memory self) internal pure returns (string memory) {
-        return italic(vm.toString(self));
-    }
-
-    function italicBytes32(bytes32 self) internal pure returns (string memory) {
-        return italic(vm.toString(self));
-    }
-
-    function underline(string memory self) internal pure returns (string memory) {
-        return styleConcat(UNDERLINE, self);
-    }
-
-    function underline(uint256 self) internal pure returns (string memory) {
-        return underline(vm.toString(self));
-    }
-
-    function underline(int256 self) internal pure returns (string memory) {
-        return underline(vm.toString(self));
-    }
-
-    function underline(address self) internal pure returns (string memory) {
-        return underline(vm.toString(self));
-    }
-
-    function underline(bool self) internal pure returns (string memory) {
-        return underline(vm.toString(self));
-    }
-
-    function underlineBytes(bytes memory self) internal pure returns (string memory) {
-        return underline(vm.toString(self));
-    }
-
-    function underlineBytes32(bytes32 self) internal pure returns (string memory) {
-        return underline(vm.toString(self));
-    }
-
-    function inverse(string memory self) internal pure returns (string memory) {
-        return styleConcat(INVERSE, self);
-    }
-
-    function inverse(uint256 self) internal pure returns (string memory) {
-        return inverse(vm.toString(self));
-    }
-
-    function inverse(int256 self) internal pure returns (string memory) {
-        return inverse(vm.toString(self));
-    }
-
-    function inverse(address self) internal pure returns (string memory) {
-        return inverse(vm.toString(self));
-    }
-
-    function inverse(bool self) internal pure returns (string memory) {
-        return inverse(vm.toString(self));
-    }
-
-    function inverseBytes(bytes memory self) internal pure returns (string memory) {
-        return inverse(vm.toString(self));
-    }
-
-    function inverseBytes32(bytes32 self) internal pure returns (string memory) {
-        return inverse(vm.toString(self));
+    function inverse(string memory text) internal pure returns (string memory) {
+        return style(INVERSE, text);
     }
 }
