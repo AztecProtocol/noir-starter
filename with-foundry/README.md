@@ -79,7 +79,7 @@ verifier contract, the `Starter` contract and two bytes32 arrays correspondent t
 solutions to your circuit.
 
 By running the following command, forge will compile the contract with 5000 rounds of optimization
-and the London EVM version. **You need to use these optimizer settings to supress the "stack too
+and the London EVM version. **You need to use these optimizer settings to suppress the "stack too
 deep" error on the solc compiler**. Then it will run the test, expecting it to pass with correct
 inputs, and fail with wrong inputs:
 
