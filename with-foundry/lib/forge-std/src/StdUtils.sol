@@ -128,13 +128,13 @@ abstract contract StdUtils {
     }
 
     /// @dev returns the hash of the init code (creation code + no args) used in CREATE2 with no constructor arguments
-    /// @param creationCode the creation code of a contract C, as returned by type(C).creationCode
+    /// @param creationCode is the creation code of a contract C, as returned by type(C).creationCode
     function hashInitCode(bytes memory creationCode) internal pure returns (bytes32) {
         return hashInitCode(creationCode, "");
     }
 
     /// @dev returns the hash of the init code (creation code + ABI-encoded args) used in CREATE2
-    /// @param creationCode the creation code of a contract C, as returned by type(C).creationCode
+    /// @param creationCode is the creation code of a contract C, as returned by type(C).creationCode
     /// @param args the ABI-encoded arguments to the constructor of C
     function hashInitCode(bytes memory creationCode, bytes memory args) internal pure returns (bytes32) {
         return keccak256(abi.encodePacked(creationCode, args));
@@ -163,7 +163,7 @@ abstract contract StdUtils {
         // Make the aggregate call.
         (, bytes[] memory returnData) = multicall.aggregate(calls);
 
-        // ABI decode the return data and return the balances.
+        // ABI decodes the return data and returns the balances.
         balances = new uint256[](length);
         for (uint256 i = 0; i < length; ++i) {
             balances[i] = abi.decode(returnData[i], (uint256));
@@ -178,7 +178,7 @@ abstract contract StdUtils {
         return address(uint160(uint256(bytesValue)));
     }
 
-    // Used to prevent the compilation of console, which shortens the compilation time when console is not used elsewhere.
+    // Used to prevent the compilation of the console, which shortens the compilation time when the console is not used elsewhere.
 
     function console2_log(string memory p0, uint256 p1) private view {
         (bool status,) = address(CONSOLE2_ADDRESS).staticcall(abi.encodeWithSignature("log(string,uint256)", p0, p1));
