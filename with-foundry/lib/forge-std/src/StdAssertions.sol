@@ -14,7 +14,7 @@ abstract contract StdAssertions is DSTest {
 
     function fail(string memory err) internal virtual {
         emit log_named_string("Error", err);
-        fail();
+        super.fail();
     }
 
     function assertFalse(bool data) internal virtual {
