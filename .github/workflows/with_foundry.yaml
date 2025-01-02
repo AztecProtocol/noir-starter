@@ -13,6 +13,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+        with:
+          submodules: recursive
+
+      - name: Install libc++
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libc++-dev libc++abi-dev
 
       - name: Get latest version
         id: versions_step
@@ -39,8 +46,7 @@ jobs:
 
       - name: Use bbup
         run: |
-          bbup -v 0.41.0
-          bb --version  # or any other bbup command you want to run
+          bbup -v 0.63.1
         shell: bash
 
       - name: Generate verifier contract
@@ -56,4 +62,4 @@ jobs:
 
       - name: Test with Foundry
         run: |
-          forge test --optimize --optimizer-runs 5000 --evm-version london
+          forge test --optimize --optimizer-runs 5000 --evm-version cancun
