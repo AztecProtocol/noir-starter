@@ -138,7 +138,7 @@ Replace `$ANVIL_RPC` with the testnet RPC, if you're deploying on a testnet.
 
 This template doesn't include settings you may need to deal with syntax highlighting and
 IDE-specific settings (i.e. VScode). Please follow the instructions on the
-[Foundy book](https://book.getfoundry.sh/config/vscode) to set that up.
+[Foundry book](https://book.getfoundry.sh/config/vscode) to set that up.
 
 It's **highly recommended** you get familiar with [Foundry](https://book.getfoundry.sh) before
 developing on this template.
