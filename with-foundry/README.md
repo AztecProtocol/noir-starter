@@ -10,9 +10,9 @@ Want to get started in a pinch? Start your project in a free Github Codespace!
 
 In the meantime, follow these simple steps to work on your own machine:
 
-Install [noirup](https://noir-lang.org/docs/getting_started/installation/#installing-noirup) with
+Install [noirup](https://noir-lang.org/docs/getting_started/noir_installation) with
 
-1. Install [noirup](https://noir-lang.org/docs/getting_started/installation/#installing-noirup):
+1. Install [noirup](https://noir-lang.org/docs/getting_started/noir_installation):
 
    ```bash
    curl -L https://raw.githubusercontent.com/noir-lang/noirup/main/install | bash
