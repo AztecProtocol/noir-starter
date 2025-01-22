@@ -28,12 +28,12 @@ describe('UltraHonk', () => {
     const input = { x: 1, y: 2 };
     const { witness } = await noir.execute(input);
     correctProof = await backend.generateProof(witness);
-    expect(correctProof.proof instanceof Uint8Array).toBeTrue;
+    expect(correctProof.proof instanceof Uint8Array).toBe(true);
   });
 
   test('Should verify valid proof for correct input', async () => {
     const verification = await backend.verifyProof(correctProof);
-    expect(verification).toBeTrue;
+    expect(verification).toBe(true);
   });
 
   test('Should fail to generate valid proof for incorrect input', async () => {
@@ -42,7 +42,7 @@ describe('UltraHonk', () => {
       const { witness } = await noir.execute(input);
       const incorrectProof = await backend.generateProof(witness);
     } catch (err) {
-      expect(err instanceof Error).toBeTrue;
+      expect(err instanceof Error).toBe(true);
       const error = err as Error;
       expect(error.message).toContain('Cannot satisfy constraint');
     }
