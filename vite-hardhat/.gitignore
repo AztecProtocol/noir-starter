@@ -50,7 +50,6 @@ crs
 
 # other
 .vscode
-.DS_Store
 artifacts
 .yarn/
 
