@@ -2,8 +2,9 @@
 import { Command } from 'commander';
 import select from '@inquirer/select';
 import input from '@inquirer/input';
-const program = new Command();
 import tiged from 'tiged';
+
+const program = new Command();
 
 program.action(async () => {
   const appType = await select({
@@ -31,9 +32,8 @@ program.action(async () => {
     console.log(info.message);
   });
 
-  emitter.clone(`./${appName}`).then(() => {
-    console.log('done');
-  });
+  await emitter.clone(`./${appName}`);
+  console.log('done');
 });
 
 program.parse();
