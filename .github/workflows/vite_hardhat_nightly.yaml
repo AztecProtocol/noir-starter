@@ -75,7 +75,6 @@ jobs:
         run: |
           bun i \
           @noir-lang/noir_js@${{ matrix.version }} \
-          @noir-lang/backend_barretenberg@${{ matrix.version }} \
           @noir-lang/noir_wasm@${{ matrix.version }} \
           @noir-lang/types@${{ matrix.version }}
 
