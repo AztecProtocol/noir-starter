@@ -23,7 +23,7 @@ You can view more complete example projects written in Noir in the [Noir Example
 
 ## Support
 
-Need help? Join the [Noir Discord](https://discord.gg/JtqzkdeQ6G) or reach out on [Twitter](https://twitter.com/NoirLang).
+Need help? Join the [Noir Discord](https://discord.gg/JtqzkdeQ6G) or reach out on [Twitter](https://x.com/NoirLang).
 
 ## Contributing
 
