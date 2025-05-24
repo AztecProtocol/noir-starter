@@ -10,4 +10,4 @@ ffi = true
 forge-std = "lib/foundry-noir-helper/lib/forge-std/src/"
 # foundry-noir-helper = "lib/foundry-noir-helper/src/"
 
-# See more config options https://github.com/foundry-rs/foundry/tree/master/config
+# See more config options https://github.com/foundry-rs/foundry/tree/master/crates/config
