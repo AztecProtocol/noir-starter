@@ -109,7 +109,7 @@ LOCALHOST_PRIVATE_KEY=<the private key you just got from anvil>
 #### (Option 2) Prepare for testnet
 
 Pick a testnet like Sepolia or Goerli. Generate a private key and use a faucet (like
-[this one for Sepolia](https://sepoliafaucet.com/)) to get some coins in there.
+[this one for Sepolia](https://www.alchemy.com/faucets/ethereum-sepolia)) to get some coins in there.
 
 Edit your `.env` file to look like:
 
