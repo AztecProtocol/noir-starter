@@ -12,7 +12,7 @@ jobs:
         working-directory: vite-hardhat
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Set up bun
         uses: oven-sh/setup-bun@v1
