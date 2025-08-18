@@ -27,12 +27,12 @@ describe('UltraPlonk', () => {
     const input = { x: 1, y: 2 };
     const { witness } = await noir.execute(input);
     correctProof = await backend.generateProof(witness);
-    expect(correctProof.proof instanceof Uint8Array).toBeTrue;
+    expect(correctProof.proof instanceof Uint8Array).toBe(true);
   });
 
   test('Should verify valid proof for correct input', async () => {
     const verification = await backend.verifyProof(correctProof);
-    expect(verification).toBeTrue;
+    expect(verification).toBe(true);
   });
 
   test('Should verify valid proof for correct input on a smart contract', async () => {
@@ -43,7 +43,7 @@ describe('UltraPlonk', () => {
       bytesToHex(correctProof.proof),
       correctProof.publicInputs as `0x${string}`[],
     ]);
-    expect(res).toBeTrue;
+    expect(res).toBe(true);
   });
 
   test('Should fail to generate valid proof for incorrect input', async () => {
@@ -52,7 +52,7 @@ describe('UltraPlonk', () => {
       const { witness } = await noir.execute(input);
       const incorrectProof = await backend.generateProof(witness);
     } catch (err) {
-      expect(err instanceof Error).toBeTrue;
+      expect(err instanceof Error).toBe(true);
       const error = err as Error;
       expect(error.message).toContain('Cannot satisfy constraint');
     }
